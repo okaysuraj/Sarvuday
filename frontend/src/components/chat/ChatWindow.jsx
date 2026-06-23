@@ -215,6 +215,7 @@ const ChatWindow = ({ room, currentUserId }) => {
 
         // Fire & forget REST to persist
         axios.post(`${BASE_URL}/chat/rooms/${room.room_id}/messages?user_id=${currentUserId}`, {
+            message_id: tempMsg.message_id,
             content: text,
             sender_type: userType,
             message_type: 'text'

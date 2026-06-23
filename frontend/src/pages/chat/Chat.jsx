@@ -32,7 +32,7 @@ const Chat = () => {
           <button 
             onClick={() => {
               const userType = localStorage.getItem('userType');
-              if (userType === 'counsellor') {
+              if (userType && userType.toLowerCase() === 'counsellor') {
                 navigate('/counsellor-dashboard/home');
               } else {
                 navigate('/normal-user-dashboard/home');
