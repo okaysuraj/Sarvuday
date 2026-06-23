@@ -1,0 +1,15 @@
+.bookBtn {
+  margin-top: 12px;
+  padding: 10px 16px;
+  background-color: #5e3fa5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.bookBtn:hover {
+  background-color: #472c84;
+}

@@ -1,0 +1,80 @@
+/* Prescriptions.module.css */
+
+.container {
+  padding: 2.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--color-surface-container-lowest);
+  border-radius: var(--radius-lg);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-hard);
+  font-family: var(--font-body);
+  color: var(--color-on-surface);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: var(--color-surface);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-hard);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translate(-2px, -2px);
+}
+
+.diagnosis {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.date {
+  font-size: 0.95rem;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: var(--color-on-surface);
+}
+
+.bulletList {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-on-surface);
+}
+
+.bulletList li {
+  margin-bottom: 0.25rem;
+}
+
+.loading,
+.noData {
+  text-align: center;
+  font-size: 1.25rem;
+  margin-top: 3rem;
+  color: var(--color-on-surface-variant);
+  font-style: italic;
+}

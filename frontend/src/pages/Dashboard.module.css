@@ -1,0 +1,83 @@
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f7f7f7;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #333;
+  color: white;
+  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navList li {
+  margin-bottom: 10px;
+}
+
+.navList a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  padding: 12px 20px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.navList a:hover {
+  background-color: #444;
+}
+
+.active {
+  background-color: #555;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+.logoutItem {
+  margin-top: 20px;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logoutButton:hover {
+  background-color: #d32f2f;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  padding: 12px 20px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}

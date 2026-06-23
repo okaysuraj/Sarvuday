@@ -1,0 +1,144 @@
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.heading {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #007BFF;
+  border-bottom: 2px solid #007BFF;
+  padding-bottom: 6px;
+  font-weight: 700;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem 2rem;
+  margin-bottom: 2rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #0056b3;
+}
+
+.input, .textarea, select {
+  padding: 0.6rem 0.9rem;
+  font-size: 1rem;
+  border: 1.8px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.input:focus, .textarea:focus, select:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 5px #007BFFaa;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+button.button {
+  grid-column: span 2;
+  background-color: #007BFF;
+  color: white;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+button.button:disabled {
+  background-color: #6c9ce9;
+  cursor: not-allowed;
+}
+
+button.button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.subheading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #007BFF;
+  border-bottom: 2px solid #007BFF;
+  padding-bottom: 4px;
+}
+
+.noData {
+  color: #777;
+  font-style: italic;
+  font-size: 1rem;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.slotList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.slotCard {
+  background-color: #f7f9fc;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.04);
+  transition: box-shadow 0.2s ease;
+}
+
+.slotCard:hover {
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.1);
+}
+
+.slotCard p {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.available {
+  color: #198754;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.unavailable {
+  color: #dc3545;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  button.button {
+    grid-column: span 1;
+  }
+}

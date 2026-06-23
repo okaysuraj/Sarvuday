@@ -1,0 +1,102 @@
+/* src/components/normal_users/Appointments.module.css */
+
+.container {
+  padding: 2.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--color-surface-container-lowest);
+  border-radius: var(--radius-lg);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-hard);
+  font-family: var(--font-body);
+  color: var(--color-on-surface);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.button,
+.buttonOutline {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: var(--border-width) solid var(--border-color);
+}
+
+.button {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-hard);
+}
+
+.button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.buttonOutline {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  box-shadow: var(--shadow-hard);
+}
+
+.buttonOutline:hover {
+  background-color: var(--color-secondary-container);
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.cardGrid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.card {
+  background-color: var(--color-surface);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-hard);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translate(-2px, -2px);
+}
+
+.card h4 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-primary);
+}
+
+.card p {
+  font-size: 1rem;
+  color: var(--color-on-surface);
+  margin-bottom: 0.5rem;
+}
+
+.placeholderText {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: var(--color-on-surface-variant);
+  text-align: center;
+  font-style: italic;
+}

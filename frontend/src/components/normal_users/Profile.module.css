@@ -1,0 +1,342 @@
+/* Profile.module.css */
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: var(--color-surface-container-lowest);
+  border-radius: var(--radius-lg);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-hard);
+  font-family: var(--font-body);
+  color: var(--color-on-surface);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2.5rem;
+  border-bottom: var(--border-width) solid var(--border-color);
+  background-color: var(--color-surface-container-low);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+}
+
+.actionButton {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-hard);
+}
+
+.actionButton:hover {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.editButton {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.deleteButton {
+  background-color: var(--color-error);
+  color: var(--color-on-error);
+}
+
+.saveButton {
+  background-color: var(--color-secondary);
+  color: var(--color-on-secondary);
+}
+
+.cancelButton {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+.profileContent {
+  padding: 2.5rem;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  gap: 2.5rem;
+}
+
+.profileImageContainer {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.profilePic {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-hard);
+}
+
+.profileInitial {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 4rem;
+  font-weight: 700;
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-hard);
+}
+
+.uploadOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  border-bottom-left-radius: 140px;
+  border-bottom-right-radius: 140px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.uploadOverlay:hover {
+  background-color: var(--color-primary);
+}
+
+.profileHeaderInfo {
+  flex: 1;
+}
+
+.userName {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  color: var(--color-on-surface);
+}
+
+.userEmail {
+  font-size: 1.1rem;
+  margin: 0 0 5px 0;
+  color: var(--color-on-surface-variant);
+}
+
+.userLocation {
+  font-size: 1rem;
+  color: var(--color-on-surface-variant);
+  margin: 0;
+}
+
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.profileCard {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: var(--border-width) solid var(--border-color);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-hard);
+}
+
+.profileCard h4 {
+  margin: 0 0 1.5rem 0;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  border-bottom: var(--border-width) solid var(--border-color);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fieldRow {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.fieldRow .fieldGroup {
+  flex: 1;
+}
+
+.fieldGroup label {
+  font-size: 0.9rem;
+  color: var(--color-on-surface-variant);
+  font-weight: 600;
+}
+
+.fieldGroup p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-on-surface);
+  font-weight: 500;
+}
+
+.editInput {
+  padding: 12px 15px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  width: 100%;
+  background-color: var(--color-surface-container-lowest);
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.1) inset;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 2px 2px 0px var(--color-primary);
+}
+
+.verified {
+  color: var(--color-secondary);
+  font-weight: 700;
+}
+
+.notVerified {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.deleteConfirmation {
+  padding: 3rem;
+  text-align: center;
+}
+
+.deleteConfirmation h3 {
+  color: var(--color-error);
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.deleteConfirmation p {
+  margin-bottom: 1.5rem;
+  color: var(--color-on-surface);
+  font-size: 1.1rem;
+}
+
+.confirmationInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 15px;
+  margin: 2rem auto;
+  display: block;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1.1rem;
+  font-family: var(--font-body);
+}
+
+.deleteActions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.deleteConfirmButton {
+  background-color: var(--color-error);
+  color: var(--color-on-error);
+}
+
+.deleteConfirmButton:hover {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.25rem;
+  color: var(--color-on-surface-variant);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-style: italic;
+}
+
+.loading::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 4px solid var(--color-primary);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  text-align: center;
+  font-size: 1.25rem;
+  color: var(--color-error);
+  padding: 3rem;
+  font-weight: 600;
+}
+
+.noData {
+  text-align: center;
+  font-size: 1.25rem;
+  color: var(--color-on-surface-variant);
+  padding: 3rem;
+  font-style: italic;
+}

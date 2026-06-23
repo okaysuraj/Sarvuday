@@ -1,0 +1,395 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgb(0 0 0 / 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  overflow: hidden;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #eaeaea;
+  background-color: #f9f9f9;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #007BFF;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actionButton {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 0.9rem;
+}
+
+.editButton {
+  background-color: #007BFF;
+  color: white;
+}
+
+.editButton:hover {
+  background-color: #0056b3;
+}
+
+.deleteButton {
+  background-color: #f44336;
+  color: white;
+}
+
+.deleteButton:hover {
+  background-color: #d32f2f;
+}
+
+.saveButton {
+  background-color: #4caf50;
+  color: white;
+}
+
+.saveButton:hover {
+  background-color: #388e3c;
+}
+
+.cancelButton {
+  background-color: #9e9e9e;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #757575;
+}
+
+.profileContent {
+  padding: 2rem;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #777;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.loading::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #007BFF;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #f44336;
+  padding: 2rem;
+}
+
+.noData {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #777;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.avatarContainer {
+  position: relative;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007BFF;
+  background: #eee;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.editableAvatar {
+  position: relative;
+}
+
+.uploadOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  text-align: center;
+  padding: 5px 0;
+  border-bottom-left-radius: 60px;
+  border-bottom-right-radius: 60px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.uploadOverlay:hover {
+  background-color: rgba(0, 123, 255, 0.8);
+  padding: 8px 0;
+}
+
+.basicInfo {
+  flex: 1;
+  min-width: 200px;
+}
+
+.name {
+  margin: 0 0 0.3rem;
+  font-size: 2rem;
+  color: #007BFF;
+}
+
+.email {
+  margin: 0 0 0.2rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.location {
+  color: #777;
+  font-style: italic;
+}
+
+.locationInputs {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.locationInputs input {
+  flex: 1;
+  min-width: 0;
+}
+
+.stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #007BFF;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid #007BFF;
+  display: inline-block;
+  padding-bottom: 4px;
+  color: #007BFF;
+}
+
+.bio {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+  white-space: pre-line;
+}
+
+.bioTextarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.bioTextarea:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.sectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: #f9f9f9;
+  padding: 1.2rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 6px 14px rgb(0 0 0 / 0.1);
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #0056b3;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.fieldGroup label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.fieldGroup p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.editInput {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.verified {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.notVerified {
+  color: #f44336;
+  font-weight: 500;
+}
+
+.standard {
+  color: #757575;
+  font-weight: 500;
+}
+
+.deleteConfirmation {
+  padding: 2rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.deleteConfirmation h3 {
+  color: #f44336;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.deleteConfirmation p {
+  margin-bottom: 1.5rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.confirmationInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 1rem auto;
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.deleteActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.deleteConfirmButton {
+  background-color: #f44336;
+  color: white;
+}
+
+.deleteConfirmButton:hover {
+  background-color: #d32f2f;
+}

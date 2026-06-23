@@ -1,0 +1,69 @@
+# Project Structure
+
+my-app/
+├── public/
+│   └── index.html
+├── src/
+│   ├── assets/              # Images, icons, fonts, etc.
+│   ├── components/          # Reusable UI components (Buttons, Cards, etc.)
+│   ├── layouts/             # Shared layout components for each user type
+│   ├── pages/               # Route-level components
+│   │   ├── auth/            # Login, Register, ForgotPassword
+│   │   ├── admin/           # Admin-specific pages
+│   │   ├── counsellor/      # Counsellor-specific pages
+│   │   ├── user/            # Normal user-specific pages
+│   │   └── common/          # Shared pages (Home, NotFound, etc.)
+│   ├── features/            # Redux or Zustand slices or logic modules (chat, auth, user management)
+│   ├── hooks/               # Custom React hooks (useAuth, useChat)
+│   ├── services/            # API calls (authService, chatService)
+│   ├── context/             # React Contexts (if not using Redux)
+│   ├── utils/               # Utility functions (validators, formatters)
+│   ├── routes/              # Route definitions and role-based guards
+│   ├── config/              # App-level config (env, role definitions)
+│   ├── App.jsx              # Root component
+│   ├── main.jsx             # Entry point (if using Vite)
+│   └── index.js             # Entry point (if using CRA)
+├── .env                     # Environment variables
+├── package.json
+└── README.md
+
+
+# Chatbot UI
+features/
+└── chat/
+    ├── components/
+    │   ├── ChatWindow.jsx
+    │   └── MessageBubble.jsx
+    ├── hooks/
+    │   └── useChat.js
+    ├── services/
+    │   └── chatService.js
+    └── ChatPage.jsx
+
+# Dashboards
+pages/
+├── admin/
+│   └── Dashboard.jsx
+├── counsellor/
+│   └── Dashboard.jsx
+└── user/
+    └── Dashboard.jsx
+
+layouts/
+├── AdminLayout.jsx
+├── CounsellorLayout.jsx
+└── UserLayout.jsx
+
+// src/services/authService.js
+import BASE_URL from '../config/apiConfig';
+import axios from 'axios';
+
+export const login = async (credentials) => {
+  const response = await axios.post(`${BASE_URL}/auth/login`, credentials);
+  return response.data;
+};
+
+export const register = async (userData) => {
+  const response = await axios.post(`${BASE_URL}/auth/register`, userData);
+  return response.data;
+};

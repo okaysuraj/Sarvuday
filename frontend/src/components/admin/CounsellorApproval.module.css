@@ -1,0 +1,206 @@
+/* CounsellorApproval.module.css */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 1rem;
+}
+
+.heading {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1a237e;
+  margin: 0;
+}
+
+.counsellorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.counsellorCard {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.profileInitial {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #3949ab;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.profilePic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #3949ab;
+}
+
+.counsellorName {
+  font-size: 1.2rem;
+  margin: 0 0 4px 0;
+  color: #1a237e;
+  font-weight: 600;
+}
+
+.counsellorEmail {
+  font-size: 0.9rem;
+  margin: 0;
+  color: #666;
+}
+
+.counsellorDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.detailLabel {
+  color: #666;
+  font-weight: 500;
+}
+
+.detailValue {
+  color: #333;
+  font-weight: 600;
+  text-align: right;
+  max-width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.allowBtn, .denyBtn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.allowBtn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.allowBtn:hover:not(:disabled) {
+  background-color: #388e3c;
+}
+
+.denyBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+.denyBtn:hover:not(:disabled) {
+  background-color: #d32f2f;
+}
+
+.allowBtn:disabled, .denyBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #777;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.loading::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #3949ab;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #f44336;
+  padding: 2rem;
+}
+
+.noData {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+  padding: 4rem 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
