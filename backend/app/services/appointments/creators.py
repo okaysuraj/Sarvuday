@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
-from app.models import Appointment, CounsellingSession, CounsellorAvailability
+from app.models import Appointment, CounsellorAvailability
 from app.utils.constants import AppointmentStatusEnum, CounsellorAvailabilityStatusEnum
-from app.utils.unique_id_generation import generate_appointment_id, generate_counselling_session_id
+from app.utils.unique_id_generation import generate_appointment_id
 from app.schemas import (
     CreateAppointmentRequest,
     AppointmentBase,

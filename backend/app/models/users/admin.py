@@ -1,6 +1,6 @@
 # app/models/users/admin.py
 
-from sqlalchemy import Column, String, Boolean, Enum as SqlEnum, Text, DateTime, TIMESTAMP, Index
+from sqlalchemy import Column, String, Boolean, Enum as SqlEnum, DateTime, TIMESTAMP, Index
 from sqlalchemy.orm import relationship
 from app.database.postgres import Base
 from app.models.base import BaseMixin

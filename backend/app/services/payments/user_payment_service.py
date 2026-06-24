@@ -3,7 +3,6 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from datetime import datetime
 from decimal import Decimal
 from app.models import NormalUser, UserPayment
 from app.schemas import (
@@ -12,8 +11,6 @@ from app.schemas import (
     UserPaymentInitiate,
     UserPaymentInitiateResponse,
 )
-from app.utils.unique_id_generation import generate_user_payment_id
-from app.utils.constants import PaymentStatusEnum
 
 
 class UserPaymentService:

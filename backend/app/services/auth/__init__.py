@@ -6,6 +6,7 @@ from .password_reset_service import PasswordResetService
 from .password_update_service import PasswordUpdateService
 from .google_auth_service import GoogleAuthService
 from .phone_verification import PhoneVerificationService
+from .firebase_auth_service import FirebaseAuthService
 
 
 __all__ = [
@@ -16,6 +17,7 @@ __all__ = [
     "PasswordUpdateService",
     "GoogleAuthService",
     "PhoneVerificationService",
+    "FirebaseAuthService",
 
     
 ]

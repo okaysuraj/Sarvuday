@@ -3,12 +3,9 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from datetime import datetime, timedelta
 from decimal import Decimal
-from app.models import Counsellor, CounsellorPayment
+from app.models import CounsellorPayment
 from app.schemas import CounsellorPaymentListResponse, CounsellorPaymentBase
-from app.utils.unique_id_generation import generate_counsellor_payment_id
-from app.utils.constants import PaymentStatusEnum
 
 class CounsellorPaymentService:
     def __init__(self, db: AsyncSession):

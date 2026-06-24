@@ -1,6 +1,6 @@
 // src/components/GoogleAuth.jsx
 import { useNavigate } from "react-router-dom";
-import { signInWithGoogle } from "../../utils/firebase.js";
+import { signInWithGoogle } from "../../config/firebase.js";
 import BASE_URL from "../../config/apiConfig.js";
 import axios from "axios";
 

@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+from sqlalchemy import select
 from sqlalchemy.sql import func
 
 from app.models import (
@@ -21,7 +21,7 @@ from app.schemas import (
     CounsellorAppointmentView,
     SessionAppointmentView
 )
-from app.utils.constants import UserTypeEnum, AppointmentStatusEnum, COUNSELLOR_AVAILABILITY_DAYS
+from app.utils.constants import UserTypeEnum, COUNSELLOR_AVAILABILITY_DAYS
 from fastapi import HTTPException
 
 
@@ -96,7 +96,7 @@ async def fetch_appointment_list(
     limit: int = 10,
     offset: int = 0
 ) -> AppointmentListResponse:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
 
     base_stmt = (
         select(Appointment, CounsellingSession, NormalUser, Counsellor)
@@ -159,7 +159,7 @@ async def fetch_available_slots(
 
     query = select(CounsellorAvailability).where(
         CounsellorAvailability.status == "available",
-        CounsellorAvailability.start_time >= datetime.now(timezone.utc)
+        CounsellorAvailability.start_time >= datetime.now(timezone.utc).replace(tzinfo=None)
     )
 
     if counsellor_id:

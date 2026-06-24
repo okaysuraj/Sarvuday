@@ -8,29 +8,36 @@ const Home = () => {
       
       {/* Hero Section */}
       <section className={`container ${styles.heroSection}`}>
-        <h2 className={styles.heroPreTitle}>Inner Peace</h2>
+        <h2 className={styles.heroPreTitle}>Peace comes Home</h2>
         <div className={styles.heroTitleContainer}>
           <div className={`${styles.decorationCircle} ${styles.circleYellow}`}></div>
           <h1 className={styles.heroTitle}>SARVUDAY</h1>
           <div className={`${styles.decorationPill} ${styles.pillPink}`}></div>
         </div>
         <p className={styles.heroSubtitle}>
-          Experience the sophisticated evolution of mental clarity. Our playful, sticker-like interface 
-          reduces clinical friction, making professional mental health support approachable and vibrant.
+          Experience the sophisticated evolution of mental clarity. Our 24/7 AI-driven platform makes professional mental health support approachable and affordable.
         </p>
         <div className={styles.heroButtons}>
-          <Link to="/chat">
-            <button className="btn-primary">Start Journey</button>
-          </Link>
+          
           <Link to="/assessments">
-            <button className="btn-secondary">View Programs</button>
+            <button className="btn-secondary">Assess your mental health in few clicks</button>
           </Link>
         </div>
       </section>
 
+      {/* Split Image Section */}
+      <section className={`container ${styles.splitImageSection}`}>
+        <img src="/images/hero.png" alt="Sarvuday Hero" className={styles.splitImage} />
+        <div className={`sticker-container ${styles.splitText}`}>
+          <h3>Mental Peace</h3>
+          <p>Find your inner calm and cultivate mental peace through daily practice and mindfulness.</p>
+        </div>
+        <img src="/images/home.png" alt="Sarvuday App Interface" className={styles.splitImage} />
+      </section>
+
       {/* Features Section */}
       <section className={`container ${styles.featuresSection}`}>
-        <h3 className={styles.sectionHeading}>Meditations for any mind, any mood, any goal.</h3>
+        <h3 className={styles.sectionHeading}>AI-Powered Meditations to rejuvenate your mind, body, and soul.</h3>
         <div className={styles.featureGrid}>
           <div className={`sticker-container ${styles.featureCard}`}>
             <div className={styles.iconWrapperPrimary}>

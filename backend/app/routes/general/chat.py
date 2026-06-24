@@ -1,9 +1,9 @@
 import json
 from uuid import uuid4
-from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, HTTPException, status, Query
+from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, or_, update
-from typing import Dict, List
+from typing import Dict
 from datetime import datetime, timezone
 
 from app.database import get_db
@@ -42,14 +42,20 @@ class ConnectionManager:
 
     async def broadcast(self, room_id: str, message: dict):
         if room_id in self.active_connections:
-            for connection in self.active_connections[room_id].values():
-                await connection.send_json(message)
+            for uid, connection in list(self.active_connections[room_id].items()):
+                try:
+                    await connection.send_json(message)
+                except Exception:
+                    self.disconnect(room_id, uid)
                 
     async def broadcast_except(self, room_id: str, message: dict, exclude_user_id: str):
         if room_id in self.active_connections:
-            for uid, connection in self.active_connections[room_id].items():
+            for uid, connection in list(self.active_connections[room_id].items()):
                 if uid != exclude_user_id:
-                    await connection.send_json(message)
+                    try:
+                        await connection.send_json(message)
+                    except Exception:
+                        self.disconnect(room_id, uid)
 
 manager = ConnectionManager()
 
@@ -67,7 +73,7 @@ async def get_chat_rooms(
     # The user could be either a NormalUser or a Counsellor
     sessions_query = select(CounsellingSession).where(
         or_(
-            CounsellingSession.normal_user_id == user_id,
+            CounsellingSession.user_id == user_id,
             CounsellingSession.counsellor_id == user_id
         )
     )
@@ -77,8 +83,8 @@ async def get_chat_rooms(
     rooms = {}
     
     for session in sessions:
-        other_user_id = session.counsellor_id if session.normal_user_id == user_id else session.normal_user_id
-        other_user_type = UserTypeEnum.counsellor if session.normal_user_id == user_id else UserTypeEnum.normal_user
+        other_user_id = session.counsellor_id if session.user_id == user_id else session.user_id
+        other_user_type = UserTypeEnum.counsellor if session.user_id == user_id else UserTypeEnum.normal_user
         
         room_id = generate_room_id(user_id, other_user_id)
         
@@ -121,27 +127,29 @@ async def get_chat_rooms(
             
     return {"rooms": list(rooms.values())}
 
-@router.get("/history/{room_id}", status_code=status.HTTP_200_OK, summary="Get chat history")
+@router.get("/rooms/{room_id}/messages", status_code=status.HTTP_200_OK, summary="Get chat history")
 async def get_chat_history(
     room_id: str,
-    user_id: str = Query(...),
+    limit: int = Query(100),
     db: AsyncSession = Depends(get_db)
 ):
-    query = select(DirectMessage).where(DirectMessage.room_id == room_id).order_by(DirectMessage.created_at.asc())
+    query = select(DirectMessage).where(DirectMessage.room_id == room_id).order_by(DirectMessage.created_at.asc()).limit(limit)
     result = await db.execute(query)
     messages = result.scalars().all()
     
-    return [
-        {
-            "message_id": m.message_id,
-            "room_id": m.room_id,
-            "sender_id": m.sender_id,
-            "content": m.content,
-            "is_read": m.is_read,
-            "created_at": m.created_at.isoformat()
-        }
-        for m in messages
-    ]
+    return {
+        "messages": [
+            {
+                "message_id": m.message_id,
+                "room_id": m.room_id,
+                "sender_id": m.sender_id,
+                "content": m.content,
+                "is_read": m.is_read,
+                "created_at": m.created_at.isoformat()
+            }
+            for m in messages
+        ]
+    }
 
 from pydantic import BaseModel
 from typing import Optional
@@ -167,7 +175,9 @@ async def create_message(
         sender_type=message.sender_type,
         content=message.content,
         message_type=MessageType.text,
-        is_read=False
+        is_read=False,
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc)
     )
     db.add(new_msg)
     await db.commit()
@@ -224,7 +234,9 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, token: str = Qu
                     sender_type=user.user_type.value,
                     content=data.get("content"),
                     message_type=MessageType.text,
-                    is_read=False
+                    is_read=False,
+                    created_at=datetime.now(timezone.utc),
+                    updated_at=datetime.now(timezone.utc)
                 )
                 db.add(new_msg)
                 await db.commit()

@@ -2,7 +2,7 @@
 
 from fastapi import HTTPException
 import httpx
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from app.config import settings
 
 DAILY_BASE_URL = settings.daily_base_url

@@ -1,12 +1,46 @@
-# React + Vite
+# Sarvuday Frontend - User Interface
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend application for the Sarvuday mental health and counselling platform. It provides tailored dashboards for normal users, professional counsellors, and administrators.
 
-Currently, two official plugins are available:
+## 🚀 Features & Capabilities
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Role-Based Routing**: Secure, isolated navigation experiences depending on the authenticated user's role (Admin, Counsellor, User).
+- **Real-Time Communication**: Integrated WebSocket-based chat system (`Chat.jsx`) embedded directly into dashboards for uninterrupted care.
+- **WebRTC Integration**: Built-in support for Peer-to-Peer data channels and signaling (`sdp_offer`, `ice_candidate`) for potential audio/video telehealth sessions.
+- **Appointment Management**: Interactive UI components for browsing counsellor availability and booking sessions.
+- **Responsive Design**: Custom CSS modules engineered for fluid layouts across desktop and mobile browsers.
 
-## Expanding the ESLint configuration
+## 🛠️ Technology Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Framework**: React 18+
+- **Build Tool**: Vite (for rapid HMR and optimized production bundles)
+- **Routing**: React Router DOM (v6)
+- **HTTP Client**: Axios (configured with interceptors for JWT token injection)
+- **State Management**: React Hooks (useState, useEffect, useContext)
+- **Styling**: Vanilla CSS Modules (avoiding heavy UI frameworks to maintain fine-grained control and performance)
+
+## 🏃‍♂️ Running Locally
+
+1. Ensure you have Node.js installed.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file or configure your `src/config/apiConfig.js` to point to the local backend (usually `http://localhost:8000`).
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## 🏗️ Project Structure
+
+- `/src/assets` - Static media, SVGs, and images.
+- `/src/components` - Reusable UI building blocks (Auth, Chat, Dashboards, Layouts).
+- `/src/pages` - Top-level route components (Dashboards, Login, Registration).
+- `/src/config` - Global configuration and API URL definitions.
+
+## 🔮 Future Enhancements
+
+- **Push Notifications**: Integration with Service Workers for browser-based push notifications when new messages or appointments arrive.
+- **PWA Support**: Upgrading the React app to a Progressive Web App for offline capabilities and app-like mobile experience.
+- **Enhanced Telehealth UI**: Dedicated screen layouts for active video calls with screen-sharing and whiteboard features.

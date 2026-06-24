@@ -1,8 +1,8 @@
 # app/services/appointments/appointment_service.py
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from datetime import datetime, timezone
+from datetime import datetime
 from app.utils.constants import UserTypeEnum
 from app.schemas import (
     AppointmentBase,

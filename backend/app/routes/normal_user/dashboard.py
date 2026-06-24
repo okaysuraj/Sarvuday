@@ -11,8 +11,7 @@ from app.schemas import (
     NormalUserBase, 
     UserUpdateRequest,
     UserUpdateResponse,
-    DashboardOverviewResponse,
-    SentimentTrendsResponse
+    DashboardOverviewResponse
 )
 from app.services.normal_user.user_management_service import UserManagementService
 
@@ -25,13 +24,6 @@ async def get_dashboard(
 ):
     return await UserManagementService(db).get_dashboard_overview(current_user.user_id)
 
-
-@router.get("/trends", response_model=SentimentTrendsResponse, status_code=status.HTTP_200_OK, summary="Get user sentiment trends. Normal User Authentication required")
-async def get_sentiment_trends(
-    current_user: NormalUser = Depends(ensure_normal_user),
-    db: AsyncSession = Depends(get_db)
-):
-    return await UserManagementService(db).get_sentiment_trends(current_user.user_id)
 
 @router.get("/profile", response_model=NormalUserBase, status_code=status.HTTP_200_OK, summary="Get user profile. Normal User Authentication required")
 async def get_profile(
@@ -74,6 +66,6 @@ async def update_profile(
     )
     return await UserManagementService(db).update_user_profile(current_user.user_id, update_data, profile_pic)
 
-@router.delete("/delete", status_code=status.HTTP_204_NO_CONTENT, summary="Delete Users Account. Normal User Authentication required")
+@router.delete("/profile", status_code=status.HTTP_204_NO_CONTENT, summary="Delete Users Account. Normal User Authentication required")
 async def delete_account(current_user: NormalUser = Depends(ensure_normal_user), db: AsyncSession = Depends(get_db)):
     return await UserManagementService(db).delete_account(current_user.user_id)

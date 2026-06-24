@@ -4,11 +4,10 @@ from fastapi import HTTPException, UploadFile
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from app.models import (
     NormalUser,
     ChatSession,
-    UserSentiment,
     CounsellingSession
 )
 from app.schemas import (
@@ -16,8 +15,7 @@ from app.schemas import (
     UserUpdateRequest,
     UserUpdateResponse,
     DashboardOverviewResponse,
-    CounsellingSessionResponse,
-    SentimentTrendsResponse,
+    CounsellingSessionResponse
 )
 from app.utils.file_utils import replace_uploaded_file, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE_BYTES
 
@@ -67,22 +65,6 @@ class UserManagementService:
             upcoming_sessions=[CounsellingSessionResponse.model_validate(session) for session in upcoming_appointments.scalars()],
         )
 
-
-    async def get_sentiment_trends(self, user_id: str) -> SentimentTrendsResponse:
-        """Get sentiment analysis trends"""
-        # Get last 30 days of sentiment data
-        days_ago = datetime.now() - timedelta(days=30)
-        
-        sentiments = await self.db.execute(
-            select(UserSentiment).where(
-                UserSentiment.user_id == user_id,
-                UserSentiment.date >= days_ago
-            ).order_by(UserSentiment.date)
-        )
-        
-        return SentimentTrendsResponse(
-            trends=[sentiment for sentiment in sentiments.scalars()]
-        )
 
     async def get_user_profile(self, user_id: str) -> NormalUserBase:
         """Get user profile data"""

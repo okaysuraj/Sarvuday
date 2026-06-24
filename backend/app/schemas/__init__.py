@@ -2,7 +2,7 @@
 
 from .common_schemas import StatusResponse
 
-from .auth_schemas import UserBase, UserRegister, UserRegisterResponse, UserLogin, UserLoginResponse, PasswordResetRequest, PasswordResetConfirm, PasswordUpdateRequest, PhoneVerificationRequest, PhoneVerificationConfirm, TokenValidationResponse, GoogleLoginRequest
+from .auth_schemas import UserBase, UserRegister, UserRegisterResponse, UserLogin, UserLoginResponse, PasswordResetRequest, PasswordResetConfirm, PasswordUpdateRequest, PhoneVerificationRequest, PhoneVerificationConfirm, TokenValidationResponse, GoogleLoginRequest, FirebaseRegisterRequest, FirebaseLoginRequest
 
 from .admins_schemas import AdminBase, AdminCreate, AdminCreateResponse, AdminUpdateRequest, AdminUpdateResponse, AdminFilterQuery, AdminListResponse, ApproveCounsellorResponse, DisapprovalCounsellorResponse, PlatformAnalytics, UserAnalytics, CounsellorAnalytics
 
@@ -20,13 +20,14 @@ from .chatbot_schemas import ChatSessionCreateRequest, ChatSessionResponse, Chat
 
 from .disorders_schemas import DisorderCreate, DisorderCreateResponse, DisordersListResponse, DisorderUpdate, DisorderUpdateResponse, DisorderBase, DisorderBulkCreateResponse
 
-from .sentiments_schemas import SentimentInput, SentimentPrediction, UserMessage, UserSentiment, EmotionStreakResponse, SentimentAnalysisSummary, SentimentAnalysisSummaryResponse
 
 from .payment_schemas import CounsellorPaymentBase, CounsellorPaymentCreate, CounsellorPaymentResponse, CounsellorPaymentUpdate, CounsellorPaymentListResponse, UserPaymentBase, UserPaymentInitiate, UserPaymentInitiateResponse, PaymentRefundRequest, PaymentRefundResponse, UserPaymentListResponse
 
 from .counselling_session_schemas import CounsellingSessionJoinResponse
 
 from .prescription_schemas import PrescriptionBase, PrescriptionListResponse, PrescriptionCreate
+
+from .notification_schemas import NotificationBase, NotificationListResponse
 
 __all__ = [
     # Common Schemas
@@ -45,6 +46,8 @@ __all__ = [
     "PhoneVerificationConfirm",
     "TokenValidationResponse",
     "GoogleLoginRequest",
+    "FirebaseRegisterRequest",
+    "FirebaseLoginRequest",
     
     # Admin
     "AdminBase",
@@ -80,6 +83,7 @@ __all__ = [
     "UserListResponse",
     "DashboardOverviewResponse",
     "SentimentTrendsResponse",
+    "CounsellingSessionResponse",
     
     # Availability
     "AddAvailabilitySlot",
@@ -124,15 +128,6 @@ __all__ = [
     "DisorderBase",
     "DisorderBulkCreateResponse",
     
-    # Sentiments
-    "SentimentInput",
-    "SentimentPrediction",
-    "UserMessage",
-    "UserSentiment",
-    "EmotionStreakResponse",
-    "SentimentAnalysisSummary",
-    "SentimentAnalysisSummaryResponse",
-    
     # Payments
     'CounsellorPaymentBase',
     "CounsellorPaymentCreate",
@@ -153,5 +148,9 @@ __all__ = [
     "PrescriptionBase",
     "PrescriptionListResponse",
     "PrescriptionCreate",
+    
+    # Notifications
+    "NotificationBase",
+    "NotificationListResponse",
     
 ]

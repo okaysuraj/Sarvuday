@@ -13,7 +13,6 @@ const Login = () => {
 
   const [loginMethod, setLoginMethod] = useState('email'); // 'email' or 'phone'
   const [formData, setFormData] = useState({
-    user_type: 'normal_user',
     email: '',
     phone_number: '',
     password: '',
@@ -101,7 +100,6 @@ const Login = () => {
   const handleBackendLogin = async (idToken) => {
     try {
       const response = await axios.post(`${BASE_URL}/auth/firebase-login`, {
-        user_type: formData.user_type,
         id_token: idToken
       });
       if (response.status === 200) {
@@ -159,7 +157,7 @@ const Login = () => {
   };
   
   return (
-    <div className={styles.authPageContainer}>
+    <div className={`${styles.authPageContainer} ${styles.loginBackground}`}>
       <div className={`sticker-container ${styles.formCard}`}>
         <div className={styles.formHeader} style={{ textAlign: 'left' }}>
           <h2 className={styles.formTitle}>Welcome Back</h2>

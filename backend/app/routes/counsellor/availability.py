@@ -1,6 +1,6 @@
 # app/routes/counsellor/availability.py
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.utils.oauth import ensure_counsellor_user

@@ -1,6 +1,6 @@
 # app/models/payments/counsellor_payment.py
 
-from sqlalchemy import Column, String, ForeignKey, Enum as SqlEnum, TIMESTAMP, Index, DECIMAL, Float
+from sqlalchemy import Column, String, ForeignKey, Enum as SqlEnum, TIMESTAMP, Index, DECIMAL
 from sqlalchemy.orm import relationship
 from app.database.postgres import Base
 from app.models.base import BaseMixin

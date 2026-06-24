@@ -1,7 +1,7 @@
 # app/schemas/assessments_schemas.py
 
 from pydantic import BaseModel, Field, field_validator
-from typing import List, Dict, Optional
+from typing import List, Optional
 
 
 class OptionSchema(BaseModel):

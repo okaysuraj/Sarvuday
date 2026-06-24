@@ -1,6 +1,6 @@
 # app/routes/normal_user/chatbot_sessions.py
 
-from fastapi import APIRouter, Depends, Query, HTTPException, status
+from fastapi import APIRouter, Depends, Query, status
 from typing import Optional
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession

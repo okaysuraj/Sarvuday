@@ -46,7 +46,6 @@ class NormalUser(Base, BaseMixin):
     # Relationships
     chat_sessions = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
     appointments = relationship("Appointment", back_populates="user")
-    user_sentiments = relationship("UserSentiment", back_populates="sentiment_user", cascade="all, delete-orphan")
     counselling_sessions = relationship("CounsellingSession", back_populates="user")
     prescription = relationship("Prescription", back_populates="user")
     

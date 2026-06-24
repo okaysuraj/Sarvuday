@@ -1,7 +1,7 @@
 import random
 from sqlalchemy.ext.asyncio import AsyncSession
 # from app.database.redis_db import redis_client
-from app.schemas import PhoneVerificationRequest, PhoneVerificationConfirm, StatusResponse
+from app.schemas import StatusResponse
 from app.config import settings
 
 REDIS_OTP_EXPIRY_SECONDS = settings.redis_otp_expiry_seconds

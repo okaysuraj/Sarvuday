@@ -6,12 +6,11 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.firebase_config import *
 
-from app.database import engine, Base, connect_to_mongo, close_mongo_connection
-
-
-from app.core.scheduler import sentiment_scheduler  # import your scheduler instance
+from app.database import engine, Base, connect_to_mongo, close_mongo_connection, connect_to_redis, close_redis_connection
+import firebase_admin
+from firebase_admin import credentials
+from app.config import settings
 
 
 
@@ -25,7 +24,30 @@ async def lifespan(app: FastAPI):
 
     # MongoDB and Redis
 
+    # MongoDB and Redis
     connect_to_mongo()
+    connect_to_redis()
+
+    # Firebase Admin SDK Initialization
+    if not firebase_admin._apps:
+        try:
+            # Replace escaped newlines in the private key if any exist
+            private_key = settings.firebase_private_key.replace('\\n', '\n')
+            
+            cred = credentials.Certificate({
+                "type": "service_account",
+                "project_id": settings.firebase_project_id,
+                "private_key_id": settings.private_key_id,
+                "private_key": private_key,
+                "client_email": settings.firebase_client_email,
+                "client_id": settings.client_id,
+                "auth_uri": settings.auth_uri,
+                "token_uri": settings.token_uri,
+            })
+            firebase_admin.initialize_app(cred)
+            print("[SUCCESS] Firebase Admin SDK initialized.")
+        except Exception as e:
+            print(f"[ERROR] Failed to initialize Firebase Admin SDK: {e}")
 
     
 
@@ -39,13 +61,6 @@ async def lifespan(app: FastAPI):
     print("[SUCCESS] PostgreSQL tables created.")
 
 
-
-    # Start the APScheduler
-
-    await sentiment_scheduler.start(app)
-
-
-
     yield  # <-- app runs here
 
 
@@ -54,13 +69,10 @@ async def lifespan(app: FastAPI):
 
 
 
-    # Shutdown the scheduler gracefully
-
-    await sentiment_scheduler.shutdown()
-
 
 
     close_mongo_connection()
+    close_redis_connection()
 
     
 

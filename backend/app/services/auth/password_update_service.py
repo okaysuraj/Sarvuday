@@ -2,7 +2,6 @@
 
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import IntegrityError
 from app.models import NormalUser, Counsellor, Admin
 from app.utils.helper import hash_password, verify_password
 from app.schemas import PasswordUpdateRequest, StatusResponse

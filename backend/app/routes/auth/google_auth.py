@@ -1,6 +1,6 @@
 # app/routes/auth/google_auth.py
 
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.schemas import GoogleLoginRequest, UserLoginResponse

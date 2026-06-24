@@ -12,7 +12,6 @@ from app.schemas import (
     DisapprovalCounsellorResponse
 )
 from sqlalchemy.sql import func
-from app.utils.unique_id_generation import generate_counsellor_payment_id
 
 class CounsellorManagementService:
     def __init__(self, db: AsyncSession):

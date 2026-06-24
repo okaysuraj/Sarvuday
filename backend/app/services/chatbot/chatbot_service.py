@@ -44,7 +44,9 @@ class ChatBotService:
         chat_session = ChatSession(
             session_id=session_id,
             user_id=user_id,
-            title=title or session_id
+            title=title or session_id,
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc)
         )
         
         self.db.add(chat_session)

@@ -1,7 +1,7 @@
 # app/routes/auth/__init__.py
 
 from fastapi import APIRouter
-from . import register, verification, login, password_reset, password_update, phone_verification, google_auth
+from . import register, verification, login, password_reset, password_update, phone_verification, google_auth, firebase_auth
 
 
 auth_router = APIRouter()
@@ -14,4 +14,5 @@ auth_router.include_router(password_reset.router)
 auth_router.include_router(password_update.router)
 auth_router.include_router(phone_verification.router)
 auth_router.include_router(google_auth.router)
+auth_router.include_router(firebase_auth.router)
 

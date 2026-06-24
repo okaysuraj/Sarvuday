@@ -74,19 +74,11 @@ class Settings(BaseSettings):
 
     chatbot_temperature: float
 
-    tokenizer_model: str
-
-    bert_tokenizer_path: str
-
     max_total_tokens: int
 
     chatbot_system_prompt: str
 
     
-
-    # Sentiment Model
-
-    sentiment_model_base_url: str = ''
 
 
 
@@ -104,13 +96,13 @@ class Settings(BaseSettings):
 
 
 
-    
-
-    # Job scheduling time
-
-    sentiment_job_hour: int = 0
-
-    sentiment_job_minute: int = 0
+    # Email SMTP Settings
+    smtp_server: str = "smtp.gmail.com"
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    use_tls: bool = False
+    start_tls: bool = True
 
     
 
@@ -175,13 +167,10 @@ class Settings(BaseSettings):
             "client_id",
 
             "token_uri",
-
             "auth_uri",
-
             "secret_key",
-
-            "daily_api_key"
-
+            "daily_api_key",
+            "smtp_password"
         }
 
 

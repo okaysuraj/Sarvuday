@@ -10,7 +10,6 @@ import NeoDashboardLayout from '../components/dashboard/NeoDashboardLayout';
 
 import Home from '../components/normal_users/Home';
 import Profile from '../components/normal_users/Profile';
-import Trends from '../components/normal_users/Trends';
 import AIChat from '../components/normal_users/AIChat';
 import Chat from './chat/Chat';
 import Appointments from '../components/normal_users/Appointments';
@@ -52,7 +51,6 @@ const NormalUserDashboard = () => {
         <Route index element={<Navigate to="home" replace />} />
         <Route path="home" element={<Home />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="trends" element={<Trends />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="prescriptions" element={<Prescriptions />} />
         <Route path="notifications" element={<Notifications />} />

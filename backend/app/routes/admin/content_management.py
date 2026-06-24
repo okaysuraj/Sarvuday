@@ -1,6 +1,6 @@
 # app/routes/admin/content_management.py
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models import Admin
@@ -11,7 +11,6 @@ from app.schemas import (
     DisordersListResponse, 
     DisorderUpdate, 
     DisorderUpdateResponse, 
-    DisorderBase, 
     DisorderBulkCreateResponse
 )
 from app.services.admin import ContentManagementService

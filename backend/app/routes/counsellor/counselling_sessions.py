@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.models import Counsellor, Admin
+from app.models import Counsellor
 from app.utils.oauth import ensure_counsellor_user
 from app.services.counselling_services.counselling_service import CounsellingSessionService
 from app.schemas import CounsellingSessionJoinResponse

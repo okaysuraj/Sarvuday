@@ -11,7 +11,7 @@ import Home from '../components/counsellors/Home';
 import Profile from '../components/counsellors/Profile';
 import Availability from '../components/counsellors/Availability';
 import Appointments from '../components/counsellors/Appointments';
-import Chat from './chat/Chat';
+
 
 const CounsellorDashboard = () => {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const CounsellorDashboard = () => {
     { to: "/counsellor-dashboard/profile", icon: <FaUserFriends />, label: "Profile" },
     { to: "/counsellor-dashboard/availability", icon: <FaCalendarPlus />, label: "Add Availability" },
     { to: "/counsellor-dashboard/appointments", icon: <FaCalendarCheck />, label: "Appointments" },
-    { to: "/counsellor-dashboard/messages", icon: <FaUserFriends />, label: "Messages" }
+    { to: "/chat", icon: <FaUserFriends />, label: "Messages" }
   ];
 
   return (
@@ -52,7 +52,7 @@ const CounsellorDashboard = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="availability" element={<Availability />} />
           <Route path="appointments" element={<Appointments />} />
-          <Route path="messages" element={<Chat />} />
+
       </Routes>
     </NeoDashboardLayout>
   );

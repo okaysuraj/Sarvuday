@@ -1,27 +1,21 @@
 # app/services/chatbot/chatbot_context.py
 
 from typing import List, Dict
-from transformers import AutoTokenizer
 from app.config import settings
 
-chatbot_tokenizer = settings.bert_tokenizer_path
 max_total_tokens = settings.max_total_tokens
 chatbot_system_prompt = settings.chatbot_system_prompt
-
-# Initialize tokenizer once at module level
-tokenizer = AutoTokenizer.from_pretrained(chatbot_tokenizer, use_fast=True)
-
-
 def count_tokens(text: str) -> int:
     """
-    Counts the number of tokens in a given string using the tokenizer.
+    Counts the number of tokens in a given string using a lightweight character-based approximation.
+    (Approx 4 characters per token). This removes the heavy transformers dependency.
     """
     try:
         if not isinstance(text, str):
             print(f"Warning: Non-string input received. Converting to string: {text} ({type(text)})")
             text = str(text)
 
-        return len(tokenizer.encode(text, add_special_tokens=False))
+        return len(text) // 4
 
     except Exception as e:
         print(f"Tokenizer error. Input: {text}\nException: {e}")

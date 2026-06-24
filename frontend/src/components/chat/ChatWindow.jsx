@@ -116,7 +116,7 @@ const ChatWindow = ({ room, currentUserId }) => {
       .catch(console.error);
 
     // Open WebSocket for signaling
-    const ws = new WebSocket(`${WS_BASE}/ws/chat/${room.room_id}?token=${token}`);
+    const ws = new WebSocket(`${WS_BASE}/chat/${room.room_id}?token=${token}`);
     wsRef.current = ws;
 
     ws.onopen = () => {

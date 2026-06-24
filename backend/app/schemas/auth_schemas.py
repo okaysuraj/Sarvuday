@@ -96,6 +96,20 @@ class GoogleLoginRequest(BaseModel):
     user_type: UserTypeEnum
     id_token: str
 
+# Firebase Register Request (used by frontend for email/phone sign-up)
+class FirebaseRegisterRequest(BaseModel):
+    user_type: UserTypeEnum
+    id_token: str
+    name: str
+    gender: Optional[GenderEnum] = GenderEnum.other
+    terms_accepted: bool = False
+    privacy_policy_accepted: bool = False
+
+# Firebase Login Request (used by frontend for email/phone sign-in)
+class FirebaseLoginRequest(BaseModel):
+    user_type: Optional[UserTypeEnum] = None
+    id_token: str
+
 # Phone Verification
 class PhoneVerificationRequest(BaseModel):
     phone_number: str = Field(min_length=10, max_length=15)

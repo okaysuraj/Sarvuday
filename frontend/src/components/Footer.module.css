@@ -1,83 +1,42 @@
 .footerContainer {
-    background-color: var(--color-surface-container-low);
-    border-top: var(--border-width) solid var(--border-color);
-    padding: 60px 0 20px 0;
+    background-color: var(--color-inverse-surface);
+    padding: 30px 0;
     margin-top: 80px;
 }
 
-.footer {
+.horizontalLinks {
     display: flex;
-    flex-direction: column;
-    gap: 40px;
-}
-
-.footerTop {
-    display: flex;
-    justify-content: space-between;
+    gap: 24px;
     flex-wrap: wrap;
-    gap: 40px;
+    align-items: center;
 }
 
-.brandSection {
-    max-width: 300px;
-}
-
-.brandName {
-    font-family: var(--font-heading);
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--color-primary);
+.horizontalLinks a {
+    color: var(--color-inverse-on-surface);
     text-decoration: none;
+    transition: opacity 0.2s ease;
+    font-weight: 500;
+    opacity: 0.8;
 }
 
-.brandDescription {
-    margin-top: 16px;
-    color: var(--color-on-surface-variant);
-    line-height: 1.6;
-}
-
-.linksSection {
-    display: flex;
-    gap: 80px;
-    flex-wrap: wrap;
-}
-
-.linkGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.linkGroup h4 {
-    font-family: var(--font-heading);
-    font-size: 18px;
-    color: var(--color-on-surface);
-    margin: 0;
-}
-
-.linkGroup a {
-    color: var(--color-on-surface-variant);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.linkGroup a:hover {
-    color: var(--color-primary);
+.horizontalLinks a:hover {
+    opacity: 1;
+    color: var(--color-inverse-on-surface);
 }
 
 .footerBottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 24px;
-    border-top: 1.5px solid var(--border-color);
     flex-wrap: wrap;
     gap: 20px;
+    width: 100%;
 }
 
 .footerBottom p {
-    color: var(--color-on-surface-variant);
+    color: var(--color-inverse-on-surface);
     margin: 0;
+    opacity: 0.8;
 }
 
 .social {
@@ -92,11 +51,12 @@
 }
 
 .social a {
-    color: var(--color-on-surface);
-    transition: color 0.2s ease;
+    color: var(--color-inverse-on-surface);
+    transition: opacity 0.2s ease;
     display: flex;
+    opacity: 0.8;
 }
 
 .social a:hover {
-    color: var(--color-primary);
+    opacity: 1;
 }

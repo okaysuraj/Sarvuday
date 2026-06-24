@@ -1,11 +1,12 @@
 # app/models/__init__.py
 from .base import BaseMixin
 from .users import NormalUser, Counsellor, Admin
-from .sessions import ChatSession, UserSentiment, CounsellingSession
+from .sessions import ChatSession, CounsellingSession
 from .scheduling import CounsellorAvailability, Appointment
 from .payments import UserPayment, CounsellorPayment, UserRefund
 from .medical import Prescription
 from .chat import DirectMessage
+from .notification import Notification
 
 __all__ = [
     'BaseMixin',
@@ -13,7 +14,6 @@ __all__ = [
     'Counsellor',
     'Admin',
     'ChatSession',
-    'UserSentiment',
     'CounsellingSession',
     'CounsellorAvailability',
     'Appointment',
@@ -21,5 +21,6 @@ __all__ = [
     "UserRefund",
     'CounsellorPayment',
     'Prescription',
-    'DirectMessage'
+    'DirectMessage',
+    'Notification'
 ]

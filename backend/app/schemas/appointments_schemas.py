@@ -1,6 +1,6 @@
 # app/schemas/appointment_schemas.py
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 from app.utils.constants import AppointmentStatusEnum, PaymentStatusEnum, GenderEnum

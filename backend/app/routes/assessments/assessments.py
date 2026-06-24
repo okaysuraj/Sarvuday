@@ -125,7 +125,7 @@ async def get_comprehensive_scores(
         return service.get_user_comprehensive_scores(user.user_id)
     except HTTPException:
         raise
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve comprehensive scores"

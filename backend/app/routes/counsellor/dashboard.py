@@ -96,10 +96,10 @@ async def update_profile(
     )
 
     service = CounsellorManagementService(db)
-    return await service.CounsellorManagementService(db)(current_user.user_id, update_data, profile_pic)
+    return await service.update_profile(current_user.user_id, update_data, profile_pic)
 
 
-@router.delete("/delete", status_code=status.HTTP_204_NO_CONTENT, summary="delete counsellor account. Counsellor Authentication required")
+@router.delete("/profile", status_code=status.HTTP_204_NO_CONTENT, summary="delete counsellor account. Counsellor Authentication required")
 async def delete_counsellor(
     current_user: Counsellor = Depends(ensure_counsellor_user),
     db: AsyncSession = Depends(get_db)

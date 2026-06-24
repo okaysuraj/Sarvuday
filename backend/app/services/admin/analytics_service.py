@@ -1,13 +1,12 @@
 # app/services/admin/analytics_service.py
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import func, extract, case, and_, text
+from sqlalchemy import func, text
 from datetime import datetime, timedelta, timezone
 from app.models import (
     NormalUser, 
     Counsellor,
     Admin,
-    ChatSession,
     CounsellingSession,
 )
 from app.schemas import (

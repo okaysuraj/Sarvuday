@@ -1,7 +1,7 @@
 # app/services/appointments/utils.py
 
 from datetime import datetime, timezone
-from fastapi import HTTPException, status
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas import CancelAppointmentResponse
 from app.models import Appointment, CounsellorAvailability

@@ -2,6 +2,9 @@
   background-color: var(--color-surface);
   border-bottom: var(--border-width) solid var(--border-color);
   width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .header {
@@ -21,12 +24,10 @@
   text-decoration: none;
 }
 
-.brandName {
-  font-family: var(--font-heading);
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: -0.02em;
+.brandLogo {
+  height: 120px;
+  width: auto;
+  object-fit: contain;
 }
 
 .navLinks {

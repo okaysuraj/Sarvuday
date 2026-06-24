@@ -1,7 +1,7 @@
 
 
-from pydantic import BaseModel, EmailStr, Field, Json
-from typing import Optional, List
+from pydantic import BaseModel, Field
+from typing import List
 from datetime import datetime
 
 

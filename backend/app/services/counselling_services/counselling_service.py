@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi import HTTPException, status
 from app.models import Counsellor, NormalUser, CounsellorAvailability, CounsellingSession
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from app.utils.unique_id_generation import generate_counselling_session_id
 from app.services.counselling_services.daily_service import DailyService
 from sqlalchemy.exc import IntegrityError

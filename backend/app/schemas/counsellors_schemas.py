@@ -2,10 +2,10 @@
 
 from pydantic import BaseModel, EmailStr, Field, Json
 from typing import Optional, List
-from datetime import datetime, date
+from datetime import datetime
 from decimal import Decimal
 from app.utils.constants import (
-    GenderEnum, UserTypeEnum
+    GenderEnum
 )
 from typing import Literal
 

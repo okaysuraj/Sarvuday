@@ -1,13 +1,13 @@
 # app/services/chatbot/chatbot_inference.py
 
 # chatbot_inference.py
-from openai import OpenAI
+from openai import AsyncOpenAI
 from typing import List, Dict
 from app.config import settings
 from typing import AsyncGenerator
 
 # Initialize the OpenAI-compatible client (LM Studio)
-client = OpenAI(
+client = AsyncOpenAI(
     base_url=settings.chatbot_base_url,
     api_key=settings.chatbot_api_key
 )
@@ -36,7 +36,7 @@ async def get_chatbot_response(
         messages.append({"role": "user", "content": user_input})
 
         # Call the OpenAI-compatible API
-        completion = client.chat.completions.create(
+        completion = await client.chat.completions.create(
             model=model_name,
             messages=messages,
             temperature=temperature,
@@ -68,7 +68,7 @@ async def stream_chatbot_response(
 
         messages.append({"role": "user", "content": user_input})
 
-        response = client.chat.completions.create(
+        response = await client.chat.completions.create(
             model=model_name,
             messages=messages,
             temperature=temperature,

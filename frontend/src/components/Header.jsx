@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import styles from "./Header.module.css";
+import sarvudayLogo from "../assets/sarvuday_logo.svg";
 import { useEffect, useState } from "react";
 
 const Header = () => {
@@ -51,7 +52,7 @@ const Header = () => {
             to="/"
             className={styles.brandLink}
           >
-            <span className={styles.brandName}>Sarvuday</span>
+            <img src={sarvudayLogo} alt="Sarvuday Logo" className={styles.brandLogo} />
           </NavLink>
         </div>
 
