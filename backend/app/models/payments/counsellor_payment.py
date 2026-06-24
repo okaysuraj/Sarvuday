@@ -9,8 +9,8 @@ from app.utils.constants import CommissionTypeEnum, CounsellorPayoutStatusEnum, 
 class CounsellorPayment(Base, BaseMixin):
     __tablename__ = "counsellor_payments"
     __table_args__ = (
-        Index('idx_payment_id', 'payment_id'),
-        Index('idx_status', 'status'),
+        Index('idx_counsellor_payment_id', 'payment_id'),
+        Index('idx_counsellor_payment_status', 'status'),
         Index('idx_payout_date', 'payout_date'),
         {}
     )
