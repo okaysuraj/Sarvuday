@@ -6,15 +6,7 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: POSTGRES_DB_HOSTNAME
-        sync: false
-      - key: POSTGRES_DB_PORT
-        value: '5432'
-      - key: POSTGRES_DB_NAME
-        sync: false
-      - key: POSTGRES_DB_USERNAME
-        sync: false
-      - key: POSTGRES_DB_PASSWORD
+      - key: DATABASE_URL
         sync: false
       - key: MONGO_URI
         sync: false

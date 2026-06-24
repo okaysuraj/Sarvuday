@@ -8,16 +8,12 @@ from app.config import settings
 
 
 # PostgreSQL connection string (async)
-POSTGRES_DATABASE_URL = (
-    f"postgresql+asyncpg://{settings.postgres_db_username}:{settings.postgres_db_password}"
-    f"@{settings.postgres_db_hostname}:{settings.postgres_db_port}/{settings.postgres_db_name}"
-)
+# Neon provides postgresql:// which we need to convert to asyncpg/psycopg2
+# if the user pastes the raw URL.
+POSTGRES_DATABASE_URL = settings.database_url.replace("postgres://", "postgresql+asyncpg://").replace("postgresql://", "postgresql+asyncpg://")
 
 # PostgreSQL connection string (sync - for WebSocket handlers)
-POSTGRES_SYNC_URL = (
-    f"postgresql+psycopg2://{settings.postgres_db_username}:{settings.postgres_db_password}"
-    f"@{settings.postgres_db_hostname}:{settings.postgres_db_port}/{settings.postgres_db_name}"
-)
+POSTGRES_SYNC_URL = settings.database_url.replace("postgres://", "postgresql+psycopg2://").replace("postgresql://", "postgresql+psycopg2://")
 
 # Async Engine (for REST API routes)
 engine = create_async_engine(

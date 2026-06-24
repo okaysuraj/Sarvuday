@@ -12,15 +12,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
 
-    postgres_db_hostname: str
-
-    postgres_db_port: int
-
-    postgres_db_name: str
-
-    postgres_db_username: str
-
-    postgres_db_password: str
+    database_url: str
 
 
 
@@ -141,7 +133,7 @@ class Settings(BaseSettings):
 
         sensitive_keys = {
 
-            "postgres_db_password",
+            "database_url",
 
             "mongo_db_password",
 
