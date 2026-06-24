@@ -71,7 +71,7 @@ class FirebaseAuthService:
                 )
 
         # Create user
-        user_id = await generate_user_id(payload.user_type.value, self.db)
+        user_id = generate_user_id(payload.user_type.value)
         user_class = self.MODEL_MAP[payload.user_type]
 
         user = user_class(
