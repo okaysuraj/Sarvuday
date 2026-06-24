@@ -10,7 +10,7 @@ class UserRefund(Base, BaseMixin):
     __tablename__ = "user_refunds"
     __table_args__ = (
         Index('idx_refund_id', 'refund_id'),
-        Index('idx_transaction_id', 'transaction_id'),
+        Index('idx_refund_transaction_id', 'transaction_id'),
         {}
     )
 

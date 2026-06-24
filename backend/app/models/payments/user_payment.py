@@ -11,7 +11,7 @@ class UserPayment(Base, BaseMixin):
     __table_args__ = (
         Index('idx_payment_id', 'payment_id'),
         Index('idx_status', 'status'),
-        Index('idx_transaction_id', 'transaction_id'),
+        Index('idx_payment_transaction_id', 'transaction_id'),
         {}
     )
 
