@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 
-from app.database import engine, Base, connect_to_mongo, close_mongo_connection, connect_to_redis, close_redis_connection
+from app.database import engine, Base, connect_to_mongo, close_mongo_connection
 import firebase_admin
 from firebase_admin import credentials
 from app.config import settings
@@ -22,11 +22,8 @@ async def lifespan(app: FastAPI):
 
     
 
-    # MongoDB and Redis
-
-    # MongoDB and Redis
+    # MongoDB
     connect_to_mongo()
-    connect_to_redis()
 
     # Firebase Admin SDK Initialization
     if not firebase_admin._apps:
@@ -72,7 +69,6 @@ async def lifespan(app: FastAPI):
 
 
     close_mongo_connection()
-    close_redis_connection()
 
     
 

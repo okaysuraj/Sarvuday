@@ -56,6 +56,6 @@ pytest -v
 ## 🔮 Future Enhancements
 
 - **GraphQL Integration**: Adding a GraphQL endpoint via Strawberry for more flexible frontend queries.
-- **Redis Pub/Sub**: Upgrading the WebSocket `ConnectionManager` to use Redis Pub/Sub, enabling multi-worker horizontal scaling.
+
 - **Advanced Payment Webhooks**: Real-time integration with payment gateways (Stripe/Razorpay) via robust webhook listeners.
 - **Data Analytics Pipeline**: Exporting sanitized assessment and interaction data to a data warehouse for advanced demographic and outcome research.

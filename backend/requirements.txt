@@ -13,7 +13,7 @@ python_jose==3.4.0
 SQLAlchemy==2.0.51
 asyncpg==0.31.0
 psycopg2-binary==2.9.12
-redis==8.0.0
+
 stripe==15.2.1
 twilio==9.10.9
 bcrypt==3.2.2

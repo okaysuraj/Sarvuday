@@ -6,13 +6,20 @@ import apiClient from '../../../api/client';
 import { useAuth } from '../../../context/AuthContext';
 import { Colors } from '../../../constants/theme';
 
+interface Message {
+  id: string;
+  text: string;
+  sender: 'user' | 'bot';
+  timestamp: string;
+}
+
 export default function ChatWindowScreen() {
   const { id } = useLocalSearchParams();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const flatListRef = useRef(null);
+  const flatListRef = useRef<FlatList<Message>>(null);
   const { userToken } = useAuth();
 
   useEffect(() => {
@@ -23,7 +30,7 @@ export default function ChatWindowScreen() {
         });
         
         const history = response.data.conversation_history || [];
-        const formatted = history.flatMap(entry => [
+        const formatted = history.flatMap((entry: any) => [
           { id: `${entry.timestamp}-user`, text: entry.user, sender: 'user', timestamp: entry.timestamp },
           { id: `${entry.timestamp}-bot`, text: entry.assistant, sender: 'bot', timestamp: entry.timestamp }
         ]);
@@ -73,7 +80,7 @@ export default function ChatWindowScreen() {
     }
   };
 
-  const renderMessage = ({ item }) => {
+  const renderMessage = ({ item }: { item: Message }) => {
     const isUser = item.sender === 'user';
     return (
       <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.botBubble]}>
@@ -146,5 +153,5 @@ const styles = StyleSheet.create({
   inputContainer: { flexDirection: 'row', padding: 10, backgroundColor: Colors.light.surface, borderTopWidth: 1, borderTopColor: Colors.light.border, alignItems: 'flex-end' },
   textInput: { flex: 1, backgroundColor: Colors.light.backgroundElement, color: Colors.light.text, borderRadius: 20, paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, fontSize: 16, maxHeight: 100, minHeight: 40, marginRight: 10, borderWidth: 1, borderColor: Colors.light.border },
   sendButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: Colors.light.primary, justifyContent: 'center', alignItems: 'center' },
-  sendButtonDisabled: { backgroundColor: Colors.light.backgroundSelected }
+  sendButtonDisabled: { backgroundColor: Colors.light.backgroundElement }
 });
