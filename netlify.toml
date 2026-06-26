@@ -1,8 +1,14 @@
+# Netlify configuration for frontend-only deployment
+# This file is REQUIRED to configure build settings and handle SPA routing on Netlify.
+
 [build]
   command = "npm run build"
   publish = "dist"
   base = "frontend"
 
+# Crucial for Single Page Applications (SPAs) like React:
+# Instructs Netlify to redirect all routes to index.html so React Router can handle routing.
+# Without this, refreshing any subpage (e.g. /login, /dashboard) on Netlify results in a 404 error.
 [[redirects]]
   from = "/*"
   to = "/index.html"

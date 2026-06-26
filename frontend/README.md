@@ -26,7 +26,7 @@ This is the frontend application for the Sarvuday mental health and counselling 
    ```bash
    npm install
    ```
-3. Create a `.env` file or configure your `src/config/apiConfig.js` to point to the local backend (usually `http://localhost:8000`).
+3. Copy `.env.example` to `.env` and fill in the environment variables (VITE_API_BASE_URL pointing to the backend API, and Firebase configuration keys).
 4. Start the development server:
    ```bash
    npm run dev

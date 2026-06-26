@@ -17,17 +17,17 @@ Sarvuday is a comprehensive mental health and counselling platform designed to c
 
 ### Future / Planned Features
 - **Advanced AI Insights**: Enhanced machine learning models to provide counsellors with actionable insights during sessions.
-- **Mobile Application**: Native mobile app (Android/iOS) synchronization and push notifications.
 - **Group Therapy Sessions**: Support for multi-user WebRTC rooms and group chats.
 - **Automated Invoicing**: Generation and emailing of PDF invoices for all transactions.
 - **Localization**: Multi-language support to cater to a diverse user base.
 
 ## 📁 Project Structure
 
-The project is split into independent frontend and backend directories:
+The project is split into independent directories:
 
-- `/frontend` - React + Vite application (User Interface)
-- `/backend` - FastAPI Python server (API & WebSockets)
+- `/frontend` - React + Vite application (User Interface, deployed on Netlify)
+- `/backend` - FastAPI Python server (API & WebSockets, deployed on Render)
+- `/ai_assistant_space` - Configuration files for the Hugging Face Space hosting the `model.gguf` LLM chatbot (running `llama-cpp-python` API)
 
 ## 🛠️ Tech Stack
 
@@ -37,10 +37,11 @@ The project is split into independent frontend and backend directories:
 - Axios (HTTP Client)
 - CSS Modules / Custom Styling
 
-**Backend:**
+**Backend & Database:**
 - Python 3
 - FastAPI (REST APIs & WebSockets)
-- PostgreSQL & SQLAlchemy (Relational Database & ORM)
+- PostgreSQL (Neon Cloud) & SQLAlchemy ORM
+- MongoDB (Atlas Cloud) for AI chatbot history and session data
 - Pytest (Testing Framework)
 - APScheduler (Background Tasks)
 

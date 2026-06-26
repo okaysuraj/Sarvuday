@@ -31,7 +31,7 @@ This is the core server application powering the Sarvuday platform. It handles a
    ```bash
    pip install -r requirements.txt
    ```
-3. Ensure PostgreSQL is running locally and update your DB connection string in `.env` or `database/postgres.py`.
+3. Copy `.env.example` to `.env` and fill in the configuration parameters for cloud databases (Neon PostgreSQL, MongoDB Atlas) and Hugging Face Spaces AI assistant.
 4. Run the development server:
    ```bash
    uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
