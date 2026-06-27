@@ -18,11 +18,7 @@ class Settings(BaseSettings):
 
     mongo_uri: str
 
-    mongo_db_name: str
-
-    mongo_db_username: str
-
-    mongo_db_password: Optional[str] = None
+    mongo_db_name: str = "sarvuday"
 
 
 
@@ -71,21 +67,11 @@ class Settings(BaseSettings):
 
     access_token_expire_minutes: int = 1440
 
-    reset_token_expire_minutes: int = 10
-
-    email_resend_rate_limit_minutes: int = 10
 
 
 
 
 
-    # Email SMTP Settings
-    smtp_server: str = "smtp.gmail.com"
-    smtp_port: int = 587
-    smtp_username: str = ""
-    smtp_password: str = ""
-    use_tls: bool = False
-    start_tls: bool = True
 
     
 
@@ -135,8 +121,6 @@ class Settings(BaseSettings):
 
             "database_url",
 
-            "mongo_db_password",
-
             "private_key_id",
 
             "firebase_private_key",
@@ -150,8 +134,7 @@ class Settings(BaseSettings):
             "token_uri",
             "auth_uri",
             "secret_key",
-            "daily_api_key",
-            "smtp_password"
+            "daily_api_key"
         }
 
 

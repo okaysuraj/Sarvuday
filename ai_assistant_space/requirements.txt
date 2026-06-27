@@ -1,4 +1,0 @@
---extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
---only-binary llama-cpp-python
-llama-cpp-python[server]==0.3.30
-huggingface-hub

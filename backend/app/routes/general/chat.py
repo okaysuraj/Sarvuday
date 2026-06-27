@@ -11,8 +11,7 @@ from app.models.chat import DirectMessage, MessageType
 from app.models.sessions import CounsellingSession
 from app.models.users import NormalUser, Counsellor
 from app.utils.constants import UserTypeEnum
-from app.services.auth.auth_service import AuthService
-from app.utils.oauth import MODEL_MAP
+from app.utils.oauth import MODEL_MAP, verify_access_token
 
 router = APIRouter()
 
@@ -203,7 +202,7 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, token: str = Qu
         return
         
     try:
-        payload = AuthService.verify_access_token(token)
+        payload = verify_access_token(token)
         user_id = payload["sub"]
         user_type = UserTypeEnum(payload["user_type"])
         model = MODEL_MAP[user_type]

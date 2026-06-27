@@ -15,7 +15,7 @@ from app.schemas import (
     AdminFilterQuery,
     AdminUpdateResponse
 )
-from app.utils.email_verification import EmailVerificationService
+
 from app.utils.constants import UserTypeEnum, AdminRoleEnum
 from app.utils.unique_id_generation import generate_user_id
 from app.utils.file_utils import replace_uploaded_file, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE_BYTES
@@ -24,7 +24,6 @@ from app.utils.file_utils import replace_uploaded_file, ALLOWED_IMAGE_TYPES, MAX
 class AdminManagementService:
     def __init__(self, db: AsyncSession):
         self.db = db
-        self.email_verifier = EmailVerificationService(db)
 
     async def create_admin(self, admin_data: AdminCreate, created_by: Admin) -> AdminCreateResponse:
         """Handle admin registration"""
@@ -43,11 +42,9 @@ class AdminManagementService:
         await self.db.commit()
         await self.db.refresh(new_admin)
 
-        await self.email_verifier.send_verification_email(new_admin.email, new_admin.user_type)
-
         return AdminCreateResponse(
             status="success",
-            message="Registration successful. Check you email for verification",
+            message="Admin created successfully. Please login via Firebase SSO.",
             user=AdminBase.model_validate(new_admin)
         )
 

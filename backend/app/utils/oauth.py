@@ -6,12 +6,23 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models import NormalUser, Counsellor, Admin
 from app.utils.constants import AdminRoleEnum, UserTypeEnum
-from app.services.auth import AuthService
-from jose import JWTError
+from jose import jwt, JWTError
 from sqlalchemy import select
 from typing import Optional
+from app.config import settings
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/firebase-login")
+
+def verify_access_token(token: str) -> dict:
+    try:
+        payload = jwt.decode(
+            token,
+            settings.secret_key,
+            algorithms=[settings.algorithm]
+        )
+        return payload
+    except JWTError as e:
+        raise JWTError(f"Token validation failed: {str(e)}")
 
 # Model mapping for user types
 MODEL_MAP = {
@@ -30,7 +41,7 @@ async def get_current_user(
     )
 
     try:
-        payload = AuthService.verify_access_token(token)
+        payload = verify_access_token(token)
         # print(f"Token payload: {payload}")  # Debug
         
         user_id = payload["sub"]
@@ -72,7 +83,7 @@ async def get_current_user_optional(
         return None
 
     try:
-        payload = AuthService.verify_access_token(token)
+        payload = verify_access_token(token)
         user_id = payload["sub"]
         user_type = UserTypeEnum(payload["user_type"])
         model = MODEL_MAP[user_type]

@@ -8,10 +8,7 @@ from app.config import settings
 logger = logging.getLogger(__name__)
 
 client = MongoClient(
-    settings.mongo_uri,
-    username=settings.mongo_db_username,
-    password=settings.mongo_db_password,
-    authSource="admin"
+    settings.mongo_uri
 )
 mongo_db: Database = client[settings.mongo_db_name]
 
