@@ -15,7 +15,29 @@ const Profile = () => {
   const [editableData, setEditableData] = useState({});
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const [reviewingBooking, setReviewingBooking] = useState(null);
+  const [reviewText, setReviewText] = useState('');
+  const [rating, setRating] = useState(5);
   const navigate = useNavigate();
+
+  // Mock booking history
+  const [bookings, setBookings] = useState([
+    { id: 1, date: '2023-10-15', counsellor: 'Dr. Jane Smith', type: 'Video Session', status: 'Completed', review: null },
+    { id: 2, date: '2023-11-02', counsellor: 'Dr. Alan Wake', type: 'Chat Session', status: 'Completed', review: null },
+    { id: 3, date: '2023-12-10', counsellor: 'Sarah Connor', type: 'Voice Session', status: 'Upcoming', review: null }
+  ]);
+
+  const handleSubmitReview = () => {
+    setBookings(bookings.map(b => 
+      b.id === reviewingBooking.id 
+        ? { ...b, review: { rating, text: reviewText } } 
+        : b
+    ));
+    setReviewingBooking(null);
+    setReviewText('');
+    setRating(5);
+    toast.success('Review submitted successfully!');
+  };
 
   useEffect(() => {
     fetchProfileData();
@@ -514,6 +536,72 @@ const Profile = () => {
                   <p>{total_sessions_attended}</p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div className={styles.historySection}>
+            <div className={`sticker-container ${styles.profileCard}`} style={{marginTop: '2rem', width: '100%'}}>
+              <h4>Booking History & Reviews</h4>
+              <div className={styles.bookingList}>
+                {bookings.map(booking => (
+                  <div key={booking.id} className={styles.bookingItem}>
+                    <div>
+                      <strong>{booking.counsellor}</strong> - {booking.date}
+                      <p style={{margin: '4px 0', fontSize: '14px', color: 'var(--color-on-surface-variant)'}}>{booking.type} • {booking.status}</p>
+                      {booking.review && (
+                        <p style={{fontSize: '14px', fontStyle: 'italic', color: 'var(--color-primary)'}}>
+                          You rated {booking.review.rating}/5 - "{booking.review.text}"
+                        </p>
+                      )}
+                    </div>
+                    {booking.status === 'Completed' && !booking.review && (
+                      <button 
+                        className="btn-primary" 
+                        onClick={() => setReviewingBooking(booking)}
+                      >
+                        Leave a Review
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Review Modal */}
+      {reviewingBooking && (
+        <div className={styles.modalOverlay}>
+          <div className={`sticker-container ${styles.modalContent}`}>
+            <h3>Leave a Review for {reviewingBooking.counsellor}</h3>
+            <div className={styles.fieldGroup}>
+              <label>Rating (1-5)</label>
+              <select 
+                className={styles.editInput} 
+                value={rating} 
+                onChange={(e) => setRating(Number(e.target.value))}
+              >
+                <option value={5}>5 - Excellent</option>
+                <option value={4}>4 - Very Good</option>
+                <option value={3}>3 - Average</option>
+                <option value={2}>2 - Poor</option>
+                <option value={1}>1 - Terrible</option>
+              </select>
+            </div>
+            <div className={styles.fieldGroup} style={{marginTop: '1rem'}}>
+              <label>Comments</label>
+              <textarea 
+                className={styles.editInput} 
+                rows="4" 
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="How was your experience?"
+              ></textarea>
+            </div>
+            <div style={{display: 'flex', gap: '1rem', marginTop: '1.5rem', justifyContent: 'flex-end'}}>
+              <button className="btn-secondary" onClick={() => setReviewingBooking(null)}>Cancel</button>
+              <button className="btn-primary" onClick={handleSubmitReview}>Submit Review</button>
             </div>
           </div>
         </div>

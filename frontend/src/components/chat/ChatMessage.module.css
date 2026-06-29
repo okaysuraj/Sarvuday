@@ -1,7 +1,6 @@
 .messageRow {
   display: flex;
   width: 100%;
-  gap: 12px;
 }
 
 .userRow {
@@ -12,43 +11,61 @@
   justify-content: flex-start;
 }
 
+.messageContent {
+  max-width: 75%;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.userRow .messageContent {
+  flex-direction: row-reverse;
+}
+
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-full);
-  background-color: var(--color-tertiary-fixed);
-  border: var(--border-width) solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
   flex-shrink: 0;
-  align-self: flex-end;
-  box-shadow: 2px 2px 0 var(--border-color);
+  font-weight: bold;
+  font-size: 14px;
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: 2px 2px 0px 0px rgba(26, 26, 26, 1);
 }
 
-.messageContent {
-  max-width: 75%;
+.botContent .avatar {
+  background: #ffb4e5;
+  color: var(--color-on-surface);
+}
+
+.userContent .avatar {
+  background: var(--color-primary-container);
+  color: var(--color-on-primary-container);
 }
 
 .bubble {
   padding: 14px 18px;
-  font-size: 15px;
-  line-height: 1.5;
   border: var(--border-width) solid var(--border-color);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-on-surface);
+  white-space: pre-wrap;
+  word-wrap: break-word;
   box-shadow: var(--shadow-hard);
 }
 
-.userContent .bubble {
-  background-color: var(--color-surface-container-lowest);
-  color: var(--color-on-surface);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 var(--radius-lg);
+.botContent .bubble {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 0;
 }
 
-.botContent .bubble {
-  background-color: var(--color-primary-container);
+.userContent .bubble {
+  background: var(--color-primary-container);
   color: var(--color-on-primary-container);
-  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 var(--radius-lg);
 }
 
 .bubble p {

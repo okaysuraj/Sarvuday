@@ -1,0 +1,86 @@
+/* src/components/normal_users/EmergencyConnect.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+.header {
+  background-color: var(--color-error-container);
+  color: var(--color-on-error-container);
+  padding: var(--space-lg);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  box-shadow: 4px 4px 0px var(--border-color);
+}
+
+.header h1 {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  margin-bottom: var(--space-sm);
+  color: var(--color-error);
+}
+
+.header p {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-md);
+}
+
+.helplineCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  background-color: var(--color-surface-container-lowest);
+  border: var(--border-width) solid var(--border-color);
+}
+
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  border: var(--border-width) solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface-container-low);
+  box-shadow: 2px 2px 0px var(--border-color);
+}
+
+.cardContent h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.number {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-error);
+  margin-bottom: 8px;
+}
+
+.description {
+  color: var(--color-on-surface-variant);
+  font-size: 14px;
+}
+
+.callBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-error);
+  color: var(--color-on-error);
+}

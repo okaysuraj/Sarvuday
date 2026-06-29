@@ -1,24 +1,21 @@
 // src/components/normal_users/Home.jsx
-
 import React, { useEffect, useState } from 'react';
 import BASE_URL from '../../config/apiConfig';
 import axios from 'axios';
 import styles from './Home.module.css';
+import { FaBell, FaCalendarCheck, FaChartLine, FaSmile, FaFrown, FaMeh } from 'react-icons/fa';
 
 const Home = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedMood, setSelectedMood] = useState(null);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const token = localStorage.getItem('accessToken');
-
-        const headers = token ? {
-          Authorization: `Bearer ${token}`
-        } : {};
-
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const response = await axios.get(`${BASE_URL}/user/dashboard`, { headers });
         setDashboardData(response.data);
       } catch (err) {
@@ -28,53 +25,118 @@ const Home = () => {
         setLoading(false);
       }
     };
-
     fetchDashboardData();
   }, []);
 
-  if (loading) return <p className={styles.loading}>Loading...</p>;
+  if (loading) return <p className={styles.loading}>Loading your peaceful space...</p>;
   if (error) return <p className={styles.error}>{error}</p>;
-  if (!dashboardData) return <p className={styles.noData}>No data available</p>;
 
-  const { user, chat_sessions_count, total_sessions, total_messages, last_active, upcoming_sessions } = dashboardData;
-
+  const upcoming_sessions = dashboardData?.upcoming_sessions || [];
+  
   return (
-    <div className={styles.container}>
-      <h2 className={styles.heading}>Welcome, {user.name}</h2>
+    <div className={styles.dashboardContainer}>
+      
+      {/* Header Section */}
+      <div className={styles.headerSection}>
+        <h1 className={styles.greetingTitle}>Your Mental Wealth</h1>
+        <p className={styles.greetingSubtitle}>Track your progress and stay balanced.</p>
+      </div>
 
-      <h3 className={styles.subheading}>Profile Information</h3>
-      <ul className={styles.list}>
-        <li>Email: {user.email}</li>
-        <li>Gender: {user.gender}</li>
-        <li>Phone: {user.phone_number}</li>
-        <li>Location: {user.city}, {user.state}, {user.country} - {user.pincode}</li>
-        <li>Preferred Languages: {(user.preferred_languages || []).join(', ')}</li>
-        <li>Primary Concerns: {(user.primary_concerns || []).join(', ')}</li>
-        <li>Email Verified: {user.is_email_verified ? 'Yes' : 'No'}</li>
-        <li>Phone Verified: {user.is_phone_verified ? 'Yes' : 'No'}</li>
-        <li>Last Login: {new Date(user.last_login_at).toLocaleString()}</li>
-        <li>Joined On: {new Date(user.created_at).toLocaleDateString()}</li>
-        <li>Total Sessions Attended: {user.total_sessions_attended}</li>
-      </ul>
+      {/* Top Grid: Overall Score & Notifications */}
+      <div className={styles.topGrid}>
+        
+        {/* Overall Score */}
+        <div className={`sticker-container ${styles.scoreCard}`}>
+          <div className={styles.scoreIconWrapper}>
+            <FaChartLine size={32} color="var(--color-primary)" />
+          </div>
+          <div className={styles.scoreContent}>
+            <h3>Overall Score</h3>
+            <div className={styles.scoreNumber}>84<span className={styles.scoreTotal}>/100</span></div>
+            <p>You're doing great this week! Keep up the mindfulness.</p>
+          </div>
+        </div>
 
-      <h3 className={styles.subheading}>Dashboard Stats</h3>
-      <ul className={styles.list}>
-        <li>Total Chat Sessions: {chat_sessions_count}</li>
-        <li>Total Video/Audio Sessions: {total_sessions}</li>
-        <li>Total Messages Sent: {total_messages}</li>
-        <li>Last Active: {new Date(last_active).toLocaleString()}</li>
-      </ul>
+        {/* Notifications */}
+        <div className={`sticker-container ${styles.notificationCard}`}>
+          <div className={styles.cardHeader}>
+            <h3><FaBell /> Notifications</h3>
+          </div>
+          <ul className={styles.notificationList}>
+            <li>
+              <div className={styles.notifDot}></div>
+              <p>Your AI companion missed you. Chat now?</p>
+            </li>
+            <li>
+              <div className={styles.notifDot}></div>
+              <p>Dr. Smith accepted your appointment request.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-      <h3 className={styles.subheading}>Upcoming Sessions</h3>
-      {upcoming_sessions.length === 0 ? (
-        <p className={styles.noData}>No upcoming sessions</p>
-      ) : (
-        <ul className={styles.list}>
-          {upcoming_sessions.map((session, index) => (
-            <li key={index}>{JSON.stringify(session)}</li>
-          ))}
-        </ul>
-      )}
+      {/* Middle Grid: Mood Tracker & Quiz CTA */}
+      <div className={styles.middleGrid}>
+        
+        {/* Mood Tracker */}
+        <div className={`sticker-container ${styles.moodCard}`}>
+          <h3>How are you feeling right now?</h3>
+          <div className={styles.moodChips}>
+            <button 
+              className={`${styles.moodChip} ${selectedMood === 'great' ? styles.chipActive : ''}`}
+              onClick={() => setSelectedMood('great')}
+            >
+              <FaSmile /> Great
+            </button>
+            <button 
+              className={`${styles.moodChip} ${selectedMood === 'okay' ? styles.chipActive : ''}`}
+              onClick={() => setSelectedMood('okay')}
+            >
+              <FaMeh /> Okay
+            </button>
+            <button 
+              className={`${styles.moodChip} ${selectedMood === 'down' ? styles.chipActive : ''}`}
+              onClick={() => setSelectedMood('down')}
+            >
+              <FaFrown /> Down
+            </button>
+          </div>
+        </div>
+
+        {/* Quiz CTA */}
+        <div className={`sticker-container ${styles.quizCard}`}>
+          <h3>Emotional State Check-in</h3>
+          <p>Take our quick 2-minute quiz to update your overall score and get personalized recommendations.</p>
+          <button className="btn-primary">Take Quiz</button>
+        </div>
+      </div>
+
+      {/* Bottom Section: Appointments */}
+      <div className={`sticker-container ${styles.appointmentsCard}`}>
+        <div className={styles.cardHeader}>
+          <h3><FaCalendarCheck /> Upcoming Appointments</h3>
+        </div>
+        
+        {upcoming_sessions.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>No upcoming sessions.</p>
+            <button className="btn-secondary">Explore Counsellors</button>
+          </div>
+        ) : (
+          <div className={styles.appointmentList}>
+             {upcoming_sessions.map((session, idx) => (
+                <div key={idx} className={styles.appointmentItem}>
+                  <div className={styles.aptDate}>Tomorrow, 10:00 AM</div>
+                  <div className={styles.aptDetails}>
+                    <strong>Dr. Counsellor</strong>
+                    <span>Video Session</span>
+                  </div>
+                </div>
+             ))}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 };

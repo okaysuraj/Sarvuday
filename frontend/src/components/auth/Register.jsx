@@ -155,7 +155,7 @@ const Register = () => {
   };
 
   return (
-    <div className={`${styles.authPageContainer} ${styles.registerBackground}`}>
+    <div className={`${styles.authPageContainer} memphis-bg ${styles.registerBackground}`}>
       <div className={`sticker-container ${styles.formCard}`}>
         <div className={styles.formHeader} style={{ textAlign: 'left' }}>
           <h2 className={styles.formTitle}>Create Account</h2>

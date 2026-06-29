@@ -6,7 +6,7 @@
 
 /* Hero Section */
 .heroSection {
-  padding: var(--space-sm) 0;
+  padding: 120px 0 var(--space-lg) 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -77,7 +77,7 @@
 
 .heroSubtitle {
   max-width: 600px;
-  margin: var(--space-sm) auto;
+  margin: var(--space-md) auto var(--space-lg) auto;
   color: var(--color-on-surface-variant);
   font-size: 18px;
 }
@@ -94,8 +94,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-sm) 0;
+  gap: var(--space-lg);
+  padding: var(--space-lg) 0;
   flex-wrap: wrap;
 }
 
@@ -130,7 +130,7 @@
 
 /* Features Section */
 .featuresSection {
-  padding: var(--space-sm) 0;
+  padding: var(--space-lg) 0;
 }
 
 .sectionHeading {
@@ -208,7 +208,7 @@
 
 /* Testimonials */
 .testimonialsSection {
-  padding: var(--space-sm) 0;
+  padding: var(--space-lg) 0;
   text-align: center;
 }
 
@@ -267,9 +267,10 @@
 
 /* App Promo Section */
 .appPromoSection {
-  padding: 24px 0;
+  padding: var(--space-lg) 0;
   background-color: var(--color-surface-container-low);
-  margin-top: 24px;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 
 .promoContent {

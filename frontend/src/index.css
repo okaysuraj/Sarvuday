@@ -61,6 +61,17 @@
   --shadow-hard-light: 4px 4px 0px 0px rgba(26, 26, 26, 0.2);
 }
 
+[data-theme='dark'] {
+  --color-background: #191b24;
+  --color-on-background: #f0effd;
+  --color-surface-container-lowest: #2e303a;
+  --color-surface-container: #434656;
+  --color-surface-container-high: #747688;
+  --color-on-surface: #fbf8ff;
+  --border-color: #747688;
+  --shadow-hard: 4px 4px 0px 0px rgba(116, 118, 136, 1);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -220,4 +231,12 @@ button {
 
 .text-center {
   text-align: center;
+}
+
+/* Playful Backgrounds */
+.memphis-bg {
+  background-color: var(--color-surface);
+  background-image: radial-gradient(var(--color-primary-fixed-dim) 2px, transparent 2px), radial-gradient(var(--color-secondary-fixed-dim) 2px, transparent 2px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
 }

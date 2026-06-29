@@ -1,75 +1,226 @@
-.container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  background: var(--color-surface-container-lowest);
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
-  border-radius: var(--radius-lg);
-  font-family: var(--font-body);
-  color: var(--color-on-surface);
+/* src/components/normal_users/Home.module.css */
+
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-lg);
 }
 
-.heading {
+.headerSection {
+  margin-bottom: var(--space-sm);
+}
+
+.greetingTitle {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--color-primary);
-  letter-spacing: -0.02em;
+  font-size: 32px;
+  color: var(--color-on-background);
+  margin-bottom: 8px;
 }
 
-.subheading {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  border-bottom: var(--border-width) solid var(--border-color);
-  padding-bottom: 0.5rem;
-  color: var(--color-on-surface);
+.greetingSubtitle {
+  color: var(--color-on-surface-variant);
+  font-size: 16px;
 }
 
-.list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.topGrid, .middleGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-md);
 }
 
-.list li {
-  background: var(--color-surface);
-  padding: 1rem 1.25rem;
-  border-radius: var(--radius-md);
+/* Card General */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--space-md);
+}
+
+.cardHeader h3 {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Overall Score Card */
+.scoreCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background-color: var(--color-primary-fixed);
+}
+
+.scoreIconWrapper {
+  background-color: var(--color-surface-container-lowest);
   border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
-  font-size: 1rem;
-  line-height: 1.4;
-  color: var(--color-on-surface);
+  border-radius: var(--radius-full);
+  padding: 16px;
+  box-shadow: 2px 2px 0px var(--border-color);
+}
+
+.scoreContent h3 {
+  font-size: 18px;
+  color: var(--color-on-primary-fixed);
+  margin-bottom: 4px;
+}
+
+.scoreNumber {
+  font-family: var(--font-heading);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.scoreTotal {
+  font-size: 24px;
+  color: var(--color-outline);
+}
+
+.scoreContent p {
+  font-size: 14px;
+  color: var(--color-on-primary-fixed-variant);
+}
+
+/* Notifications Card */
+.notificationCard {
+  background-color: var(--color-secondary-fixed);
+}
+
+.notificationList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notificationList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background-color: var(--color-surface-container-lowest);
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.notifDot {
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-error);
+  border-radius: 50%;
+  margin-top: 4px;
+  border: 1px solid var(--border-color);
+}
+
+/* Mood Tracker */
+.moodCard {
+  background-color: var(--color-tertiary-fixed);
+}
+
+.moodCard h3 {
+  font-size: 20px;
+  margin-bottom: var(--space-md);
+}
+
+.moodChips {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.moodChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--border-color);
+  border-radius: 100px; /* Pill shape */
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.list li:hover {
+.moodChip:hover {
   background-color: var(--color-surface-container-low);
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px rgba(0,0,0,1);
 }
 
-.error {
-  color: var(--color-error);
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.25rem;
-  margin-top: 3rem;
+.chipActive {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
-.loading,
-.noData {
-  text-align: center;
-  font-size: 1.25rem;
-  margin-top: 3rem;
+/* Quiz Card */
+.quizCard {
+  background-color: var(--color-surface-container-low);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.quizCard h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.quizCard p {
   color: var(--color-on-surface-variant);
-  font-style: italic;
+  margin-bottom: var(--space-md);
+}
+
+/* Appointments */
+.appointmentsCard {
+  background-color: var(--color-surface-container-lowest);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: var(--space-lg) 0;
+  color: var(--color-on-surface-variant);
+}
+
+.appointmentList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointmentItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-container-low);
+}
+
+.aptDate {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-primary);
+}
+
+.aptDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.aptDetails strong {
+  font-size: 16px;
+}
+
+.aptDetails span {
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
 }

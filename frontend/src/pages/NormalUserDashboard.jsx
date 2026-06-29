@@ -12,6 +12,9 @@ import Home from '../components/normal_users/Home';
 import Profile from '../components/normal_users/Profile';
 import AIChat from '../components/normal_users/AIChat';
 import Chat from './chat/Chat';
+import ExploreCounsellors from '../components/normal_users/ExploreCounsellors';
+import EmergencyConnect from '../components/normal_users/EmergencyConnect';
+import SettingsPage from '../components/normal_users/SettingsPage';
 import Appointments from '../components/normal_users/Appointments';
 import Prescriptions from '../components/normal_users/Prescriptions';
 import Notifications from '../components/normal_users/Notifications';
@@ -37,23 +40,24 @@ const NormalUserDashboard = () => {
   }, []);
 
   const sidebarLinks = [
-    { to: "/normal-user-dashboard/home", icon: <FaHome />, label: "Overview" },
+    { to: "/normal-user-dashboard/overall-score", icon: <FaHome />, label: "Overall Score" },
     { to: "/ai-chat", icon: <FaRobot />, label: "AI Assistant" },
-    { to: "/chat", icon: <FaComments />, label: "Messages" },
-    { to: "/normal-user-dashboard/appointments", icon: <FaFileMedical />, label: "Health Records" },
-    { to: "/normal-user-dashboard/notifications", icon: <FaBell />, label: "Notifications" },
-    { to: "/normal-user-dashboard/profile", icon: <FaUserCog />, label: "Profile & Settings" }
+    { to: "/normal-user-dashboard/explore-counsellors", icon: <FaUserCog />, label: "Explore Counsellors" },
+    { to: "/chat", icon: <FaComments />, label: "Chat Messages" },
+    { to: "/normal-user-dashboard/emergency", icon: <FaFileMedical />, label: "Emergency Connect" },
+    { to: "/normal-user-dashboard/profile", icon: <FaUserCog />, label: "Profile" },
+    { to: "/normal-user-dashboard/settings", icon: <FaUserCog />, label: "Settings" }
   ];
 
   return (
     <NeoDashboardLayout username={username} sidebarLinks={sidebarLinks}>
       <Routes>
-        <Route index element={<Navigate to="home" replace />} />
-        <Route path="home" element={<Home />} />
+        <Route index element={<Navigate to="overall-score" replace />} />
+        <Route path="overall-score" element={<Home />} />
+        <Route path="explore-counsellors" element={<ExploreCounsellors />} />
+        <Route path="emergency" element={<EmergencyConnect />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="appointments" element={<Appointments />} />
-        <Route path="prescriptions" element={<Prescriptions />} />
-        <Route path="notifications" element={<Notifications />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Routes>
     </NeoDashboardLayout>
   );

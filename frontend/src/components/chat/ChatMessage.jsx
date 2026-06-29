@@ -6,12 +6,10 @@ const ChatMessage = ({ message }) => {
 
   return (
     <div className={`${styles.messageRow} ${isUser ? styles.userRow : styles.botRow}`}>
-      {!isUser && (
-        <div className={styles.avatar}>
-          <span>🤖</span>
-        </div>
-      )}
       <div className={`${styles.messageContent} ${isUser ? styles.userContent : styles.botContent}`}>
+        <div className={styles.avatar}>
+          {isUser ? 'U' : 'D'}
+        </div>
         <div className={styles.bubble}>
           <p>{message.text}</p>
         </div>
@@ -21,4 +19,3 @@ const ChatMessage = ({ message }) => {
 };
 
 export default ChatMessage;
-

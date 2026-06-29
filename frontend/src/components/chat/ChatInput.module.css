@@ -1,39 +1,41 @@
 .chatInputContainer {
-  padding: 24px;
-  background-color: var(--color-surface);
-  border-top: var(--border-width) solid var(--border-color);
-  z-index: 10;
+  padding: var(--space-md);
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, var(--color-surface-container-lowest) 20%);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .chatInputWrapper {
   display: flex;
-  align-items: center;
-  background-color: var(--color-surface-container-lowest);
+  max-width: 800px;
+  width: 100%;
+  background: #F9F8F3;
   border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-full);
-  padding: 8px 12px;
   box-shadow: var(--shadow-hard);
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  align-items: center;
   gap: 8px;
-  transition: box-shadow 0.2s ease;
+  transition: all 0.2s ease-in-out;
 }
 
 .chatInputWrapper:focus-within {
-  box-shadow: none;
-  transform: translate(2px, 2px);
+  border-color: var(--color-primary);
+  box-shadow: 2px 2px 0px 0px rgba(26, 26, 26, 1);
 }
 
 .inputField {
-  flex-grow: 1;
+  flex: 1;
   border: none;
   background: transparent;
-  padding: 8px;
-  font-size: 15px;
+  outline: none;
+  padding: 10px 15px;
+  font-size: 16px;
   font-family: var(--font-body);
   color: var(--color-on-surface);
-}
-
-.inputField:focus {
-  outline: none;
 }
 
 .inputField::placeholder {
@@ -41,26 +43,26 @@
 }
 
 .iconButton {
-  background: transparent;
+  background: none;
   border: none;
-  color: var(--color-on-surface-variant);
-  font-size: 20px;
+  color: var(--color-outline);
   cursor: pointer;
+  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  border-radius: 50%;
-  transition: all 0.2s ease;
+  border-radius: var(--radius-full);
+  font-size: 20px;
+  transition: 0.2s;
 }
 
 .iconButton:hover {
-  background-color: var(--color-surface-container);
-  color: var(--color-on-surface);
+  color: var(--color-primary);
+  background: var(--color-surface-container-high);
 }
 
 .sendButton {
-  background-color: var(--color-primary);
+  background: var(--color-primary);
   color: var(--color-on-primary);
   border: var(--border-width) solid var(--border-color);
   width: 44px;
@@ -70,12 +72,11 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 2px 2px 0 var(--border-color);
+  transition: 0.1s ease-in-out;
+  box-shadow: 2px 2px 0px 0px rgba(26, 26, 26, 1);
 }
 
 .sendButton:hover {
-  background-color: var(--color-primary);
   transform: translate(2px, 2px);
   box-shadow: none;
 }

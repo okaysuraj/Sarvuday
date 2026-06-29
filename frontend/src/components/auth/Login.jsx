@@ -157,7 +157,7 @@ const Login = () => {
   };
   
   return (
-    <div className={`${styles.authPageContainer} ${styles.loginBackground}`}>
+    <div className={`${styles.authPageContainer} memphis-bg ${styles.loginBackground}`}>
       <div className={`sticker-container ${styles.formCard}`}>
         <div className={styles.formHeader} style={{ textAlign: 'left' }}>
           <h2 className={styles.formTitle}>Welcome Back</h2>

@@ -340,3 +340,47 @@
   padding: 3rem;
   font-style: italic;
 }
+
+/* History and Reviews */
+.historySection {
+  margin-top: 2rem;
+}
+
+.bookingList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bookingItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--color-surface-container-lowest);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--color-surface-container-lowest);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+

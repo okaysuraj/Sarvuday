@@ -1,34 +1,33 @@
 .fullPageContainer {
   display: flex;
-  height: 100%;
-  width: 100%;
-  background-color: var(--color-surface);
-  color: var(--color-on-surface);
+  height: 100vh;
+  background: var(--color-background);
   font-family: var(--font-body);
+  overflow: hidden;
 }
 
 .sidebar {
-  width: 300px;
-  background-color: var(--color-surface-container-low);
+  width: 280px;
+  background: var(--color-surface-container-low);
+  border-right: var(--border-width) solid var(--border-color);
   display: flex;
   flex-direction: column;
-  border-right: var(--border-width) solid var(--border-color);
-  overflow-y: auto;
+  padding: var(--space-md);
+  flex-shrink: 0;
 }
 
 .sidebarHeader {
-  padding: 15px;
   display: flex;
   align-items: center;
   gap: 15px;
-  border-bottom: var(--border-width) solid var(--border-color);
-  background: var(--color-surface-container-lowest);
+  margin-bottom: var(--space-md);
 }
 
 .sidebarHeader h2 {
   font-family: var(--font-heading);
   font-size: 20px;
   margin: 0;
+  color: var(--color-on-background);
 }
 
 .backBtn {
@@ -48,11 +47,11 @@
 }
 
 .chatWindow {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  background-color: var(--color-surface);
+  position: relative;
+  background: var(--color-surface-container-lowest);
 }
 
 .noChatSelected {
@@ -63,19 +62,4 @@
   color: var(--color-on-surface-variant);
   font-size: 18px;
   font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .fullPageContainer {
-    flex-direction: column;
-  }
-  .sidebar {
-    width: 100%;
-    height: 30%;
-    border-right: none;
-    border-bottom: var(--border-width) solid var(--border-color);
-  }
-  .chatWindow {
-    height: 70%;
-  }
 }

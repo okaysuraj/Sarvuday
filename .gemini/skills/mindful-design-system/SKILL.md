@@ -1,6 +1,6 @@
 ---
 name: SarvUday Design System
-description: Frontend design specification for the Mindful mental health app, defining colors, typography, shapes, and layout based on a Neo-Memphis aesthetic.
+description: Frontend design specification for the SarvUday mental health app, defining colors, typography, shapes, and layout based on a Neo-Memphis aesthetic.
 ---
 
 ## Brand & Style
