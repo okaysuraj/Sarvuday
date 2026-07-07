@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List
-from datetime import datetime
+from datetime import datetime, timezone
 from bson import ObjectId
 from app.utils.constants import AssessmentTypeEnum
 
@@ -26,6 +26,8 @@ class PyObjectId(ObjectId):
 class Message(BaseModel):
     role: str  # "user" or "assistant"
     content: str
+    sentiment_score: float = 0.0  # AI-driven mood analysis
+    embedding: List[float] = []  # Vector representation for context
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
@@ -34,6 +36,8 @@ class ChatHistory(BaseModel):
     user_id: str
     session_id: str
     conversation: List[Message]
+    context_summary: str = ""  # Long-term memory context summary
+    crisis_flag: bool = False
 
     model_config = {
         "validate_by_name": True,
@@ -85,6 +89,52 @@ class DisordersData(BaseModel):
     preventions: List[str]
     treatments: List[str]
     best_advice: str
+
+    model_config = {
+        "validate_by_name": True,
+        "arbitrary_types_allowed": True,
+        "json_encoders": {ObjectId: str},
+    }
+
+class MoodTracking(BaseModel):
+    mongo_id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    user_id: str
+    mood: str
+    energy_level: int
+    anxiety_level: int
+    sleep_quality: str
+    notes: str = ""
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    model_config = {
+        "validate_by_name": True,
+        "arbitrary_types_allowed": True,
+        "json_encoders": {ObjectId: str},
+    }
+
+class JournalEntry(BaseModel):
+    mongo_id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    user_id: str
+    content: str
+    entry_type: str = "text"  # "text" or "voice"
+    ai_sentiment_score: float = 0.0
+    shared_with_therapist: bool = False
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    model_config = {
+        "validate_by_name": True,
+        "arbitrary_types_allowed": True,
+        "json_encoders": {ObjectId: str},
+    }
+
+class CrisisLog(BaseModel):
+    mongo_id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    user_id: str
+    trigger_source: str  # e.g., "chatbot", "journal", "manual"
+    risk_level: str  # "high", "critical"
+    action_taken: str
+    resolved: bool = False
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     model_config = {
         "validate_by_name": True,

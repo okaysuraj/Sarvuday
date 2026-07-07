@@ -1,6 +1,6 @@
 # app/models/scheduling/appointment.py
 
-from sqlalchemy import Column, String, Text, Enum as SqlEnum, ForeignKey, Index
+from sqlalchemy import Column, String, Text, Enum as SqlEnum, ForeignKey, Index, Boolean
 from sqlalchemy.orm import relationship
 from app.database.postgres import Base
 from app.models.base import BaseMixin
@@ -20,6 +20,7 @@ class Appointment(Base, BaseMixin):
 
     status = Column(SqlEnum(AppointmentStatusEnum), default=AppointmentStatusEnum.pending)
     reason = Column(Text)
+    is_emergency = Column(Boolean, default=False)
     payment_id = Column(String(20), ForeignKey("user_payments.payment_id"), nullable=False)
     
     # Refund if any

@@ -37,6 +37,14 @@ class NormalUser(Base, BaseMixin):
     city = Column(String(100))
     address = Column(Text)
     pincode = Column(String(10))
+    timezone = Column(String(50))
+
+    # Mental Health Specific
+    is_anonymous = Column(Boolean, default=False)
+    emergency_contact_name = Column(String(255))
+    emergency_contact_phone = Column(String(15))
+    emergency_contact_relation = Column(String(100))
+    accessibility_preferences = Column(Text)
 
     last_login_at = Column(TIMESTAMP)
     terms_accepted = Column(Boolean, default=False)

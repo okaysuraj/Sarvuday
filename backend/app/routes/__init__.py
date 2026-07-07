@@ -12,6 +12,7 @@ from .admin import admin_router
 from .assessments import assessment_router
 from .normal_user import normal_user_router
 from .counsellor import counsellor_router
+from .ai import router as ai_insights_router
 
 api_router = APIRouter()
 
@@ -106,6 +107,11 @@ api_router.include_router(
     contact_router,
     prefix="/contact",
     tags=["Contact"],
+)
+
+api_router.include_router(
+    ai_insights_router,
+    prefix="/ai-insights",
 )
 
 __all__ = ["api_router"]

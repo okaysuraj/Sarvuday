@@ -64,6 +64,8 @@ class Counsellor(Base, BaseMixin):
     city = Column(String(100))
     address = Column(Text)
     pincode = Column(String(10))
+    timezone = Column(String(50))
+    therapy_methods = Column(Text)
 
     # Platform Engagement
     average_rating = Column(DECIMAL(3, 2), default=0.0)

@@ -8,7 +8,8 @@ from . import (
     normal_user_management,
     content_management,
     analytics,
-    counselling_session_management
+    counselling_session_management,
+    compliance
 )
 
 admin_router = APIRouter()
@@ -20,3 +21,4 @@ admin_router.include_router(normal_user_management.router)
 admin_router.include_router(content_management.router)
 admin_router.include_router(analytics.router)
 admin_router.include_router(counselling_session_management.router)
+admin_router.include_router(compliance.router)

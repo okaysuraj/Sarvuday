@@ -1,6 +1,6 @@
 # app/models/scheduling/availability.py
 
-from sqlalchemy import Column, String, Text, DateTime, Enum as SqlEnum, ForeignKey, Index
+from sqlalchemy import Column, String, Text, DateTime, Enum as SqlEnum, ForeignKey, Index, Boolean
 from sqlalchemy.orm import relationship
 from app.database.postgres import Base
 from app.models.base import BaseMixin
@@ -18,6 +18,8 @@ class CounsellorAvailability(Base, BaseMixin):
     end_time = Column(DateTime, nullable=False)
     status = Column(SqlEnum(CounsellorAvailabilityStatusEnum), default=CounsellorAvailabilityStatusEnum.available)
     notes = Column(Text)
+    is_locked = Column(Boolean, default=False)
+    locked_until = Column(DateTime, nullable=True)
 
     counsellor = relationship("Counsellor", back_populates="availability")
     appointments = relationship("Appointment", back_populates="availability_slot")
