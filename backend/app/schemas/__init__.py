@@ -29,6 +29,21 @@ from .prescription_schemas import PrescriptionBase, PrescriptionListResponse, Pr
 
 from .notification_schemas import NotificationBase, NotificationListResponse
 
+from .tracking_schemas import (
+    MoodCreate,
+    JournalCreate,
+    MoodResponse,
+    JournalResponse
+)
+
+from .community_schemas import (
+    SupportGroupCreate,
+    SupportGroupResponse,
+    PostCreate,
+    PostInteract,
+    PostResponse
+)
+
 __all__ = [
     # Common Schemas
     "StatusResponse",
@@ -84,6 +99,19 @@ __all__ = [
     "DashboardOverviewResponse",
     "SentimentTrendsResponse",
     "CounsellingSessionResponse",
+    
+    # Tracking
+    "MoodCreate",
+    "JournalCreate",
+    "MoodResponse",
+    "JournalResponse",
+    
+    # Community
+    "SupportGroupCreate",
+    "SupportGroupResponse",
+    "PostCreate",
+    "PostInteract",
+    "PostResponse",
     
     # Availability
     "AddAvailabilitySlot",

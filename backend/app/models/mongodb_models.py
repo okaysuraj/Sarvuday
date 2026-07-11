@@ -141,3 +141,34 @@ class CrisisLog(BaseModel):
         "arbitrary_types_allowed": True,
         "json_encoders": {ObjectId: str},
     }
+
+class SupportGroup(BaseModel):
+    mongo_id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str
+    description: str
+    member_count: int = 0
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    model_config = {
+        "validate_by_name": True,
+        "arbitrary_types_allowed": True,
+        "json_encoders": {ObjectId: str},
+    }
+
+class CommunityPost(BaseModel):
+    mongo_id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    group_id: str = "" # Empty means public/general feed
+    user_id: str
+    content: str
+    is_anonymous: bool = False
+    has_trigger_warning: bool = False
+    likes: int = 0
+    hugs: int = 0
+    relates: int = 0
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    model_config = {
+        "validate_by_name": True,
+        "arbitrary_types_allowed": True,
+        "json_encoders": {ObjectId: str},
+    }

@@ -45,6 +45,13 @@ class NormalUser(Base, BaseMixin):
     emergency_contact_phone = Column(String(15))
     emergency_contact_relation = Column(String(100))
     accessibility_preferences = Column(Text)
+    
+    # Onboarding Form Specific
+    age_range = Column(String(50))
+    symptoms = Column(Text)
+    stress_factors = Column(Text)
+    mental_health_history = Column(Text)
+    therapy_goals = Column(Text)
 
     last_login_at = Column(TIMESTAMP)
     terms_accepted = Column(Boolean, default=False)

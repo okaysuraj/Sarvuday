@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* Colors */
   --color-surface: #fbf8ff;
@@ -239,4 +243,47 @@ button {
   background-image: radial-gradient(var(--color-primary-fixed-dim) 2px, transparent 2px), radial-gradient(var(--color-secondary-fixed-dim) 2px, transparent 2px);
   background-size: 40px 40px;
   background-position: 0 0, 20px 20px;
+}
+
+@layer utilities {
+  .btn-interactive {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .btn-interactive:active {
+      transform: translate(2px, 2px);
+      box-shadow: none !important;
+  }
+  
+  .input-focus-shadow:focus {
+      box-shadow: 2px 2px 0px 0px #1A1A1A;
+  }
+  
+  .dot-pattern {
+      background-image: radial-gradient(#c4c5d8 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+  }
+  
+  .neo-memphis-input {
+      background-color: #f9f8f3;
+      border-radius: 12px;
+      border: 1.5px solid #1A1A1A;
+      transition: all 0.2s ease-in-out;
+  }
+  .neo-memphis-input:focus {
+      border-color: #002da5;
+      box-shadow: 2px 2px 0px 0px #1A1A1A;
+      outline: none;
+  }
+  .neo-memphis-btn-primary {
+      background-color: #002da5;
+      color: #ffffff;
+      border: 1.5px solid #1A1A1A;
+      box-shadow: 4px 4px 0px 0px #1A1A1A;
+      border-radius: 9999px;
+      transition: all 0.1s ease-in-out;
+  }
+  .neo-memphis-btn-primary:active {
+      box-shadow: 0px 0px 0px 0px #1A1A1A;
+      transform: translate(2px, 2px);
+  }
 }

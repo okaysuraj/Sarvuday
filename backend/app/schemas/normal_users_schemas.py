@@ -25,6 +25,15 @@ class NormalUserBase(BaseModel):
     address: Optional[str]
     pincode: Optional[str]
 
+    emergency_contact_name: Optional[str] = None
+    emergency_contact_phone: Optional[str] = None
+    emergency_contact_relation: Optional[str] = None
+    age_range: Optional[str] = None
+    symptoms: Optional[str] = None
+    stress_factors: Optional[str] = None
+    mental_health_history: Optional[str] = None
+    therapy_goals: Optional[str] = None
+
     is_email_verified: bool = False
     is_phone_verified: bool = False
     terms_accepted: bool = False
@@ -48,6 +57,15 @@ class UserUpdateRequest(BaseModel):
     city: Optional[str] = None
     address: Optional[str] = None
     pincode: Optional[str] = None
+
+    emergency_contact_name: Optional[str] = None
+    emergency_contact_phone: Optional[str] = None
+    emergency_contact_relation: Optional[str] = None
+    age_range: Optional[str] = None
+    symptoms: Optional[str] = None
+    stress_factors: Optional[str] = None
+    mental_health_history: Optional[str] = None
+    therapy_goals: Optional[str] = None
 
 class UserUpdateResponse(BaseModel):
     message: str

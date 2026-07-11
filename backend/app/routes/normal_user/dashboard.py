@@ -44,6 +44,14 @@ async def update_profile(
     city: Optional[str] = Form(None),
     address: Optional[str] = Form(None),
     pincode: Optional[str] = Form(None),
+    emergency_contact_name: Optional[str] = Form(None),
+    emergency_contact_phone: Optional[str] = Form(None),
+    emergency_contact_relation: Optional[str] = Form(None),
+    age_range: Optional[str] = Form(None),
+    symptoms: Optional[str] = Form(None),
+    stress_factors: Optional[str] = Form(None),
+    mental_health_history: Optional[str] = Form(None),
+    therapy_goals: Optional[str] = Form(None),
     profile_pic: Optional[UploadFile] = File(None),
     current_user: NormalUser = Depends(ensure_normal_user),
     db: AsyncSession = Depends(get_db)
@@ -63,6 +71,14 @@ async def update_profile(
         city=city,
         address=address,
         pincode=pincode,
+        emergency_contact_name=emergency_contact_name,
+        emergency_contact_phone=emergency_contact_phone,
+        emergency_contact_relation=emergency_contact_relation,
+        age_range=age_range,
+        symptoms=symptoms,
+        stress_factors=stress_factors,
+        mental_health_history=mental_health_history,
+        therapy_goals=therapy_goals,
     )
     return await UserManagementService(db).update_user_profile(current_user.user_id, update_data, profile_pic)
 

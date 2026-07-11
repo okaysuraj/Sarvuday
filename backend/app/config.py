@@ -61,7 +61,7 @@ class Settings(BaseSettings):
 
 
 
-    secret_key: str = "d70e7203b79ff1d7428213a9f39f62a9211db0d4ab5cb5f1fb387af0dfb9ca53"
+    secret_key: str
 
     algorithm: str = "HS256"
 

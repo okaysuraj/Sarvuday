@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end', // Push controls to bottom
   },
   videoPlaceholder: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#1E293B',

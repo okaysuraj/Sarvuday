@@ -13,6 +13,7 @@ from .assessments import assessment_router
 from .normal_user import normal_user_router
 from .counsellor import counsellor_router
 from .ai import router as ai_insights_router
+from .general.community import router as community_router
 
 api_router = APIRouter()
 
@@ -112,6 +113,12 @@ api_router.include_router(
 api_router.include_router(
     ai_insights_router,
     prefix="/ai-insights",
+)
+
+api_router.include_router(
+    community_router,
+    prefix="/community",
+    tags=["Community"],
 )
 
 __all__ = ["api_router"]
