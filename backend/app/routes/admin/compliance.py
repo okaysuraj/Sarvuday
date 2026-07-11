@@ -3,14 +3,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import update, delete
 from app.database import get_db
 from app.models import NormalUser, Admin
-from app.utils.oauth import ensure_admin
+from app.utils.oauth import ensure_admin_user
 
 router = APIRouter(tags=["Admin Compliance"])
 
 @router.post("/anonymize/{user_id}")
 async def anonymize_user_data(
     user_id: str,
-    current_admin: Admin = Depends(ensure_admin),
+    current_admin: Admin = Depends(ensure_admin_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -47,7 +47,7 @@ async def anonymize_user_data(
 @router.delete("/right-to-delete/{user_id}")
 async def right_to_delete_user(
     user_id: str,
-    current_admin: Admin = Depends(ensure_admin),
+    current_admin: Admin = Depends(ensure_admin_user),
     db: AsyncSession = Depends(get_db)
 ):
     """

@@ -1,3 +1,6 @@
+Live link : **https://sarvuday.netlify.app/**
+
+
 # Sarvuday - Mental Health & Counselling Platform
 
 Sarvuday is a comprehensive mental health and counselling platform designed to connect users with professional counsellors. The platform facilitates real-time communication, appointment scheduling, and AI-driven sentiment analysis to ensure the highest quality of care.
