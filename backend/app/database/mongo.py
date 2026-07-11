@@ -12,6 +12,9 @@ client = MongoClient(
 )
 mongo_db: Database = client[settings.mongo_db_name]
 
+def get_mongo_db():
+    return mongo_db
+
 chatbot_collection = mongo_db["chatbot_history"]
 assessments_collection = mongo_db["assessments_data"]
 users_scores_collection = mongo_db["users_scores"]

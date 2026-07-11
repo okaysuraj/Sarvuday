@@ -1,7 +1,7 @@
 # app/database/__init__.py
 
 from .postgres import engine, async_session, Base, get_db
-from .mongo import chatbot_collection, assessments_collection, users_scores_collection, disorders_collection, connect_to_mongo, close_mongo_connection
+from .mongo import chatbot_collection, assessments_collection, users_scores_collection, disorders_collection, connect_to_mongo, close_mongo_connection, get_mongo_db
 
 
 __all__ = [
@@ -18,5 +18,5 @@ __all__ = [
     "disorders_collection",
     "connect_to_mongo",
     "close_mongo_connection",
-
+    "get_mongo_db",
 ]
