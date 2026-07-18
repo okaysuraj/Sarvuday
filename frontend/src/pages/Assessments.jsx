@@ -1,9 +1,8 @@
 // src/pages/Assessments.jsx
 
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import styles from './Assessments.module.css';
-import BASE_URL from '../config/apiConfig';
 
 const Assessments = () => {
   const [assessmentType, setAssessmentType] = useState('');
@@ -16,7 +15,7 @@ const Assessments = () => {
 
   const fetchQuestions = async (type) => {
     try {
-      const res = await axios.get(`${BASE_URL}/assessments/${type}`);
+      const res = await axiosInstance.get(`/assessments/${type}`);
       console.log('Fetched questions:', res.data.questions); // 🔍 Debug
       setAssessmentType(type);
       setQuestions(res.data.questions);
@@ -55,12 +54,6 @@ const Assessments = () => {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
       try {
-        const token = localStorage.getItem('accessToken');
-        const config = token ? {
-          headers: { Authorization: `Bearer ${token}` }
-        } : {};
-
-        // Make sure answers are in the correct format
         const formattedAnswers = answers.map(answer => ({
           question_id: answer.question_id,
           selected_option_score: answer.selected_option_score
@@ -71,10 +64,9 @@ const Assessments = () => {
         // 🔍 Debug: Check payload structure
         console.log('Submitting payload:', JSON.stringify(payload, null, 2));
 
-        const res = await axios.post(
-          `${BASE_URL}/assessments/score/${assessmentType}`,
-          payload,
-          config
+        const res = await axiosInstance.post(
+          `/assessments/score/${assessmentType}`,
+          payload
         );
 
         // Make sure we're getting a valid score object before setting it

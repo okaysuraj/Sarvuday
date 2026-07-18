@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Animated, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomButton } from '../../components/CustomButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function VoiceJournalScreen() {
   const router = useRouter();
   const [isRecording, setIsRecording] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -25,8 +27,32 @@ export default function VoiceJournalScreen() {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleSave = () => {
-    router.replace('/(tabs)');
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem('access_token');
+      const res = await fetch('http://10.0.2.2:8000/normal_user/tracking/journal', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          text: "Mock transcription of voice journal audio from therapy module...",
+          entry_type: "voice"
+        })
+      });
+      if (res.ok) {
+        router.replace('/(tabs)');
+      } else {
+        Alert.alert('Error', 'Failed to save voice journal');
+      }
+    } catch (e) {
+      console.error(e);
+      Alert.alert('Error', 'An error occurred.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -70,11 +96,15 @@ export default function VoiceJournalScreen() {
       </View>
 
       <View className="p-6 border-t border-surface-variant bg-surface">
-        <CustomButton 
-          title="Save Recording"
-          onPress={handleSave}
-          disabled={duration === 0 || isRecording}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color="#002da5" />
+        ) : (
+          <CustomButton 
+            title="Save Recording"
+            onPress={handleSave}
+            disabled={duration === 0 || isRecording}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

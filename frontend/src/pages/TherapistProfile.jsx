@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import axiosInstance from '../utils/axiosInstance';
 
 const TherapistProfile = () => {
   const { id } = useParams();
+  const [counsellor, setCounsellor] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCounsellor = async () => {
+      try {
+        const response = await axiosInstance.get(`/content/counsellors/${id}`);
+        setCounsellor(response.data);
+      } catch (error) {
+        console.error('Failed to fetch therapist details', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCounsellor();
+  }, [id]);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-64"><span className="material-symbols-outlined animate-spin text-4xl text-primary">autorenew</span></div>;
+  }
+
+  if (!counsellor) {
+    return <div className="text-center p-8 font-label-bold text-on-surface-variant">Therapist not found.</div>;
+  }
 
   return (
     <div className="max-w-6xl mx-auto py-8">
@@ -23,7 +48,7 @@ const TherapistProfile = () => {
       <header className="flex flex-col lg:flex-row gap-stack-lg items-start lg:items-center mb-stack-lg">
         <div className="relative group shrink-0">
           <div className="w-48 h-48 rounded-full border-[1.5px] border-on-surface overflow-hidden neo-shadow">
-            <img alt="Therapist Profile" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8quV2YqIa4iQBbJPQfu8H0pV40IhCvWYzVtbi61yUcVgC9CPUOR2PxizIWsEnbkmo7OeGHTbERdtEbLVGPIWHuTI8Oe_0F9PLrgcpkEie2Ce-kpgdue51OgsWVgxMryni1xDehw07S_itwVPGHrCCr3dve7PX4kIxJ6sygH4jZHqY8W6Wrt-jZJdWKI1pIqYAl6CJp4R1arCKltF4A0hr5dNKUpnSiq8S9eNSsBG3OQ6hFB9TwgQbNQ"/>
+            <img alt="Therapist Profile" className="w-full h-full object-cover" src={counsellor.profile_pic || "https://lh3.googleusercontent.com/aida-public/AB6AXuD8quV2YqIa4iQBbJPQfu8H0pV40IhCvWYzVtbi61yUcVgC9CPUOR2PxizIWsEnbkmo7OeGHTbERdtEbLVGPIWHuTI8Oe_0F9PLrgcpkEie2Ce-kpgdue51OgsWVgxMryni1xDehw07S_itwVPGHrCCr3dve7PX4kIxJ6sygH4jZHqY8W6Wrt-jZJdWKI1pIqYAl6CJp4R1arCKltF4A0hr5dNKUpnSiq8S9eNSsBG3OQ6hFB9TwgQbNQ"}/>
           </div>
           <div className="absolute bottom-2 right-2 bg-secondary-container border-[1.5px] border-on-surface rounded-full p-2 neo-shadow-sm flex items-center justify-center">
             <span className="material-symbols-outlined text-on-secondary-container" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
@@ -32,22 +57,24 @@ const TherapistProfile = () => {
         
         <div className="flex-1">
           <div className="flex flex-wrap items-center gap-4 mb-2">
-            <h2 className="font-display-lg text-display-lg text-on-surface">Dr. Ananya Sharma</h2>
-            <span className="px-4 py-1 rounded-full border-[1.5px] border-on-surface bg-accent-sage font-label-bold text-label-bold">Clinical Psychologist</span>
+            <h2 className="font-display-lg text-display-lg text-on-surface">{counsellor.name}</h2>
+            <span className="px-4 py-1 rounded-full border-[1.5px] border-on-surface bg-accent-sage font-label-bold text-label-bold">
+              {(counsellor.specializations && counsellor.specializations[0]) || 'Therapist'}
+            </span>
           </div>
-          <p className="font-body-lg text-on-surface-variant max-w-2xl">Helping you navigate the complexities of modern life through mindfulness-based cognitive therapy and compassionate listening.</p>
+          <p className="font-body-lg text-on-surface-variant max-w-2xl">{counsellor.bio || 'Professional and compassionate therapist.'}</p>
           
           <div className="flex flex-wrap gap-gutter mt-stack-md">
             <div className="bg-surface border-[1.5px] border-on-surface rounded-2xl p-4 neo-shadow-sm flex flex-col items-center justify-center min-w-[140px]">
-              <span className="font-display-lg text-headline-sm text-primary">8+</span>
+              <span className="font-display-lg text-headline-sm text-primary">{counsellor.experience_years || 0}+</span>
               <span className="font-label-bold text-on-surface-variant">Years Exp</span>
             </div>
             <div className="bg-secondary-container border-[1.5px] border-on-surface rounded-2xl p-4 neo-shadow-sm flex flex-col items-center justify-center min-w-[140px]">
-              <span className="font-display-lg text-headline-sm text-on-secondary-container">4.9</span>
+              <span className="font-display-lg text-headline-sm text-on-secondary-container">{counsellor.average_rating || '5.0'}</span>
               <span className="font-label-bold text-on-surface-variant">Star Rating</span>
             </div>
             <div className="bg-accent-pink border-[1.5px] border-on-surface rounded-2xl p-4 neo-shadow-sm flex flex-col items-center justify-center min-w-[140px]">
-              <span className="font-display-lg text-headline-sm text-ink-black">1.2k</span>
+              <span className="font-display-lg text-headline-sm text-ink-black">...</span>
               <span className="font-label-bold text-on-surface-variant">Patients</span>
             </div>
           </div>
@@ -58,18 +85,18 @@ const TherapistProfile = () => {
             <div className="mb-6">
               <span className="text-on-surface-variant font-label-bold block mb-1">Session Fee</span>
               <div className="flex items-baseline gap-2">
-                <span className="font-display-lg text-headline-md text-on-surface">₹1,500</span>
+                <span className="font-display-lg text-headline-md text-on-surface">₹{counsellor.session_fee || '1500'}</span>
                 <span className="text-on-surface-variant">/ hour</span>
               </div>
             </div>
-            <Link to="/booking/type" className="w-full bg-primary text-white border-[1.5px] border-on-surface neo-shadow rounded-2xl py-4 font-headline-sm active-click mb-4 flex items-center justify-center gap-3 transition-colors hover:bg-primary/90">
+            <Link to="/booking/type" state={{ counsellorId: id }} className="w-full bg-primary text-white border-[1.5px] border-on-surface neo-shadow rounded-2xl py-4 font-headline-sm active-click mb-4 flex items-center justify-center gap-3 transition-colors hover:bg-primary/90">
               <span className="material-symbols-outlined">event_available</span>
               Book Appointment
             </Link>
             <button className="w-full bg-white text-on-surface border-[1.5px] border-on-surface rounded-2xl py-4 font-label-bold hover:bg-surface-variant transition-colors">
               Send Message
             </button>
-            <p className="mt-4 text-center text-label-md text-on-surface-variant">Next available: Tomorrow, 10:00 AM</p>
+            <p className="mt-4 text-center text-label-md text-on-surface-variant">Next available: Soon</p>
           </div>
         </div>
       </header>
@@ -83,17 +110,18 @@ const TherapistProfile = () => {
             <h3 className="font-headline-sm text-headline-sm text-on-surface">About Me</h3>
           </div>
           <div className="space-y-4 font-body-md text-on-surface-variant leading-relaxed">
-            <p>Dr. Ananya Sharma is a highly regarded Clinical Psychologist with over 8 years of experience in emotional wellness and trauma recovery. She specializes in creating safe, non-judgmental spaces for her clients to explore their inner landscapes.</p>
-            <p>Her approach integrates Evidence-Based Practices with a holistic view of mental health. She has worked extensively with young professionals facing burnout, individuals navigating relationship challenges, and those seeking to improve their overall quality of life through mindfulness.</p>
+            <p>{counsellor.bio || 'Bio not provided.'}</p>
           </div>
           <div className="mt-8">
             <h4 className="font-label-bold text-on-surface mb-4">Specializations</h4>
             <div className="flex flex-wrap gap-2">
-              <span className="px-4 py-2 rounded-full border-[1.5px] border-on-surface bg-secondary-container text-on-secondary-container font-label-bold">Anxiety & Stress</span>
-              <span className="px-4 py-2 rounded-full border-[1.5px] border-on-surface bg-accent-sage text-on-surface font-label-bold">Relationship Counseling</span>
-              <span className="px-4 py-2 rounded-full border-[1.5px] border-on-surface bg-accent-pink text-ink-black font-label-bold">CBT</span>
-              <span className="px-4 py-2 rounded-full border-[1.5px] border-on-surface bg-surface-container text-on-surface font-label-bold">Mindfulness</span>
-              <span className="px-4 py-2 rounded-full border-[1.5px] border-on-surface bg-surface-container text-on-surface font-label-bold">Workplace Burnout</span>
+              {counsellor.specializations && counsellor.specializations.length > 0 ? (
+                counsellor.specializations.map((spec, i) => (
+                  <span key={i} className="px-4 py-2 rounded-full border-[1.5px] border-on-surface bg-secondary-container text-on-secondary-container font-label-bold">{spec}</span>
+                ))
+              ) : (
+                <span className="px-4 py-2 rounded-full border-[1.5px] border-on-surface bg-surface-container text-on-surface font-label-bold">General</span>
+              )}
             </div>
           </div>
         </section>
@@ -110,8 +138,8 @@ const TherapistProfile = () => {
             </div>
           </div>
           <div className="font-body-md mt-auto">
-            <p className="font-bold text-on-surface mb-1">Soul Center Wellness</p>
-            <p className="text-on-surface-variant text-label-md">142, Block B, Sushant Lok, New Delhi, India 110012</p>
+            <p className="font-bold text-on-surface mb-1">Clinic Address</p>
+            <p className="text-on-surface-variant text-label-md">{counsellor.address || 'Address not provided'}</p>
             <button className="text-primary font-label-bold mt-2 inline-block hover:underline">Get Directions</button>
           </div>
         </section>

@@ -39,12 +39,59 @@ import Chat from './pages/chat/Chat';
 import VideoCallPage from './pages/chat/VideoCallPage';
 import CounsellorDashboard from './pages/CounsellorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import ContentModeration from './pages/admin/ContentModeration';
 import TherapistSearch from './pages/TherapistSearch';
 import TherapistProfile from './pages/TherapistProfile';
 import BookingType from './pages/BookingType';
 import BookingSlot from './pages/BookingSlot';
 import BookingPayment from './pages/BookingPayment';
+import UserProfile from './pages/UserProfile';
+import Notifications from './pages/Notifications';
+import MyRecords from './pages/MyRecords';
+import MoodTracker from './pages/MoodTracker';
+import MoodCheckIn from './pages/MoodCheckIn';
+import DailyJournal from './pages/DailyJournal';
+import AIChatHome from './pages/AIChatHome';
+import AIChatSession from './pages/AIChatSession';
+import AIMoodAnalysisResult from './pages/AIMoodAnalysisResult';
+import AIRecommendations from './pages/AIRecommendations';
+import CounsellorDashboard from './pages/CounsellorDashboard';
+import AvailabilityManagement from './pages/AvailabilityManagement';
+import PatientList from './pages/PatientList';
+import EarningsDashboard from './pages/EarningsDashboard';
+import EditProfile from './pages/EditProfile';
+import AppointmentsList from './pages/AppointmentsList';
+import WaitingRoom from './pages/chat/WaitingRoom';
+import SessionRoom from './pages/chat/SessionRoom';
+import SessionNotes from './pages/chat/SessionNotes';
+import SessionSummary from './pages/chat/SessionSummary';
+import CommunityFeed from './pages/community/CommunityFeed';
+import PostCreation from './pages/community/PostCreation';
+import SupportGroups from './pages/community/SupportGroups';
+import GroupChat from './pages/community/GroupChat';
+import TherapistReviews from './pages/TherapistReviews';
+import SettingsLayout from './pages/settings/SettingsLayout';
+import PrivacySettings from './pages/settings/PrivacySettings';
+import ReminderSettings from './pages/settings/ReminderSettings';
+import AccountData from './pages/settings/AccountData';
+import Wallet from './pages/financial/Wallet';
+import Subscriptions from './pages/financial/Subscriptions';
+import EmergencyHelp from './pages/EmergencyHelp';
 
+// New Phase 8 Imports
+import GoalTracking from './pages/tracking/GoalTracking';
+import SleepTracking from './pages/tracking/SleepTracking';
+import SleepMoodCorrelation from './pages/tracking/SleepMoodCorrelation';
+import MedicationPlan from './pages/tracking/MedicationPlan';
+import StressTriggerAnalysis from './pages/tracking/StressTriggerAnalysis';
+import TriggerStressFactors from './pages/tracking/TriggerStressFactors';
+import ProgressDashboard from './pages/tracking/ProgressDashboard';
+import WeeklyReport from './pages/tracking/WeeklyReport';
+import TodayMoodSnapshot from './pages/tracking/TodayMoodSnapshot';
+import MoodCalendar from './pages/tracking/MoodCalendar';
+import VoiceMoodJournal from './pages/tracking/VoiceMoodJournal';
+import WearableIntegration from './pages/tracking/WearableIntegration';
+import GuidedMeditation from './pages/tracking/GuidedMeditation';
 const App = () => {
   return (
     <Router>
@@ -70,6 +117,9 @@ const App = () => {
           <Route path="/onboarding/preferences" element={<PreferencesSetup />} />
           <Route path="/disorders" element={<Disorders />} />
           <Route path="/approved-counsellors" element={<ApprovedCounsellors />} />
+          <Route path="counsellors/:id/book" element={<BookingSlot />} />
+          <Route path="counsellors/:counsellorId/reviews" element={<TherapistReviews />} />
+          <Route path="appointments" element={<AppointmentsList />} />
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/about" element={<About />} />
@@ -144,6 +194,126 @@ const App = () => {
             }
           />
           <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/edit"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <Notifications />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-records"
+            element={
+              <ProtectedRoute>
+                <MyRecords />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mood-tracker"
+            element={
+              <ProtectedRoute>
+                <MoodTracker />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mood-tracker/add"
+            element={
+              <ProtectedRoute>
+                <MoodCheckIn />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/journal"
+            element={
+              <ProtectedRoute>
+                <DailyJournal />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/journal/analysis"
+            element={
+              <ProtectedRoute>
+                <AIMoodAnalysisResult />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/insights"
+            element={
+              <ProtectedRoute>
+                <AIRecommendations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/counsellor-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['counsellor']}>
+                <CounsellorDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/counsellor-dashboard/patients"
+            element={
+              <ProtectedRoute allowedRoles={['counsellor']}>
+                <PatientList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/schedule"
+            element={
+              <ProtectedRoute allowedRoles={['counsellor']}>
+                <AvailabilityManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/earnings"
+            element={
+              <ProtectedRoute allowedRoles={['counsellor']}>
+                <EarningsDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ai-chat"
+            element={
+              <ProtectedRoute>
+                <AIChatHome />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ai-chat/session"
+            element={
+              <ProtectedRoute>
+                <AIChatSession />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/counselling-session/:sessionId"
             element={
               <ProtectedRoute>
@@ -167,6 +337,45 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin-dashboard/moderation"
+            element={
+              <ProtectedRoute>
+                <ContentModeration />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/session/waiting" element={<WaitingRoom />} />
+          <Route path="/session/:sessionId" element={<SessionRoom />} />
+          <Route path="/session/notes" element={<SessionNotes />} />
+          <Route path="/session/summary" element={<SessionSummary />} />
+          <Route path="/community" element={<CommunityFeed />} />
+          <Route path="/community/new" element={<PostCreation />} />
+          <Route path="/community/groups" element={<SupportGroups />} />
+          <Route path="/community/groups/:groupId" element={<GroupChat />} />
+          <Route path="/settings" element={<SettingsLayout />}>
+            <Route path="privacy" element={<PrivacySettings />} />
+            <Route path="reminders" element={<ReminderSettings />} />
+            <Route path="data" element={<AccountData />} />
+          </Route>
+          <Route path="/wallet" element={<Wallet />} />
+          <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="/emergency" element={<EmergencyHelp />} />
+          
+          {/* Tracking Routes */}
+          <Route path="/goals" element={<ProtectedRoute><GoalTracking /></ProtectedRoute>} />
+          <Route path="/sleep" element={<ProtectedRoute><SleepTracking /></ProtectedRoute>} />
+          <Route path="/sleep/correlation" element={<ProtectedRoute><SleepMoodCorrelation /></ProtectedRoute>} />
+          <Route path="/medication" element={<ProtectedRoute><MedicationPlan /></ProtectedRoute>} />
+          <Route path="/stress/analysis" element={<ProtectedRoute><StressTriggerAnalysis /></ProtectedRoute>} />
+          <Route path="/stress/factors" element={<ProtectedRoute><TriggerStressFactors /></ProtectedRoute>} />
+          <Route path="/progress" element={<ProtectedRoute><ProgressDashboard /></ProtectedRoute>} />
+          <Route path="/progress/weekly" element={<ProtectedRoute><WeeklyReport /></ProtectedRoute>} />
+          <Route path="/progress/today" element={<ProtectedRoute><TodayMoodSnapshot /></ProtectedRoute>} />
+          <Route path="/progress/calendar" element={<ProtectedRoute><MoodCalendar /></ProtectedRoute>} />
+          <Route path="/journal/voice" element={<ProtectedRoute><VoiceMoodJournal /></ProtectedRoute>} />
+          <Route path="/wearables" element={<ProtectedRoute><WearableIntegration /></ProtectedRoute>} />
+          <Route path="/meditation" element={<ProtectedRoute><GuidedMeditation /></ProtectedRoute>} />
         </Route>
       </Routes>
     </Router>

@@ -2,7 +2,7 @@ import { apiClient } from './client';
 
 export const userApi = {
   getProfile: async () => {
-    const response = await apiClient.get('/user/dashboard/profile');
+    const response = await apiClient.get('/normal_user/dashboard/profile');
     return response.data;
   },
   
@@ -17,7 +17,7 @@ export const userApi = {
       }
     });
 
-    const response = await apiClient.patch('/user/dashboard/profile', formData, {
+    const response = await apiClient.patch('/normal_user/dashboard/profile', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -26,12 +26,27 @@ export const userApi = {
   },
   
   getPatientDashboard: async () => {
-    const response = await apiClient.get('/user/dashboard');
+    const response = await apiClient.get('/normal_user/dashboard');
     return response.data;
   },
   
   getTherapistDashboard: async () => {
     const response = await apiClient.get('/counsellor/dashboard');
+    return response.data;
+  },
+
+  getAdminDashboard: async () => {
+    const response = await apiClient.get('/admin/dashboard');
+    return response.data;
+  },
+
+  getTherapists: async () => {
+    const response = await apiClient.get('/content/counsellors');
+    return response.data;
+  },
+
+  getTherapistById: async (id: string) => {
+    const response = await apiClient.get(`/content/counsellors/${id}`);
     return response.data;
   }
 };

@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Keyb
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomButton } from '../../components/CustomButton';
+import { userApi } from '../../api/user';
 
 export default function EmergencySetupScreen() {
   const router = useRouter();
@@ -11,16 +12,25 @@ export default function EmergencySetupScreen() {
   const [phone, setPhone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await userApi.updateProfile({
+        emergency_contact_name: name,
+        emergency_contact_relation: relationship,
+        emergency_contact_phone: phone
+      });
       Alert.alert(
         'Intake Complete', 
         'Thank you for completing your profile. You will now be taken to your dashboard.',
         [{ text: 'Go to Dashboard', onPress: () => router.replace('/(tabs)') }]
       );
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Failed to save emergency contact details.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

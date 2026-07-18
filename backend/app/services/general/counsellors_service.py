@@ -23,3 +23,17 @@ class CounsellorService:
             counsellors=[CounsellorWebView.model_validate(c) for c in counsellors]
         )
 
+    @classmethod
+    async def fetch_counsellor_by_id(cls, db: AsyncSession, counsellor_id: str) -> CounsellorWebView:
+        query = select(Counsellor).where(
+            Counsellor.user_id == counsellor_id,
+            Counsellor.is_approved == True
+        )
+        result = await db.execute(query)
+        counsellor = result.scalar_one_or_none()
+
+        if not counsellor:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Counsellor not found.")
+
+        return CounsellorWebView.model_validate(counsellor)
+

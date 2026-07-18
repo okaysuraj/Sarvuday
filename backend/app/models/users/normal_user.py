@@ -38,6 +38,8 @@ class NormalUser(Base, BaseMixin):
     address = Column(Text)
     pincode = Column(String(10))
     timezone = Column(String(50))
+    dob = Column(String(20))
+    bio = Column(Text)
 
     # Mental Health Specific
     is_anonymous = Column(Boolean, default=False)

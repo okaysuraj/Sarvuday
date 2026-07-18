@@ -55,15 +55,15 @@ const PreferencesSetup = () => {
       // Add preferences
       formDataToSend.append('therapy_goals', JSON.stringify(formData));
 
-      const response = await axiosInstance.patch('/dashboard/profile', formDataToSend);
+      const response = await axiosInstance.patch('/user/dashboard/profile', formDataToSend);
       if (response.status === 200) {
         toast.success("Profile setup complete!");
         localStorage.removeItem('onboardingData');
         const userType = localStorage.getItem('userType');
         if (userType === 'counsellor') {
-          navigate('/counsellor/dashboard');
+          navigate('/counsellor-dashboard');
         } else {
-          navigate('/dashboard');
+          navigate('/normal-user-dashboard');
         }
       }
     } catch (error) {
@@ -75,9 +75,9 @@ const PreferencesSetup = () => {
   const handleSkip = () => {
     const userType = localStorage.getItem('userType');
     if (userType === 'counsellor') {
-      navigate('/counsellor/dashboard');
+      navigate('/counsellor-dashboard');
     } else {
-      navigate('/dashboard');
+      navigate('/normal-user-dashboard');
     }
   };
 

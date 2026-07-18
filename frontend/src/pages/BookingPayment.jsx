@@ -1,30 +1,62 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
 
 const BookingPayment = () => {
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = useState('card_4242');
+  const location = useLocation();
+  const state = location.state || {};
+  const { counsellorId, bookingType, selectedDate, selectedSlot } = state;
 
+  const [paymentMethod, setPaymentMethod] = useState('card_4242');
   const [loading, setLoading] = useState(false);
+  const [counsellor, setCounsellor] = useState(null);
+
+  useEffect(() => {
+    if (!counsellorId || !selectedSlot) {
+      navigate(-1);
+      return;
+    }
+
+    const fetchCounsellor = async () => {
+      try {
+        const res = await axiosInstance.get(`/content/counsellors/${counsellorId}`);
+        setCounsellor(res.data);
+      } catch (err) {
+        console.error('Failed to load counsellor', err);
+      }
+    };
+    fetchCounsellor();
+  }, [counsellorId, selectedSlot, navigate]);
 
   const handleConfirm = async () => {
     setLoading(true);
     try {
-      // In a real app, amount would come from the actual booking details
-      const payload = { amount: 1500.00, currency: "inr" };
-      await axiosInstance.post('/payments/create-intent', payload);
+      // Create the appointment (backend handles dummy payment for now)
+      const payload = { 
+        counsellor_id: counsellorId, 
+        availability_slot_id: selectedSlot.id,
+        reason: bookingType
+      };
+      await axiosInstance.post('/user/appointments', payload);
       
       toast.success("Payment successful! Appointment booked.");
-      navigate('/normal-user-dashboard');
+      // Redirect to appointments list or dashboard
+      navigate('/my-records'); // Assuming appointments are shown in my-records or we will create /appointments
     } catch (error) {
       console.error("Payment failed", error);
-      toast.error("Payment failed. Please try again.");
+      toast.error(error.response?.data?.detail || "Booking failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (!selectedSlot) return null;
+
+  const fee = counsellor?.session_fee || 1500;
+  const tax = fee * 0.18;
+  const total = fee + tax;
 
   return (
     <div className="max-w-7xl mx-auto py-8">
@@ -108,26 +140,6 @@ const BookingPayment = () => {
                   </div>
                 </div>
               </label>
-              
-              {/* Card Option 2 */}
-              <label className="flex items-center justify-between p-4 border-[1.5px] border-ink-black rounded-xl hover:bg-surface-container transition-colors cursor-pointer group">
-                <div className="flex items-center gap-4">
-                  <input 
-                    checked={paymentMethod === 'card_8899'}
-                    onChange={() => setPaymentMethod('card_8899')}
-                    className="custom-radio" 
-                    name="payment_method" 
-                    type="radio"
-                  />
-                  <div className="w-12 h-8 bg-surface-container-high rounded flex items-center justify-center border border-ink-black/20">
-                    <span className="font-label-bold text-[10px]">MC</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-label-bold">Mastercard ending in 8899</span>
-                    <span className="font-body-md text-[12px] text-on-surface-variant">Expires 08/24</span>
-                  </div>
-                </div>
-              </label>
             </div>
             
             <button className="mt-6 flex items-center gap-2 text-primary font-label-bold hover:text-primary/80 transition-colors">
@@ -154,28 +166,6 @@ const BookingPayment = () => {
               </div>
             </label>
           </div>
-
-          {/* Wallet Option */}
-          <div className="bg-white border-[1.5px] border-ink-black rounded-3xl p-6 hover:bg-surface-container transition-colors cursor-pointer">
-            <label className="flex items-center justify-between cursor-pointer w-full">
-              <div className="flex items-center gap-4">
-                <input 
-                  checked={paymentMethod === 'wallet'}
-                  onChange={() => setPaymentMethod('wallet')}
-                  className="custom-radio" 
-                  name="payment_method" 
-                  type="radio"
-                />
-                <div className="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center border-[1.5px] border-ink-black">
-                  <span className="material-symbols-outlined">account_balance_wallet</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-headline-sm text-ink-black text-xl">Digital Wallet</span>
-                  <span className="font-body-md text-[14px] text-on-surface-variant">Balance: ₹4,500.00</span>
-                </div>
-              </div>
-            </label>
-          </div>
         </div>
 
         {/* Right Column: Order Summary Sidebar */}
@@ -186,30 +176,26 @@ const BookingPayment = () => {
             <div className="flex flex-col gap-4 mb-6">
               <div className="flex justify-between items-start">
                 <div className="flex flex-col">
-                  <span className="font-label-bold">Therapy Session</span>
-                  <span className="font-body-md text-sm text-ink-black/70">Dr. Aisha Sharma (50 min)</span>
+                  <span className="font-label-bold">Therapy Session ({bookingType})</span>
+                  <span className="font-body-md text-sm text-ink-black/70">{counsellor?.name || 'Therapist'} ({counsellor?.session_duration || 50} min)</span>
+                  <span className="font-body-md text-xs text-ink-black/60 mt-1">{new Date(selectedDate).toDateString()} at {selectedSlot.start_time.substring(0,5)}</span>
                 </div>
-                <span className="font-label-md">₹1,500</span>
+                <span className="font-label-md">₹{fee.toFixed(2)}</span>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-2 mb-6">
-              <input className="flex-1 bg-white border-[1.5px] border-ink-black rounded-xl p-3 font-body-md h-12 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Promo code" type="text"/>
-              <button className="h-12 px-6 bg-surface border-[1.5px] border-ink-black rounded-xl font-label-bold active-press transition-colors">Apply</button>
             </div>
             
             <div className="border-t-[1.5px] border-ink-black pt-4 flex flex-col gap-2 mb-6">
               <div className="flex justify-between">
                 <span className="font-body-md text-ink-black/70">Subtotal</span>
-                <span className="font-body-md">₹1,500.00</span>
+                <span className="font-body-md">₹{fee.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-body-md text-ink-black/70">Tax (Estimated)</span>
-                <span className="font-body-md">₹270.00</span>
+                <span className="font-body-md">₹{tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mt-2 pt-2 border-t-[1.5px] border-ink-black border-dashed">
                 <span className="font-headline-sm text-ink-black">Total</span>
-                <span className="font-headline-sm text-ink-black">₹1,770.00</span>
+                <span className="font-headline-sm text-ink-black">₹{total.toFixed(2)}</span>
               </div>
             </div>
             

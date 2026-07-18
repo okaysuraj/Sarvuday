@@ -24,6 +24,9 @@ class NormalUserBase(BaseModel):
     city: Optional[str]
     address: Optional[str]
     pincode: Optional[str]
+    timezone: Optional[str]
+    dob: Optional[str]
+    bio: Optional[str]
 
     emergency_contact_name: Optional[str] = None
     emergency_contact_phone: Optional[str] = None
@@ -57,6 +60,9 @@ class UserUpdateRequest(BaseModel):
     city: Optional[str] = None
     address: Optional[str] = None
     pincode: Optional[str] = None
+    timezone: Optional[str] = None
+    dob: Optional[str] = None
+    bio: Optional[str] = None
 
     emergency_contact_name: Optional[str] = None
     emergency_contact_phone: Optional[str] = None

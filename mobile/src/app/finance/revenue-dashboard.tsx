@@ -1,11 +1,42 @@
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function RevenueDashboardScreen() {
   const router = useRouter();
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'year'>('month');
+  const [revenue, setRevenue] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = await AsyncStorage.getItem('access_token');
+        const res = await fetch('http://10.0.2.2:8000/counsellor/dashboard', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          setRevenue(json.revenue || 0);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-surface items-center justify-center">
+        <ActivityIndicator size="large" color="#002da5" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-surface">
@@ -36,7 +67,7 @@ export default function RevenueDashboardScreen() {
 
         <Text className="font-headline-md text-on-surface text-lg font-bold mb-4">Total Revenue</Text>
         <View className="bg-surface-container-highest p-6 rounded-2xl mb-8 border border-outline-variant">
-          <Text className="font-headline-md text-on-surface font-bold text-4xl mb-6 text-center">$3,450.00</Text>
+          <Text className="font-headline-md text-on-surface font-bold text-4xl mb-6 text-center">${revenue.toFixed(2)}</Text>
           
           {/* Mock Graph */}
           <View className="h-40 justify-end flex-row items-end gap-2 mb-4 border-b border-surface-variant pb-2">

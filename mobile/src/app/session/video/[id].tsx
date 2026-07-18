@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../../store/useAuthStore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function VideoCallScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -12,8 +13,35 @@ export default function VideoCallScreen() {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const joinSession = async () => {
+      try {
+        const token = await AsyncStorage.getItem('access_token');
+        const rolePath = user?.role === 'therapist' ? 'counsellor' : 'normal_user';
+        const res = await fetch(`http://10.0.2.2:8000/${rolePath}/sessions/join/${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          setSessionToken(json.token);
+          console.log(`Joined session. Token: ${json.token}`);
+        } else {
+          Alert.alert('Notice', 'Mocking video session (Backend returned error).');
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    joinSession();
+  }, [id, user?.role]);
+
+  useEffect(() => {
+    if (loading) return;
     const timer = setInterval(() => {
       setDuration(prev => prev + 1);
     }, 1000);
@@ -29,6 +57,14 @@ export default function VideoCallScreen() {
   const handleEndCall = () => {
     router.replace(`/session/end?sessionId=${id}`);
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-ink-black items-center justify-center">
+        <ActivityIndicator size="large" color="#ffffff" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-ink-black">

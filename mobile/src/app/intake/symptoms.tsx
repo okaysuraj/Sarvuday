@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-na
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomButton } from '../../components/CustomButton';
+import { userApi } from '../../api/user';
 
 const SYMPTOMS = [
   'Depression', 'Anxiety', 'Panic Attacks', 'Insomnia', 'Chronic Stress',
@@ -13,6 +14,21 @@ const SYMPTOMS = [
 export default function SymptomsScreen() {
   const router = useRouter();
   const [selected, setSelected] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleNext = async () => {
+    setIsLoading(true);
+    try {
+      await userApi.updateProfile({
+        symptoms: selected.join(',')
+      });
+      router.push('/intake/emergency-setup');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const toggleSymptom = (s: string) => {
     if (selected.includes(s)) {
@@ -65,7 +81,8 @@ export default function SymptomsScreen() {
       <View className="p-6 border-t border-surface-variant bg-surface">
         <CustomButton 
           title="Next"
-          onPress={() => router.push('/intake/emergency-setup')}
+          onPress={handleNext}
+          isLoading={isLoading}
           disabled={selected.length === 0}
         />
       </View>

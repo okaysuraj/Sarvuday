@@ -3,12 +3,32 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Keyb
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomButton } from '../../components/CustomButton';
+import { userApi } from '../../api/user';
 
 export default function MedicalHistoryScreen() {
   const router = useRouter();
   const [history, setHistory] = useState('');
   const [medications, setMedications] = useState('');
   const [therapyBefore, setTherapyBefore] = useState<'yes' | 'no' | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleNext = async () => {
+    setIsLoading(true);
+    try {
+      await userApi.updateProfile({
+        mental_health_history: history,
+        // Since we don't have a medications field, we append it to history or just use history for both.
+        // Let's just pass mental_health_history for now.
+        // Wait, therapyBefore is also not a direct field. Let's encode this into mental_health_history.
+        mental_health_history: `Therapy before: ${therapyBefore}. Diagnoses: ${history}. Medications: ${medications}.`
+      });
+      router.push('/intake/symptoms');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-surface">
@@ -80,7 +100,8 @@ export default function MedicalHistoryScreen() {
         <View className="p-6 border-t border-surface-variant bg-surface">
           <CustomButton 
             title="Next"
-            onPress={() => router.push('/intake/symptoms')}
+            onPress={handleNext}
+            isLoading={isLoading}
             disabled={!therapyBefore}
           />
         </View>

@@ -1,112 +1,93 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { chatApi } from '../../api/chat';
-import { useAuthStore } from '../../store/useAuthStore';
-import { format, parseISO } from 'date-fns';
+import useAuthStore from '../../store/authStore';
+import { format } from 'date-fns';
 
-export default function ChatHubScreen() {
+export default function ChatRoomsScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
+  
   const [rooms, setRooms] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const fetchRooms = useCallback(async () => {
-    if (!user?.user_id) return;
-    try {
-      const response = await chatApi.getChatRooms(user.user_id);
-      setRooms(response.rooms || []);
-    } catch (error) {
-      console.error('Error fetching chat rooms', error);
-    } finally {
-      setIsLoading(false);
-      setRefreshing(false);
-    }
-  }, [user]);
 
   useEffect(() => {
+    const fetchRooms = async () => {
+      if (!user) return;
+      try {
+        const data = await chatApi.getRooms(user.user_id);
+        setRooms(data.rooms || []);
+      } catch (error) {
+        console.error('Error fetching chat rooms:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     fetchRooms();
-  }, [fetchRooms]);
+  }, [user]);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchRooms();
-  };
-
-  const formatTime = (isoString: string) => {
-    if (!isoString) return '';
-    try {
-      return format(parseISO(isoString), 'h:mm a');
-    } catch (e) {
-      return '';
-    }
-  };
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-background justify-center items-center">
+        <ActivityIndicator size="large" color="#002da5" />
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView className="flex-1 bg-surface">
-      <View className="px-6 pt-4 pb-2">
-        <Text className="font-headline-md text-on-surface text-3xl font-bold mb-6">Messages</Text>
-        
-        {/* AI Companion Card */}
-        <TouchableOpacity 
-          onPress={() => router.push('/chat/ai')}
-          className="bg-primary-fixed p-4 rounded-xl flex-row items-center mb-8 border border-primary-fixed-dim"
-        >
-          <View className="w-14 h-14 rounded-full bg-primary items-center justify-center mr-4">
-            <Ionicons name="sparkles" size={24} color="#ffffff" />
-          </View>
-          <View className="flex-1">
-            <Text className="font-headline-md text-on-primary-fixed font-bold text-lg">AI Companion</Text>
-            <Text className="font-body-md text-on-primary-fixed-variant text-sm mt-1">Available 24/7 for support</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={24} color="#002da5" />
+    <View className="flex-1 bg-background">
+      <View className="w-full top-0 border-b-[1.5px] border-ink-black flex-row justify-between items-center px-6 py-4 z-40 bg-background">
+        <View className="w-10" />
+        <Text className="font-headline-sm text-primary font-bold text-xl uppercase tracking-tighter">Messages</Text>
+        <TouchableOpacity className="p-2 rounded-full active:bg-surface-container-high">
+          <Ionicons name="search" size={24} color="#1b1b20" />
         </TouchableOpacity>
-
-        <View className="flex-row justify-between items-center mb-4">
-          <Text className="font-headline-md text-on-surface text-lg font-bold">Recent Conversations</Text>
-        </View>
       </View>
 
-      <ScrollView 
-        className="flex-1 px-6"
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#002da5" />}
-      >
-        {isLoading ? (
-          <ActivityIndicator size="large" color="#002da5" className="mt-8" />
-        ) : rooms.length > 0 ? (
-          rooms.map(chat => (
+      <ScrollView className="flex-1 px-4 py-4" contentContainerStyle={{ paddingBottom: 100 }}>
+        {rooms.length === 0 ? (
+          <View className="items-center justify-center py-10 opacity-70">
+            <Ionicons name="chatbubbles-outline" size={48} color="#1b1b20" />
+            <Text className="mt-4 font-body-md text-ink-black">No messages yet.</Text>
+          </View>
+        ) : (
+          rooms.map((room, idx) => (
             <TouchableOpacity 
-              key={chat.room_id}
-              onPress={() => router.push(`/chat/${chat.room_id}`)}
-              className="flex-row items-center py-4 border-b border-surface-variant"
+              key={idx} 
+              onPress={() => router.push(`/chat/${room.room_id}`)}
+              className="flex-row items-center bg-surface border-[1.5px] border-ink-black rounded-2xl p-4 mb-4 shadow-[2px_2px_0px_0px_#1A1A1A] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
             >
-              <View className="w-14 h-14 rounded-full bg-surface-container-highest items-center justify-center mr-4">
-                <Ionicons name={chat.other_user_type === 'counsellor' ? "medical" : "person"} size={24} color="#1b1b20" />
+              <View className="w-12 h-12 rounded-full border-[1.5px] border-ink-black bg-accent-sage items-center justify-center overflow-hidden">
+                 {room.other_user_type === 'counsellor' ? (
+                   <Ionicons name="medkit" size={20} color="#1b1b20" />
+                 ) : (
+                   <Ionicons name="person" size={20} color="#1b1b20" />
+                 )}
               </View>
-              <View className="flex-1">
+              <View className="flex-1 ml-4">
                 <View className="flex-row justify-between items-center mb-1">
-                  <Text className="font-headline-md text-on-surface font-bold text-base">{chat.other_user_name}</Text>
-                  <Text className="font-label-md text-on-surface-variant text-xs">{formatTime(chat.last_message_time)}</Text>
+                  <Text className="font-label-bold text-ink-black font-bold text-base">{room.other_user_name}</Text>
+                  {room.last_message_time && (
+                    <Text className="text-xs text-on-surface-variant font-label-md">
+                      {format(new Date(room.last_message_time), 'MMM dd')}
+                    </Text>
+                  )}
                 </View>
-                <Text className="font-body-md text-on-surface-variant text-sm" numberOfLines={1}>
-                  {chat.last_message || 'No messages yet.'}
+                <Text className="font-body-md text-on-surface-variant text-sm line-clamp-1" numberOfLines={1}>
+                  {room.last_message || 'Start chatting...'}
                 </Text>
               </View>
-              {chat.unread_count > 0 && (
-                <View className="w-6 h-6 rounded-full bg-primary items-center justify-center ml-2">
-                  <Text className="text-on-primary font-label-bold text-xs">{chat.unread_count}</Text>
+              {room.unread_count > 0 && (
+                <View className="bg-primary border-[1.5px] border-ink-black rounded-full min-w-[24px] h-[24px] items-center justify-center px-1 ml-2">
+                  <Text className="text-white text-xs font-bold">{room.unread_count}</Text>
                 </View>
               )}
             </TouchableOpacity>
           ))
-        ) : (
-          <View className="items-center py-12">
-            <Text className="text-on-surface-variant text-center">No active conversations yet.</Text>
-          </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

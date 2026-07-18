@@ -1,9 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import axiosInstance from '../utils/axiosInstance';
+import { toast } from 'react-toastify';
 
 const AdminDashboard = () => {
   const [telemetry, setTelemetry] = useState([60, 65, 55, 80, 75, 90, 85, 70, 50, 95]);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await axiosInstance.get('/admin/dashboard');
+        setDashboardData(response.data);
+      } catch (error) {
+        console.error('Failed to load admin dashboard', error);
+        toast.error('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
+
     const interval = setInterval(() => {
       setTelemetry(prev => prev.map(currentHeight => {
         const variance = Math.floor(Math.random() * 20) - 10;
@@ -15,6 +32,10 @@ const AdminDashboard = () => {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-64"><span className="material-symbols-outlined animate-spin text-4xl text-primary">autorenew</span></div>;
+  }
 
   return (
     <div className="space-y-gutter">
@@ -38,7 +59,7 @@ const AdminDashboard = () => {
         <div className="sticker-card neo-shadow-large p-6 rounded-[32px] bg-accent-pink flex flex-col justify-between">
           <div>
             <p className="font-label-bold text-on-surface-variant uppercase text-xs mb-1">Total Community</p>
-            <h3 className="font-display-lg text-display-lg text-ink-black">42,892</h3>
+            <h3 className="font-display-lg text-display-lg text-ink-black">{dashboardData?.total_active_users || 0}</h3>
           </div>
           <div className="flex items-center gap-1 text-primary font-label-bold mt-4">
             <span className="material-symbols-outlined">trending_up</span>
@@ -50,7 +71,7 @@ const AdminDashboard = () => {
         <div className="sticker-card neo-shadow-large p-6 rounded-[32px] bg-secondary-fixed flex flex-col justify-between">
           <div>
             <p className="font-label-bold text-on-surface-variant uppercase text-xs mb-1">Licensed Staff</p>
-            <h3 className="font-display-lg text-display-lg text-ink-black">1,248</h3>
+            <h3 className="font-display-lg text-display-lg text-ink-black">{dashboardData?.active_therapists || 0}</h3>
           </div>
           <div className="flex items-center gap-1 text-ink-black font-label-bold mt-4">
             <span className="material-symbols-outlined">groups</span>
@@ -63,7 +84,7 @@ const AdminDashboard = () => {
           <div className="flex justify-between items-start">
             <div>
               <p className="font-label-bold text-on-surface-variant uppercase text-xs mb-1">Monthly Revenue</p>
-              <h3 className="font-display-lg text-display-lg text-ink-black">$244,900</h3>
+              <h3 className="font-display-lg text-display-lg text-ink-black">${dashboardData?.total_revenue || 0}</h3>
             </div>
             <div className="h-16 w-32 relative">
               {/* Mini Sparkline visualization placeholder */}

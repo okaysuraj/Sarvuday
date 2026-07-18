@@ -10,7 +10,7 @@ const NormalUserDashboard = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const response = await axiosInstance.get('/dashboard');
+        const response = await axiosInstance.get('/user/dashboard');
         setDashboardData(response.data);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
@@ -39,7 +39,7 @@ const NormalUserDashboard = () => {
           </button>
         </div>
         <div className="w-64 h-64 md:w-80 md:h-80 shrink-0 neo-card overflow-hidden bg-background">
-          <img alt="Hero Illustration" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLtyVAa1ECaNGVdj2YLQx-5XVQpfLPTyYDAmrY4KEoVORawz7XD9HRyHJuxBVMTMeeR6LOm0QoOP2FUPR6uenL3YpeTS7bBj4HQ9SMl7hTaCHBoZWGlkCdi0_wQS-m_VHpxpLGFqLkq6D098b1S0rX2LLBPXYGnW7Og_7f8B-rZm8nxNzb30TpP75sD2NyZBiXv6KWOdRslgXkaky8Lb0Ei6OU0Ee2d6eS4WCRSV-FoQwMGDn6KuulWmv5qK" />
+          <img alt="Hero" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLtyVAa1ECaNGVdj2YLQx-5XVQpfLPTyYDAmrY4KEoVORawz7XD9HRyHJuxBVMTMeeR6LOm0QoOP2FUPR6uenL3YpeTS7bBj4HQ9SMl7hTaCHBoZWGlkCdi0_wQS-m_VHpxpLGFqLkq6D098b1S0rX2LLBPXYGnW7Og_7f8B-rZm8nxNzb30TpP75sD2NyZBiXv6KWOdRslgXkaky8Lb0Ei6OU0Ee2d6eS4WCRSV-FoQwMGDn6KuulWmv5qK" />
         </div>
       </section>
 
@@ -62,31 +62,42 @@ const NormalUserDashboard = () => {
         {/* Weekly Mood Snapshot */}
         <div className="col-span-1 md:col-span-7 neo-card bg-surface p-container-padding flex flex-col">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-headline-sm text-headline-sm text-ink-black">Your Activity Summary</h3>
+            <h3 className="font-headline-sm text-headline-sm text-ink-black">Weekly Mood Snapshot</h3>
+            <button className="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+              <span className="font-label-md text-label-md">View History</span>
+              <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
           </div>
           
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <div className="neo-card bg-accent-sage/30 p-4 border-[1px]">
-              <p className="font-label-md text-on-surface-variant">Chat Sessions</p>
-              <p className="font-display-md text-primary">{dashboardData?.chat_sessions_count || 0}</p>
+          <div className="flex-grow flex items-end gap-4 h-48 mt-4 pt-4 border-b-[1.5px] border-ink-black relative">
+            {/* Y-axis labels */}
+            <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-outline w-8">
+              <span>Great</span>
+              <span>Okay</span>
+              <span>Low</span>
             </div>
-            <div className="neo-card bg-accent-orange/30 p-4 border-[1px]">
-              <p className="font-label-md text-on-surface-variant">Therapy Sessions</p>
-              <p className="font-display-md text-secondary">{dashboardData?.total_sessions || 0}</p>
-            </div>
-            <div className="neo-card bg-accent-pink/30 p-4 border-[1px] col-span-2">
-              <p className="font-label-md text-on-surface-variant">Upcoming Appointments</p>
-              {dashboardData?.upcoming_sessions && dashboardData.upcoming_sessions.length > 0 ? (
-                <ul className="mt-2 space-y-2">
-                  {dashboardData.upcoming_sessions.map((session, idx) => (
-                    <li key={idx} className="font-body-md text-ink-black border-l-4 border-primary pl-2">
-                      {new Date(session.session_scheduled_at).toLocaleString()}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="font-body-md text-ink-black mt-2">No upcoming appointments.</p>
-              )}
+            <div className="ml-8 flex-grow flex items-end justify-between h-full px-2">
+              {/* Day Bars */}
+              {[
+                { day: 'Mon', h: '60%', color: 'bg-accent-sage', label: 'Good' },
+                { day: 'Tue', h: '80%', color: 'bg-accent-orange', label: 'Great' },
+                { day: 'Wed', h: '40%', color: 'bg-accent-sage', label: 'Okay' },
+                { day: 'Thu', h: '70%', color: 'bg-accent-sage', label: 'Good' },
+                { day: 'Fri', h: '50%', color: 'bg-accent-pink', label: 'Mixed' },
+                { day: 'Sat', h: '30%', color: 'bg-surface-dim', label: 'Low', active: true },
+                { day: 'Sun', h: '0%', color: '', label: '', empty: true }
+              ].map((item, idx) => (
+                <div key={idx} className="flex flex-col items-center gap-2 group cursor-pointer w-full">
+                  {item.empty ? (
+                    <div className="w-full max-w-[32px] h-[0%] border-[1.5px] border-dashed border-outline-variant rounded-t-lg"></div>
+                  ) : (
+                    <div className={`w-full max-w-[32px] h-[${item.h}] ${item.color} border-[1.5px] border-ink-black rounded-t-lg group-hover:bg-primary transition-colors relative`} style={{ height: item.h }}>
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-ink-black text-background text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">{item.label}</div>
+                    </div>
+                  )}
+                  <span className={`font-label-md text-label-md ${item.active ? 'text-primary font-bold' : 'text-on-surface-variant'}`}>{item.day}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -104,21 +115,18 @@ const NormalUserDashboard = () => {
             <p className="font-body-md text-body-md text-tertiary-container mt-1">Schedule your next session easily.</p>
           </div>
           <div className="shrink-0">
-            <span className="material-symbols-outlined text-ink-black">arrow_forward_ios</span>
+            <span className="material-symbols-outlined text-ink-black bg-surface p-2 rounded-full border-[1.5px] border-ink-black">arrow_forward</span>
           </div>
         </Link>
         
-        {/* Quick Exercise */}
-        <div className="neo-card bg-accent-sage p-container-padding flex flex-row items-center gap-6 cursor-pointer hover:bg-secondary-fixed transition-colors">
-          <div className="w-16 h-16 bg-surface rounded-2xl flex items-center justify-center border-[1.5px] border-ink-black shrink-0">
-            <span className="material-symbols-outlined text-secondary text-4xl">self_improvement</span>
-          </div>
-          <div className="flex-grow">
-            <h3 className="font-headline-sm text-headline-sm text-ink-black">Breathe &amp; Relax</h3>
-            <p className="font-body-md text-body-md text-secondary-container mt-1">3-minute guided exercise.</p>
-          </div>
-          <div className="shrink-0">
-            <span className="material-symbols-outlined text-ink-black">arrow_forward_ios</span>
+        {/* AI Insights */}
+        <div className="neo-card bg-surface p-container-padding flex flex-col justify-center">
+          <div className="flex items-start gap-4">
+            <span className="material-symbols-outlined text-secondary text-3xl mt-1">lightbulb</span>
+            <div>
+              <h3 className="font-headline-sm text-headline-sm text-ink-black">Weekly Insight</h3>
+              <p className="font-body-md text-body-md text-on-surface-variant mt-2 italic">"You've been logging higher stress levels on Wednesdays. Consider scheduling a short mindfulness break mid-week."</p>
+            </div>
           </div>
         </div>
       </section>

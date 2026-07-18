@@ -28,9 +28,12 @@ const DashboardLayout = () => {
 
   const patientNav = [
     { label: 'Home', path: '/normal-user-dashboard', icon: 'home' },
+    { label: 'AI Chat', path: '/ai-chat', icon: 'smart_toy' },
+    { label: 'Book', path: '/therapists', icon: 'calendar_month' },
+    { label: 'Profile', path: '/profile', icon: 'person' },
     { label: 'Mood Tracker', path: '/mood-tracker', icon: 'mood' },
     { label: 'My Records', path: '/my-records', icon: 'assignment' },
-    { label: 'Therapists', path: '/therapists', icon: 'medical_services' }
+    { label: 'Insights', path: '/insights', icon: 'leaderboard' }
   ];
 
   const therapistNav = [
@@ -165,12 +168,28 @@ const DashboardLayout = () => {
         )}
 
         {/* Dashboard Canvas */}
-        <div className="flex-grow p-margin-mobile md:p-margin-desktop overflow-y-auto">
-          <div className="max-w-7xl mx-auto w-full">
+        <div className="flex-grow p-margin-mobile md:p-margin-desktop overflow-y-auto mb-[80px] md:mb-0">
+          <div className="max-w-7xl mx-auto w-full relative">
+            <Link to="/notifications" className="absolute top-4 right-4 p-2 bg-surface rounded-full border-[1.5px] border-ink-black neo-shadow hover:bg-surface-container-high transition-colors text-primary font-bold z-50">
+              <span className="material-symbols-outlined">notifications</span>
+            </Link>
             <Outlet />
           </div>
         </div>
       </main>
+
+      {/* Mobile BottomNavBar (hidden on desktop) */}
+      <nav className="md:hidden fixed bottom-0 w-full z-50 border-t-[1.5px] border-ink-black bg-surface dark:bg-surface-container-low flex justify-around items-center h-[80px] px-4 pb-safe">
+        {navItems.slice(0, 4).map((item, idx) => {
+          const isActive = location.pathname.startsWith(item.path);
+          return (
+            <Link key={idx} to={item.path} className={`flex flex-col items-center justify-center ${isActive ? 'bg-secondary-container text-on-secondary-container border-[1.5px] border-ink-black rounded-xl px-4 py-1 scale-95 transition-transform' : 'text-on-surface-variant hover:text-primary transition-colors'}`}>
+              <span className="material-symbols-outlined" style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}>{item.icon}</span>
+              <span className="font-label-md text-label-md mt-1">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 };

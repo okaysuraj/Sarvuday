@@ -1,17 +1,59 @@
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-
-const MOCK_PATIENTS = [
-  { id: '1', name: 'Alex Johnson', status: 'Active', nextSession: 'Oct 14, 10:00 AM', risk: 'Low' },
-  { id: '2', name: 'Maria Garcia', status: 'Alert', nextSession: 'Oct 15, 2:00 PM', risk: 'High' },
-  { id: '3', name: 'David Smith', status: 'Active', nextSession: 'Oct 16, 11:30 AM', risk: 'Medium' },
-];
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TherapistPatientsListScreen() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [patients, setPatients] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const token = await AsyncStorage.getItem('access_token');
+        const res = await fetch('http://10.0.2.2:8000/counsellor/appointments', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          // Extract unique patients from appointments
+          const patientMap = new Map();
+          if (json.appointments) {
+            json.appointments.forEach((appt: any) => {
+              if (appt.normal_user && !patientMap.has(appt.normal_user.user_id)) {
+                patientMap.set(appt.normal_user.user_id, {
+                  id: appt.normal_user.user_id,
+                  name: appt.normal_user.name || 'Unknown Patient',
+                  status: 'Active',
+                  nextSession: new Date(appt.start_time).toLocaleDateString(),
+                  risk: 'Low' // mock risk level since backend doesn't provide it yet
+                });
+              }
+            });
+          }
+          setPatients(Array.from(patientMap.values()));
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAppointments();
+  }, []);
+
+  const filteredPatients = patients.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-surface items-center justify-center">
+        <ActivityIndicator size="large" color="#002da5" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-surface">
@@ -38,10 +80,10 @@ export default function TherapistPatientsListScreen() {
       </View>
 
       <ScrollView className="flex-1 px-6">
-        {MOCK_PATIENTS.map(patient => (
+        {filteredPatients.length > 0 ? filteredPatients.map(patient => (
           <TouchableOpacity 
             key={patient.id}
-            onPress={() => router.push(`/therapist/patients/${patient.id}`)}
+            onPress={() => router.push(`/counsellor/patient/${patient.id}`)}
             className="bg-surface-container-highest p-4 rounded-xl mb-4 border border-outline-variant flex-row items-center"
           >
             <View className="w-12 h-12 rounded-full bg-surface-variant items-center justify-center mr-4">
@@ -61,7 +103,11 @@ export default function TherapistPatientsListScreen() {
             
             <Ionicons name="chevron-forward" size={20} color="#747687" className="ml-3" />
           </TouchableOpacity>
-        ))}
+        )) : (
+          <View className="items-center justify-center py-10">
+            <Text className="font-body-md text-on-surface-variant">No patients found.</Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

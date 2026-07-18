@@ -1,18 +1,8 @@
-import { apiClient as api } from './client';
+import api from './client';
 
 export const therapistApi = {
-  getPatients: async () => {
-    const response = await api.get(`/therapist/patients`);
+  getTherapists: async () => {
+    const response = await api.get('/user/therapists');
     return response.data;
   },
-  
-  getPatientDetails: async (patientId: string) => {
-    const response = await api.get(`/therapist/patients/${patientId}`);
-    return response.data;
-  },
-  
-  getEarnings: async () => {
-    const response = await api.get(`/therapist/earnings`);
-    return response.data;
-  }
 };

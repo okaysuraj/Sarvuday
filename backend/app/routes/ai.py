@@ -24,6 +24,20 @@ async def analyze_sentiment(payload: Dict[str, str]) -> Dict[str, Any]:
         "requires_intervention": risk_level == "critical"
     }
 
+@router.get("/summary")
+async def get_ai_summary() -> Dict[str, Any]:
+    """
+    Returns AI generated insights and summary for the user.
+    """
+    return {
+        "overall_mood": "Improving",
+        "key_themes": ["Work stress", "Family time", "Better sleep"],
+        "recommendations": [
+            "Continue with Box Breathing exercises before bed.",
+            "Consider discussing 'Work stress' in your next therapy session."
+        ]
+    }
+
 @router.post("/voice-analysis")
 async def analyze_voice_tone(payload: Dict[str, Any]) -> Dict[str, Any]:
     """

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const BookingType = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const counsellorId = location.state?.counsellorId;
   const [selectedType, setSelectedType] = useState('video');
 
   const types = [
@@ -41,7 +43,7 @@ const BookingType = () => {
   ];
 
   const handleContinue = () => {
-    navigate('/booking/slot');
+    navigate('/booking/slot', { state: { counsellorId, bookingType: selectedType } });
   };
 
   return (

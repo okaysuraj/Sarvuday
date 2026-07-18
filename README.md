@@ -93,54 +93,71 @@ I have verified the architecture across the `backend`, `frontend`, and `mobile` 
 
 ## 2. Configuration & API Keys Required for Production
 
-To make this project fully functional and deployable, you must configure the following `.env` files across the 3 environments.
+To make every feature of this project fully functional, you need to configure API keys for third-party services and set up your databases. Below is a comprehensive list of all required `.env` variables across the 3 environments.
 
-### ⚙️ Backend (`/backend/.env`)
+### 🏗️ Backend (`/backend/.env`)
 
-The backend relies on `pydantic-settings`. Ensure the `.env` file at `backend/.env` contains valid production keys:
+The backend requires the most configuration as it orchestrates all external services. Create a `.env` file in `/backend` with the following:
 
-> [!IMPORTANT]
-> **Database & Storage**
-> - `DATABASE_URL`: Production PostgreSQL URI (e.g., Supabase, RDS, Neon).
-> - `MONGO_URI`: Production MongoDB URI (e.g., MongoDB Atlas).
-> - `MONGO_DB_NAME`: Ensure this matches your production cluster (default: "sarvuday").
+**1. Databases (Required for all features)**
+- `DATABASE_URL`: Production PostgreSQL URI (e.g., Supabase, RDS, Neon).
+- `MONGO_URI`: Production MongoDB URI (e.g., MongoDB Atlas). Used for AI Chat history and Community features.
+- `MONGO_DB_NAME`: Ensure this matches your production cluster (default: "sarvuday").
 
-> [!CAUTION]
-> **Firebase Service Account (Crucial for Auth & Mobile push)**
-> You must generate a Firebase Service Account JSON from your Firebase Console.
-> - `FIREBASE_PROJECT_ID`: Your Firebase Project ID.
-> - `FIREBASE_CLIENT_EMAIL`: Service account email.
-> - `FIREBASE_PRIVATE_KEY`: Service account private key (Ensure newline characters `\n` are parsed correctly).
+**2. Firebase Service Account (Required for Authentication & Push Notifications)**
+Generate a Firebase Service Account JSON from your Firebase Console (Project Settings > Service Accounts).
+- `FIREBASE_PROJECT_ID`: Your Firebase Project ID.
+- `FIREBASE_CLIENT_EMAIL`: Service account email.
+- `FIREBASE_PRIVATE_KEY`: Service account private key (Ensure newline characters `\n` are parsed correctly).
 
-> [!TIP]
-> **Third-Party Integrations**
-> - `DAILY_API_KEY`: Required for WebRTC Video Consultations. Get this from the [Daily.co Dashboard](https://dashboard.daily.co).
-> - `STRIPE_SECRET_KEY` & `STRIPE_WEBHOOK_SECRET`: Required for payment processing. Get these from your Stripe Dashboard.
-> - `CHATBOT_API_KEY` & `CHATBOT_BASE_URL`: Currently points to a local LLM (`http://localhost:1234/v1`). Change this to OpenAI or HuggingFace endpoints for production.
-> - `SECRET_KEY`: A strong 256-bit key for JWT signing. Generate using `openssl rand -hex 32`.
+**3. Google OAuth 2.0 (Required for Google Login)**
+- `CLIENT_ID`: Google OAuth Client ID.
+- `PRIVATE_KEY_ID`: Google Private Key ID.
+
+**4. Daily.co (Required for Video Consultations)**
+- `DAILY_API_KEY`: Required for WebRTC Video Consultations. Get this from the [Daily.co Dashboard](https://dashboard.daily.co).
+- `DAILY_BASE_URL`: Usually `https://api.daily.co/v1`.
+
+**5. Stripe (Required for Payments & Wallet)**
+- `STRIPE_SECRET_KEY`: Secret key from your Stripe Dashboard.
+- `STRIPE_PUBLISHABLE_KEY`: Publishable key from your Stripe Dashboard.
+- `STRIPE_WEBHOOK_SECRET`: Required for processing payment webhooks securely.
+
+**6. AI Companion / Chatbot (Required for AI Features)**
+- `CHATBOT_API_KEY`: Your LLM provider's API key (e.g., OpenAI API Key, HuggingFace Token, or LM-Studio).
+- `CHATBOT_BASE_URL`: The base URL of the LLM provider (e.g., `https://api.openai.com/v1` or `http://localhost:1234/v1` for local).
+- `CHATBOT_MODEL`: The specific model ID to use (e.g., `gpt-4o`, or `llama-3`).
+
+**7. Security (Required for JWT)**
+- `SECRET_KEY`: A strong 256-bit key for JWT session signing. Generate using `openssl rand -hex 32`.
 
 ---
 
-### 💻 Web Frontend (`/frontend/.env`)
+### 🌐 Web Frontend (`/frontend/.env`)
 
-Update the environment variables for your React/Vite deployment (e.g., on Vercel or Render).
+Create a `.env` file in the `/frontend` directory for the React/Vite application.
 
-> [!IMPORTANT]
-> - `VITE_API_BASE_URL`: Must point to your deployed backend URL (e.g., `https://api.sarvuday.com`).
-> - `VITE_FIREBASE_*`: Ensure your Firebase public web config variables are correct.
+**1. API Connection**
+- `VITE_API_BASE_URL`: Must point to your deployed backend URL (e.g., `https://api.sarvuday.com` or `http://127.0.0.1:8000`).
+
+**2. Firebase Web SDK (Required for Auth UI)**
+Get these from your Firebase Console (Project Settings > General > Web App).
+- `VITE_FIREBASE_API_KEY`: Firebase public API key.
+- `VITE_FIREBASE_AUTH_DOMAIN`: e.g., `your-project.firebaseapp.com`
+- `VITE_FIREBASE_PROJECT_ID`: e.g., `your-project`
+- `VITE_FIREBASE_STORAGE_BUCKET`: e.g., `your-project.firebasestorage.app`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`: Sender ID for push notifications.
+- `VITE_FIREBASE_APP_ID`: Web App ID.
 
 ---
 
-### 📱 Mobile App (`/mobile/.env` - Needs to be created)
+### 📱 Mobile App (`/mobile/.env`)
 
-You need to create a `.env` file in the `/mobile` directory so the Expo app knows how to talk to the backend.
+You need to create a `.env` file in the `/mobile` directory so the Expo app knows how to communicate with the backend and WebRTC services.
 
-> [!IMPORTANT]
-> Create `/mobile/.env` and add:
-> ```env
-> EXPO_PUBLIC_API_URL=https://your-production-backend-url.com
-> EXPO_PUBLIC_DAILY_DOMAIN=https://yourdomain.daily.co
-> ```
+**1. API & External Services**
+- `EXPO_PUBLIC_API_URL`: Your deployed backend URL (e.g., `https://api.sarvuday.com`).
+- `EXPO_PUBLIC_DAILY_DOMAIN`: Your Daily.co domain for video calls (e.g., `https://yourdomain.daily.co`).
 
 ---
 

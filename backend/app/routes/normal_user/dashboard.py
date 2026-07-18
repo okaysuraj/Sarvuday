@@ -52,6 +52,9 @@ async def update_profile(
     stress_factors: Optional[str] = Form(None),
     mental_health_history: Optional[str] = Form(None),
     therapy_goals: Optional[str] = Form(None),
+    timezone: Optional[str] = Form(None),
+    dob: Optional[str] = Form(None),
+    bio: Optional[str] = Form(None),
     profile_pic: Optional[UploadFile] = File(None),
     current_user: NormalUser = Depends(ensure_normal_user),
     db: AsyncSession = Depends(get_db)
@@ -79,6 +82,9 @@ async def update_profile(
         stress_factors=stress_factors,
         mental_health_history=mental_health_history,
         therapy_goals=therapy_goals,
+        timezone=timezone,
+        dob=dob,
+        bio=bio,
     )
     return await UserManagementService(db).update_user_profile(current_user.user_id, update_data, profile_pic)
 

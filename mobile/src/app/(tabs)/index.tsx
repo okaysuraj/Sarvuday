@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { useAuthStore } from '../../store/authStore';
 import { PatientDashboard } from '../../components/dashboard/PatientDashboard';
 import { TherapistDashboard } from '../../components/dashboard/TherapistDashboard';
+import { AdminDashboard } from '../../components/dashboard/AdminDashboard';
 
 export default function HomeTabScreen() {
   const user = useAuthStore(state => state.user);
@@ -15,6 +16,9 @@ export default function HomeTabScreen() {
     );
   }
 
-  // Assuming user object has a 'role' property
+  if (user.role === 'admin') {
+    return <AdminDashboard />;
+  }
+
   return user.role === 'therapist' ? <TherapistDashboard /> : <PatientDashboard />;
 }
