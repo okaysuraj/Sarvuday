@@ -91,7 +91,7 @@ export default function TherapistsTabScreen() {
           <View className="flex-row gap-4">
             <View className="flex-1 bg-surface border-[1.5px] border-ink-black rounded-2xl p-4 flex-col gap-2">
               <View className="bg-primary-fixed w-10 h-10 rounded-full flex items-center justify-center border-[1.5px] border-ink-black">
-                <Ionicons name="brain" size={20} color="#002da5" />
+                <Ionicons name="bulb" size={20} color="#002da5" />
               </View>
               <Text className="font-label-md text-on-surface font-bold">Cognitive Behavioral</Text>
               <Text className="text-xs text-on-surface-variant">2 days ago</Text>
