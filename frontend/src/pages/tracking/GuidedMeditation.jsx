@@ -83,10 +83,10 @@ const GuidedMeditation = () => {
                   <span>12:00</span>
                 </div>
                 <div className="w-full h-4 bg-surface-container neo-border rounded-full overflow-hidden relative">
-                  <div className="h-full bg-secondary-container transition-all duration-300" style={{width: \`\${progress}%\`}}></div>
+                  <div className="h-full bg-secondary-container transition-all duration-300" style={{width: `${progress}%`}}></div>
                   <div 
                     className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white neo-border rounded-full shadow-[2px_2px_0px_0px_rgba(26,26,26,1)] cursor-pointer hover:scale-110 transition-transform"
-                    style={{left: \`calc(\${progress}% - 12px)\`}}
+                    style={{left: `calc(${progress}% - 12px)`}}
                   ></div>
                 </div>
               </div>
@@ -101,7 +101,7 @@ const GuidedMeditation = () => {
                 </button>
                 <button 
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className={\`w-16 h-16 md:w-20 md:h-20 flex items-center justify-center neo-border rounded-[28px] neo-shadow hover:-translate-y-1 transition-transform \${isPlaying ? 'bg-primary text-white' : 'bg-white text-ink-black'}\`}
+                  className={`w-16 h-16 md:w-20 md:h-20 flex items-center justify-center neo-border rounded-[28px] neo-shadow hover:-translate-y-1 transition-transform \${isPlaying ? 'bg-primary text-white' : 'bg-white text-ink-black'}`}
                 >
                   <span className="material-symbols-outlined text-4xl md:text-5xl">{isPlaying ? 'pause' : 'play_arrow'}</span>
                 </button>
