@@ -155,67 +155,57 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-surface dot-pattern min-h-screen flex items-center justify-center p-8 overflow-hidden relative selection:bg-primary selection:text-on-primary">
-      {/* Decorative Neo-Memphis Background Elements */}
-      <div className="absolute top-20 left-20 w-48 h-48 bg-accent-sage rounded-full border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] z-0 hidden lg:block animate-[bounce_4s_infinite_alternate]"></div>
-      <div className="absolute bottom-10 right-24 w-32 h-64 bg-accent-pink rounded-t-full rounded-b-2xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] z-0 hidden lg:block rotate-12"></div>
-      <div className="absolute top-1/4 right-1/4 w-16 h-16 bg-secondary-container rounded-xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] z-0 hidden xl:block rotate-45"></div>
+    <div className="bg-slate-50 min-h-screen flex items-center justify-center p-8 overflow-hidden relative selection:bg-primary/20 selection:text-primary">
+      {/* Decorative Soft Glows */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-accent-pink/20 rounded-full blur-[100px] z-0 hidden lg:block animate-pulse duration-10000 pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] z-0 hidden lg:block pointer-events-none"></div>
       
       {/* Main Content Container */}
-      <main className="relative z-10 w-full max-w-[480px]">
-        {/* Top App Bar / Brand Header Context */}
-        <div className="text-center mb-8">
-          <Link to="/">
-            <h1 className="font-display-lg text-display-lg text-primary tracking-tight">SarvUday</h1>
-          </Link>
-          <p className="font-body-lg text-body-lg text-on-surface-variant mt-2">Find your balance today.</p>
-        </div>
-
+      <main className="relative z-10 w-full max-w-md">
         {/* Login Card */}
-        <div className="bg-on-primary rounded-[32px] border-[1.5px] border-ink-black shadow-[8px_8px_0px_0px_#1A1A1A] p-container-padding relative overflow-visible">
-          {/* Decorative corner sticker */}
-          <div className="absolute -top-4 -right-4 bg-secondary-container w-12 h-12 rounded-full border-[1.5px] border-ink-black shadow-[2px_2px_0px_0px_#1A1A1A] flex items-center justify-center rotate-12 z-20">
-            <span className="material-symbols-outlined text-ink-black" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl p-10 relative overflow-hidden">
+          
+          <div className="text-center mb-8">
+            <h2 className="font-display-lg text-3xl text-gray-900 mb-2 tracking-tight">Welcome Back</h2>
+            <p className="font-body-md text-gray-500">Log in to continue your journey.</p>
           </div>
 
-          <h2 className="font-headline-md text-headline-md text-on-surface mb-6">Welcome Back</h2>
-
           {/* Login Method Toggle */}
-          <div className="flex gap-4 mb-6">
+          <div className="flex gap-4 mb-6 bg-gray-50 p-1 rounded-xl">
             <button 
               type="button"
               onClick={() => setLoginMethod('email')}
-              className={`flex-1 py-2 font-label-bold text-label-bold rounded-xl border-[1.5px] border-ink-black transition-all ${loginMethod === 'email' ? 'bg-primary-fixed text-ink-black shadow-[2px_2px_0px_0px_#1A1A1A]' : 'bg-surface text-on-surface-variant bg-opacity-50 hover:bg-surface-variant'}`}
+              className={`flex-1 py-2 font-label-bold text-label-bold rounded-lg transition-all duration-200 ${loginMethod === 'email' ? 'bg-white text-primary shadow-sm ring-1 ring-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Email
             </button>
             <button 
               type="button"
               onClick={() => { setLoginMethod('phone'); setOtpSent(false); }}
-              className={`flex-1 py-2 font-label-bold text-label-bold rounded-xl border-[1.5px] border-ink-black transition-all ${loginMethod === 'phone' ? 'bg-primary-fixed text-ink-black shadow-[2px_2px_0px_0px_#1A1A1A]' : 'bg-surface text-on-surface-variant bg-opacity-50 hover:bg-surface-variant'}`}
+              className={`flex-1 py-2 font-label-bold text-label-bold rounded-lg transition-all duration-200 ${loginMethod === 'phone' ? 'bg-white text-primary shadow-sm ring-1 ring-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Phone
             </button>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-stack-md">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             {loginMethod === 'email' ? (
               <>
                 {/* Email Field */}
-                <div className="flex flex-col gap-base">
-                  <label className="font-label-bold text-label-bold text-on-surface" htmlFor="email">Email Address</label>
-                  <input className="w-full h-12 bg-surface-container-low border-[1.5px] border-ink-black rounded-xl px-4 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-0 input-focus-shadow transition-all" id="email" name="email" placeholder="hello@example.com" required type="email" value={formData.email} onChange={handleChange} />
+                <div className="flex flex-col gap-2">
+                  <label className="font-label-bold text-sm text-gray-700" htmlFor="email">Email Address</label>
+                  <input className="w-full h-12 bg-white border border-gray-200 rounded-xl px-4 font-body-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-sm" id="email" name="email" placeholder="hello@example.com" required type="email" value={formData.email} onChange={handleChange} />
                 </div>
                 {/* Password Field */}
-                <div className="flex flex-col gap-base">
+                <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center">
-                    <label className="font-label-bold text-label-bold text-on-surface" htmlFor="password">Password</label>
-                    <button type="button" onClick={handleResetPassword} className="font-label-md text-label-md text-primary hover:underline underline-offset-2">Forgot Password?</button>
+                    <label className="font-label-bold text-sm text-gray-700" htmlFor="password">Password</label>
+                    <button type="button" onClick={handleResetPassword} className="font-label-md text-xs text-primary hover:underline underline-offset-2">Forgot Password?</button>
                   </div>
                   <div className="relative">
-                    <input className="w-full h-12 bg-surface-container-low border-[1.5px] border-ink-black rounded-xl pl-4 pr-12 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-0 input-focus-shadow transition-all" id="password" name="password" placeholder="••••••••" required type={showPassword ? "text" : "password"} value={formData.password} onChange={handleChange} />
-                    <button onClick={() => setShowPassword(!showPassword)} aria-label="Toggle password visibility" className="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface transition-colors" type="button">
+                    <input className="w-full h-12 bg-white border border-gray-200 rounded-xl pl-4 pr-12 font-body-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-sm" id="password" name="password" placeholder="••••••••" required type={showPassword ? "text" : "password"} value={formData.password} onChange={handleChange} />
+                    <button onClick={() => setShowPassword(!showPassword)} aria-label="Toggle password visibility" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" type="button">
                       <span className="material-symbols-outlined">{showPassword ? "visibility_off" : "visibility"}</span>
                     </button>
                   </div>
@@ -224,14 +214,14 @@ const Login = () => {
             ) : (
               <>
                 {!otpSent ? (
-                  <div className="flex flex-col gap-base">
-                    <label className="font-label-bold text-label-bold text-on-surface" htmlFor="phone_number">Phone Number</label>
-                    <input className="w-full h-12 bg-surface-container-low border-[1.5px] border-ink-black rounded-xl px-4 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-0 input-focus-shadow transition-all" id="phone_number" name="phone_number" placeholder="+1234567890" required type="tel" value={formData.phone_number} onChange={handleChange} />
+                  <div className="flex flex-col gap-2">
+                    <label className="font-label-bold text-sm text-gray-700" htmlFor="phone_number">Phone Number</label>
+                    <input className="w-full h-12 bg-white border border-gray-200 rounded-xl px-4 font-body-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-sm" id="phone_number" name="phone_number" placeholder="+1234567890" required type="tel" value={formData.phone_number} onChange={handleChange} />
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-base">
-                    <label className="font-label-bold text-label-bold text-on-surface" htmlFor="otpCode">OTP Code</label>
-                    <input className="w-full h-12 bg-surface-container-low border-[1.5px] border-ink-black rounded-xl px-4 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-0 input-focus-shadow transition-all" id="otpCode" name="otpCode" placeholder="123456" required type="text" value={otpCode} onChange={(e) => setOtpCode(e.target.value)} />
+                  <div className="flex flex-col gap-2">
+                    <label className="font-label-bold text-sm text-gray-700" htmlFor="otpCode">OTP Code</label>
+                    <input className="w-full h-12 bg-white border border-gray-200 rounded-xl px-4 font-body-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-sm" id="otpCode" name="otpCode" placeholder="123456" required type="text" value={otpCode} onChange={(e) => setOtpCode(e.target.value)} />
                   </div>
                 )}
               </>
@@ -240,21 +230,21 @@ const Login = () => {
             <div ref={recaptchaContainerRef}></div>
 
             {/* Submit Button */}
-            <button className="mt-4 w-full h-[56px] bg-primary text-on-primary border-[1.5px] border-ink-black rounded-xl shadow-[4px_4px_0px_0px_#1A1A1A] font-label-bold text-label-bold tracking-wide flex items-center justify-center btn-interactive" type="submit">
+            <button className="mt-2 w-full h-[52px] bg-primary text-white rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 font-label-bold tracking-wide flex items-center justify-center transition-all duration-200" type="submit">
               {loginMethod === 'phone' ? (otpSent ? 'Verify OTP' : 'Send OTP') : 'Log In'}
             </button>
           </form>
 
           {/* Divider */}
           <div className="flex items-center gap-4 my-8">
-            <div className="flex-grow border-t-[1.5px] border-ink-black"></div>
-            <span className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Or continue with</span>
-            <div className="flex-grow border-t-[1.5px] border-ink-black"></div>
+            <div className="flex-grow border-t border-gray-200"></div>
+            <span className="font-label-md text-xs text-gray-400 uppercase tracking-wider">Or continue with</span>
+            <div className="flex-grow border-t border-gray-200"></div>
           </div>
 
           {/* Social Logins */}
-          <div className="flex flex-col gap-stack-sm">
-            <button className="w-full h-12 bg-on-primary text-on-surface border-[1.5px] border-ink-black rounded-xl shadow-[2px_2px_0px_0px_#1A1A1A] font-label-bold text-label-bold flex items-center justify-center gap-3 btn-interactive hover:bg-surface-variant/50" type="button">
+          <div className="flex flex-col gap-3">
+            <button className="w-full h-12 bg-white text-gray-700 border border-gray-200 rounded-xl shadow-sm font-label-bold flex items-center justify-center gap-3 hover:bg-gray-50 hover:shadow-md transition-all duration-200" type="button">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
@@ -263,8 +253,8 @@ const Login = () => {
               </svg>
               Google
             </button>
-            <button className="w-full h-12 bg-on-primary text-on-surface border-[1.5px] border-ink-black rounded-xl shadow-[2px_2px_0px_0px_#1A1A1A] font-label-bold text-label-bold flex items-center justify-center gap-3 btn-interactive hover:bg-surface-variant/50" type="button">
-              <svg className="w-5 h-5 text-ink-black" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <button className="w-full h-12 bg-white text-gray-700 border border-gray-200 rounded-xl shadow-sm font-label-bold flex items-center justify-center gap-3 hover:bg-gray-50 hover:shadow-md transition-all duration-200" type="button">
+              <svg className="w-5 h-5 text-gray-900" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.62-1.48 3.604-2.923 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.858-.026-3.04 2.48-4.494 2.597-4.56-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.688.792-1.364 2.234-1.182 3.598 1.35.104 2.623-.571 3.468-1.585z"></path>
               </svg>
               Apple
@@ -272,9 +262,9 @@ const Login = () => {
           </div>
 
           {/* Sign Up Link */}
-          <p className="mt-8 text-center font-body-md text-body-md text-on-surface">
+          <p className="mt-8 text-center font-body-md text-sm text-gray-500">
             Don't have an account? 
-            <Link to="/register" className="font-label-bold text-label-bold text-primary hover:underline underline-offset-2 ml-1">Sign up</Link>
+            <Link to="/register" className="font-label-bold text-primary hover:underline underline-offset-2 ml-1">Sign up</Link>
           </p>
         </div>
       </main>

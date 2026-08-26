@@ -152,23 +152,21 @@ const Register = () => {
 
   return (
     <div className="bg-surface min-h-screen flex items-center justify-center p-margin-desktop font-body-md text-on-surface">
-      <main className="w-full max-w-5xl flex flex-col lg:flex-row rounded-[48px] overflow-hidden border-[1.5px] border-ink-black shadow-[8px_8px_0px_0px_#1A1A1A] bg-white lg:min-h-[800px]">
+      <main className="w-full max-w-5xl flex flex-col lg:flex-row rounded-3xl overflow-hidden border border-gray-100 shadow-2xl bg-white lg:min-h-[800px]">
         {/* Left Side: Graphic/Branding */}
-        <div className="hidden lg:flex lg:w-1/2 bg-accent-sage relative overflow-hidden flex-col justify-between p-12 border-r-[1.5px] border-ink-black">
-          <div className="z-10">
-            <Link to="/">
-              <h1 className="font-display-lg text-display-lg text-ink-black mb-4 tracking-tight hover:text-primary transition-colors">SarvUday</h1>
-            </Link>
-            <p className="font-body-lg text-body-lg text-on-surface-variant max-w-md">Your journey to mental clarity begins here. A playful, supportive space for your wellbeing.</p>
+        <div className="hidden lg:flex lg:w-1/2 bg-slate-50 relative overflow-hidden flex-col justify-center p-12">
+          <div className="z-10 mb-8 text-center">
+            <h2 className="font-display-lg text-4xl text-gray-900 mb-4 tracking-tight">Your Journey Begins</h2>
+            <p className="font-body-lg text-body-lg text-gray-600 max-w-md mx-auto">A safe, supportive space for your wellbeing and personal growth.</p>
           </div>
-          <div className="absolute inset-0 z-0 opacity-80" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCCID2y-MG7YOupw0yueH1MvHLbbOk8aIrjdBzSZ3jIfH1A4RxFOK3iEP-DlE_wBZ03C0-qFaeEiUMZdIV4DfWMLCBCWQokD4fj0n5T9CjgvIm6MDQ82lT2MJghQOlmCYEx6T9HCTvVAcNX4ThUALg7mSjlgwL5AO9Vcp8QkD09HvrP_kpRr1LnZP1j5gPrxhSTfvkNfIDdJJvnA0KKXiM9OjBlhcNx0gWHAM0BifQW3nYhSVNT94D7PA')", backgroundSize: 'cover' }}></div>
-          <div className="z-10 bg-white/80 backdrop-blur-sm p-6 rounded-2xl border-[1.5px] border-ink-black inline-block mt-auto w-max self-start shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-            <div className="flex items-center gap-3 mb-2">
+          <div className="absolute inset-0 z-0 opacity-40" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCCID2y-MG7YOupw0yueH1MvHLbbOk8aIrjdBzSZ3jIfH1A4RxFOK3iEP-DlE_wBZ03C0-qFaeEiUMZdIV4DfWMLCBCWQokD4fj0n5T9CjgvIm6MDQ82lT2MJghQOlmCYEx6T9HCTvVAcNX4ThUALg7mSjlgwL5AO9Vcp8QkD09HvrP_kpRr1LnZP1j5gPrxhSTfvkNfIDdJJvnA0KKXiM9OjBlhcNx0gWHAM0BifQW3nYhSVNT94D7PA')", backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+          <div className="z-10 bg-white/90 backdrop-blur-md p-6 rounded-2xl border border-gray-100 mt-auto mx-auto w-full max-w-sm shadow-lg transform -translate-y-4">
+            <div className="flex items-center justify-center gap-2 mb-3">
               {[...Array(5)].map((_, i) => (
-                <span key={i} className="material-symbols-outlined text-secondary-container" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                <span key={i} className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
               ))}
             </div>
-            <p className="font-body-md text-body-md font-medium">"A breath of fresh air for my daily routine."</p>
+            <p className="font-body-md text-body-md font-medium text-center text-gray-800">"A breath of fresh air for my daily routine."</p>
           </div>
         </div>
 
@@ -181,18 +179,18 @@ const Register = () => {
             </div>
 
             {/* Registration Method Toggle */}
-            <div className="flex gap-4 mb-6">
+            <div className="flex gap-4 mb-6 bg-gray-50 p-1 rounded-xl">
               <button 
                 type="button"
                 onClick={() => setRegisterMethod('email')}
-                className={`flex-1 py-2 font-label-bold text-label-bold rounded-xl border-[1.5px] border-ink-black transition-all ${registerMethod === 'email' ? 'bg-primary-fixed text-ink-black shadow-[2px_2px_0px_0px_#1A1A1A]' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-variant'}`}
+                className={`flex-1 py-2 font-label-bold text-label-bold rounded-lg transition-all duration-200 ${registerMethod === 'email' ? 'bg-white text-primary shadow-sm ring-1 ring-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Email
               </button>
               <button 
                 type="button"
                 onClick={() => { setRegisterMethod('phone'); setOtpSent(false); }}
-                className={`flex-1 py-2 font-label-bold text-label-bold rounded-xl border-[1.5px] border-ink-black transition-all ${registerMethod === 'phone' ? 'bg-primary-fixed text-ink-black shadow-[2px_2px_0px_0px_#1A1A1A]' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-variant'}`}
+                className={`flex-1 py-2 font-label-bold text-label-bold rounded-lg transition-all duration-200 ${registerMethod === 'phone' ? 'bg-white text-primary shadow-sm ring-1 ring-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Phone
               </button>
@@ -259,7 +257,7 @@ const Register = () => {
                 <label className="flex items-start gap-3 cursor-pointer group">
                   <div className="relative flex items-center pt-1">
                     <input type="checkbox" className="peer sr-only" name="terms_accepted" checked={formData.terms_accepted} onChange={(e) => { const checked = e.target.checked; handleChange(e); setFormData(p => ({...p, privacy_policy_accepted: checked})); }} required />
-                    <div className="w-5 h-5 border-[1.5px] border-ink-black rounded bg-white peer-checked:bg-primary transition-colors flex items-center justify-center">
+                    <div className="w-5 h-5 border border-gray-300 rounded bg-white peer-checked:bg-primary peer-checked:border-primary transition-colors flex items-center justify-center">
                       <span className="material-symbols-outlined text-[16px] text-white opacity-0 peer-checked:opacity-100 font-bold">check</span>
                     </div>
                   </div>
@@ -293,11 +291,11 @@ const Register = () => {
             </div>
 
             <div className="mt-6 flex justify-center gap-4">
-              <button type="button" className="w-14 h-14 rounded-full border-[1.5px] border-ink-black bg-white flex items-center justify-center hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] transition-all">
-                <img alt="Google" className="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWhBMLEOgNC_L1Nty9cd7UergeHKe6THVpi3XOlbOjVyGpvV5y6SDqxMvki0nLnaQtbhtOiXWRT-dhFIsCOm19PG_HpfTVh5nM1kdJqL16SE--DMKz-t2V1BxsjJ86GkZ3aBhUVW4RlzwyG2ct442DV5a-dnXR5-vnvtww1nTeWJRzRRCU1h3hVlKFDHLkIanqNhiOk6UIpwbX-MoLplT3zH9URhOn7YYHfETeCo2QSKNkvia7d0afgA"/>
+              <button type="button" className="w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 hover:shadow-md transition-all">
+                <img alt="Google" className="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWhBMLEOgNC_L1Nty9cd7UergeHKe6THVpi3XOlbOjVyGpvV5y6SDqxMvki0nLnaQtbhtOiXWRT-dhFIsCOm19PG_HpfTVh5nM1kdJqL16SE--DMKz-t2V1BxsjJ86GkZ3aBhUVW4RlzwyG2ct442DV5a-dnXR5-vnvtww1nTeWJRzRRCU1h3hVlKFDHLkIanqNhiOk6UIpwbX-MoLplT3zH9URhOn7YYHfETeCo2QSKNkvia7d0afgA"/>
               </button>
-              <button type="button" className="w-14 h-14 rounded-full border-[1.5px] border-ink-black bg-white flex items-center justify-center hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] transition-all">
-                <img alt="Apple" className="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeBMpRq9n3C43cZmxJTIyvAkUuGi4NZhsQO8gDlsXsXEPqpHg4iTORl96TiKJYUYfJYFW-t8r-O6T8VBOFXwwg5v87NZ_GcJLMe8FtW1cXk_oPNppnv3nnD7YFzyPRKHsKvTibBu0MMldd9AZdH0_dbnQG_xZm6h0SzrGGx2A4_kkHr56oqxSYtBIq8QnOos91dKmdzG-DAR6_1ggg3jX2RGlz5h-_2YSTMCOa7qLdFoeGqox06ZsIyg"/>
+              <button type="button" className="w-12 h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 hover:shadow-md transition-all">
+                <img alt="Apple" className="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeBMpRq9n3C43cZmxJTIyvAkUuGi4NZhsQO8gDlsXsXEPqpHg4iTORl96TiKJYUYfJYFW-t8r-O6T8VBOFXwwg5v87NZ_GcJLMe8FtW1cXk_oPNppnv3nnD7YFzyPRKHsKvTibBu0MMldd9AZdH0_dbnQG_xZm6h0SzrGGx2A4_kkHr56oqxSYtBIq8QnOos91dKmdzG-DAR6_1ggg3jX2RGlz5h-_2YSTMCOa7qLdFoeGqox06ZsIyg"/>
               </button>
             </div>
           </div>

@@ -98,8 +98,8 @@ const App = () => {
       <Routes>
         {/* Public routes with Header/Footer */}
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<Splash />} />
-          <Route path="/welcome" element={<Home />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/splash" element={<Splash />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
