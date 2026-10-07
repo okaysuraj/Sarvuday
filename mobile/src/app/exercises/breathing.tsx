@@ -10,7 +10,7 @@ export default function BreathingExerciseScreen() {
   const [scale] = useState(new Animated.Value(1));
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: any;
     
     if (isPlaying) {
       const phases = [

@@ -42,7 +42,7 @@ export default function AppointmentAlertsScreen() {
           <View className="flex-1 flex-col gap-6">
             <View className="bg-white border-[1.5px] border-ink-black rounded-[32px] p-8 shadow-[4px_4px_0px_0px_#1A1A1A] flex-col gap-6">
               <View className="flex-row items-center gap-3">
-                <Ionicons name="notifications-active" size={24} color="#002da5" />
+                <Ionicons name="notifications-circle" size={24} color="#002da5" />
                 <Text className="font-headline-sm text-ink-black font-bold text-xl">Delivery</Text>
               </View>
               
@@ -162,7 +162,7 @@ export default function AppointmentAlertsScreen() {
               {/* CTA Button */}
               <View className="pt-4">
                 <TouchableOpacity 
-                  onPress={() => router.push('/patient/dashboard')}
+                  onPress={() => router.push('/(tabs)')}
                   className="w-full py-4 bg-primary rounded-xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none items-center justify-center"
                 >
                   <Text className="text-white font-label-bold font-bold text-lg">Save Preferences</Text>
@@ -187,7 +187,7 @@ export default function AppointmentAlertsScreen() {
 
       {/* BottomNavBar */}
       <View className="absolute bottom-0 w-full z-50 flex-row justify-around items-center px-4 py-2 bg-cream-bg border-t-[1.5px] border-ink-black pb-8">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center p-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center p-2">
           <Ionicons name="home" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant mt-1">Home</Text>
         </TouchableOpacity>
@@ -207,3 +207,4 @@ export default function AppointmentAlertsScreen() {
     </View>
   );
 }
+

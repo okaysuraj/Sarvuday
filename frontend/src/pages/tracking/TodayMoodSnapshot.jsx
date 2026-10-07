@@ -44,38 +44,7 @@ const TodayMoodSnapshot = () => {
 
   return (
     <div className="flex-1 pb-24">
-      <style>{`
-        .memphis-card {
-            border: 1.5px solid #1A1A1A;
-            border-radius: 24px;
-        }
-        .memphis-card-lg {
-            border: 1.5px solid #1A1A1A;
-            border-radius: 48px;
-        }
-        .memphis-button-primary {
-            border: 1.5px solid #1A1A1A;
-            box-shadow: 4px 4px 0px 0px #1A1A1A;
-            transition: all 0.2s ease;
-        }
-        .memphis-button-primary:active {
-            box-shadow: 0px 0px 0px 0px #1A1A1A;
-            transform: translate(2px, 2px);
-        }
-        .memphis-chip {
-            border: 1px solid #1A1A1A;
-            border-radius: 9999px;
-        }
-        .memphis-progress {
-            border: 1.5px solid #1A1A1A;
-        }
-        .text-shadow-light {
-            text-shadow: 1px 1px 0px #fff;
-        }
-        .icon-fill {
-            font-variation-settings: 'FILL' 1;
-        }
-      `}</style>
+      
 
       {/* Header Section */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
@@ -116,7 +85,7 @@ const TodayMoodSnapshot = () => {
                 <span className="font-bold">{energy}%</span>
               </div>
               <div className="h-4 w-full bg-surface-variant rounded-full memphis-progress overflow-hidden">
-                <div className="h-full bg-accent-sage border-r-[1.5px] border-ink-black transition-all duration-1000" style={{ width: `${energy}%` }}></div>
+                <div className="h-full bg-accent-sage border-r-[1.5px] border-outline transition-all duration-1000" style={{ width: `${energy}%` }}></div>
               </div>
             </div>
             {/* Mental / Anxiety */}
@@ -126,16 +95,16 @@ const TodayMoodSnapshot = () => {
                 <span className="font-bold">{mental}%</span>
               </div>
               <div className="h-4 w-full bg-surface-variant rounded-full memphis-progress overflow-hidden">
-                <div className="h-full bg-primary-fixed border-r-[1.5px] border-ink-black transition-all duration-1000" style={{ width: `${mental}%` }}></div>
+                <div className="h-full bg-primary-fixed border-r-[1.5px] border-outline transition-all duration-1000" style={{ width: `${mental}%` }}></div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Mood Ring / Overall (Spans 4 cols on desktop) */}
-        <div className="col-span-1 md:col-span-4 bg-accent-orange memphis-card p-6 md:p-8 flex flex-col items-center justify-center text-center gap-4 relative">
+        <div className="col-span-1 md:col-span-4 bg-surface memphis-card p-6 md:p-8 flex flex-col items-center justify-center text-center gap-4 relative">
           <h3 className="font-headline-sm text-xl text-on-error-container absolute top-6 left-6">Vibe</h3>
-          <div className="w-32 h-32 rounded-full border-[1.5px] border-ink-black bg-surface-container-lowest flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] mb-4 hover:scale-105 transition-transform">
+          <div className="w-32 h-32 rounded-full border-outline bg-surface-container-lowest flex items-center justify-center shadow-subtle mb-4 hover:scale-105 transition-transform">
             <span className={`material-symbols-outlined text-6xl ${moodInfo.color} icon-fill`}>{moodInfo.icon}</span>
           </div>
           <p className="font-body-lg text-2xl text-on-tertiary-fixed font-medium">{moodInfo.label}</p>
@@ -146,8 +115,8 @@ const TodayMoodSnapshot = () => {
           <h3 className="font-headline-md text-3xl text-ink-black mb-6">Main Influences</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Influence 1 */}
-            <div className="bg-surface-container-highest memphis-card p-6 flex flex-col gap-4 hover:-translate-y-1 transition-transform">
-              <div className="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center border-[1.5px] border-ink-black shrink-0">
+            <div className="bg-surface-container-highest memphis-card p-6 flex flex-col gap-4 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center border-outline shrink-0">
                 <span className="material-symbols-outlined text-primary">laptop_mac</span>
               </div>
               <div>
@@ -160,8 +129,8 @@ const TodayMoodSnapshot = () => {
             </div>
             
             {/* Influence 2 */}
-            <div className="bg-surface-container-highest memphis-card p-6 flex flex-col gap-4 hover:-translate-y-1 transition-transform">
-              <div className="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center border-[1.5px] border-ink-black shrink-0">
+            <div className="bg-surface-container-highest memphis-card p-6 flex flex-col gap-4 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center border-outline shrink-0">
                 <span className="material-symbols-outlined text-tertiary">bedtime</span>
               </div>
               <div>
@@ -174,8 +143,8 @@ const TodayMoodSnapshot = () => {
             </div>
             
             {/* Influence 3 */}
-            <div className="bg-surface-container-highest memphis-card p-6 flex flex-col gap-4 hover:-translate-y-1 transition-transform">
-              <div className="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center border-[1.5px] border-ink-black shrink-0">
+            <div className="bg-surface-container-highest memphis-card p-6 flex flex-col gap-4 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center border-outline shrink-0">
                 <span className="material-symbols-outlined text-secondary">groups</span>
               </div>
               <div>

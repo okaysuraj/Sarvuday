@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useAuthStore } from '../../../store/authStore';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '../../../store/useAuthStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function VideoCallScreen() {
@@ -21,7 +22,8 @@ export default function VideoCallScreen() {
       try {
         const token = await AsyncStorage.getItem('access_token');
         const rolePath = user?.role === 'therapist' ? 'counsellor' : 'normal_user';
-        const res = await fetch(`http://10.0.2.2:8000/${rolePath}/sessions/join/${id}`, {
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+        const res = await fetch(`${apiUrl}/${rolePath}/sessions/join/${id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {

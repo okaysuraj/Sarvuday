@@ -76,7 +76,7 @@ async def stream_chatbot_response(
         )
 
         # Streaming the tokens one by one
-        for chunk in response:
+        async for chunk in response:
             if chunk.choices[0].delta.content:
                 yield chunk.choices[0].delta.content
 

@@ -122,7 +122,7 @@ export default function ModerationWarningScreen() {
 
       {/* Bottom Navigation for Mobile */}
       <View className="md:hidden absolute bottom-0 w-full z-50 bg-surface border-t-[1.5px] border-ink-black flex-row justify-around items-center h-20 px-4 pb-safe">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="items-center justify-center">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="items-center justify-center">
           <Ionicons name="home" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant">Home</Text>
         </TouchableOpacity>
@@ -142,3 +142,4 @@ export default function ModerationWarningScreen() {
     </View>
   );
 }
+

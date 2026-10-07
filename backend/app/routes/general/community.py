@@ -9,7 +9,7 @@ from app.schemas import SupportGroupCreate, PostCreate, PostInteract, SupportGro
 from app.models.mongodb_models import SupportGroup, CommunityPost
 import traceback
 
-router = APIRouter(prefix="/community", tags=["Community"])
+router = APIRouter(tags=["Community"])
 
 @router.get("/groups")
 async def get_support_groups(mongo_db = Depends(get_mongo_db)):

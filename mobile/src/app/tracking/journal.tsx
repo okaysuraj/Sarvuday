@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomButton } from '../../components/CustomButton';
@@ -28,13 +29,12 @@ export default function JournalEntryScreen() {
       if (moodIndex !== undefined) {
         await trackingApi.logMood({
           moodIndex: Number(moodIndex),
-          emotions: emotions ? String(emotions).split(',') : []
+          notes: emotions ? `Emotions: ${emotions}` : undefined
         });
       }
 
-      await trackingApi.submitJournalEntry({
-        text: entry,
-        triggers: selectedTriggers
+      await trackingApi.submitJournal({
+        text: selectedTriggers.length > 0 ? `${entry}\n\nTriggers: ${selectedTriggers.join(', ')}` : entry
       });
 
       Alert.alert('Saved', 'Your check-in has been saved successfully.', [

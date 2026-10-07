@@ -46,7 +46,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
       } ${className}`}
     >
       {isLoading ? (
-        <ActivityIndicator color={variant === 'outline' ? '#002da5' : '#ffffff'} />
+        <ActivityIndicator color={variant === 'outline' ? '#18181B' : '#ffffff'} />
       ) : (
         <Text className={`font-headline-md text-base ${variantStyles.split(' ')[1]} ${textClassName}`}>
           {title}

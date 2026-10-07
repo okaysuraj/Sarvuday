@@ -2,42 +2,59 @@ import React from 'react';
 
 const Terms = () => {
   return (
-    <div className="container" style={{ padding: '80px 0', minHeight: '80vh' }}>
-      <div className="sticker-container" style={{ padding: '40px' }}>
-        <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-primary)', marginBottom: '24px' }}>Terms of Service</h1>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          Effective Date: {new Date().toLocaleDateString()}
-        </p>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          Welcome to Sarvuday. By accessing or using our website and application, you agree to comply with and be bound by
-          these Terms of Service. If you do not agree, please do not use our services.
-        </p>
+    <div className="bg-[#FAF9F6] text-[#121214] min-h-[calc(100vh-64px)] py-16 sm:py-24">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="bg-white border-[#EAEAEA] rounded-2xl p-8 sm:p-12 shadow-sm space-y-8">
+          <div className="border-b border-[#EAEAEA] pb-6">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">
+              Terms of Care &amp; Platform Access
+            </span>
+            <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-[#121214] mt-2">
+              Terms of Service
+            </h1>
+            <p className="text-xs text-[#71717A] mt-2">
+              Effective Date: September 2026 &bull; SarvUday Platform
+            </p>
+          </div>
 
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: '40px', marginBottom: '16px' }}>1. Use of Services</h2>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          You must be at least 18 years old to use our services independently. You agree to use the platform only for lawful
-          purposes and in a way that does not infringe the rights of, restrict, or inhibit anyone else's use and enjoyment
-          of the platform.
-        </p>
+          <div className="space-y-6 text-sm leading-relaxed text-[#6E6D7A]">
+            <div className="p-4 rounded-xl bg-[#FDEBEC] border-[#F6D0D2] text-xs text-[#8F2B26]">
+              <strong>Emergency Medical Disclaimer:</strong> SarvUday is a tele-counselling platform and supportive tool. It is not an emergency psychiatric hospital or acute suicide prevention facility. If you are experiencing thoughts of self-harm or a life-threatening medical emergency, call <strong>988</strong> or your local emergency services immediately.
+            </div>
 
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: '40px', marginBottom: '16px' }}>2. Medical Disclaimer</h2>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          The content on Sarvuday is for informational purposes only and is not a substitute for professional medical advice,
-          diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any
-          questions you may have regarding a medical condition.
-        </p>
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold text-[#121214]">1. Acceptance of Terms</h2>
+              <p>
+                By accessing or using the SarvUday platform, you confirm your agreement to these Terms of Service. If you do not agree to all terms, you should discontinue use of the platform.
+              </p>
+            </div>
 
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: '40px', marginBottom: '16px' }}>3. User Accounts</h2>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          You are responsible for maintaining the confidentiality of your account credentials and for all activities that
-          occur under your account. We reserve the right to suspend or terminate accounts that violate these terms.
-        </p>
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold text-[#121214]">2. Clinical Relationship &amp; Telehealth</h2>
+              <p>
+                Therapy sessions booked via SarvUday establish a professional client-counsellor relationship directly with the licensed provider. Counsellors maintain their own clinical independence and licensure requirements.
+              </p>
+            </div>
 
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: '40px', marginBottom: '16px' }}>4. Changes to Terms</h2>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          We may modify these terms at any time. Your continued use of the platform following the posting of changes constitutes
-          your acceptance of the revised terms.
-        </p>
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold text-[#121214]">3. AI Companion Limitations</h2>
+              <p>
+                The 24/7 AI Companion is an emotional support and psychoeducational tool powered by conversational algorithms. It does not issue clinical psychiatric diagnoses, medical prescriptions, or replace human medical care.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold text-[#121214]">4. Account Responsibility</h2>
+              <p>
+                You are responsible for safeguarding your login credentials and maintaining privacy during telehealth video calls.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-[#EAEAEA] text-xs text-[#71717A]">
+              For questions regarding these terms, contact <a href="mailto:legal@sarvuday.com" className="text-[#121214] underline">legal@sarvuday.com</a>.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

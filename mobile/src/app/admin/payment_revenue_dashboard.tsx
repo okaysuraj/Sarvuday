@@ -13,7 +13,8 @@ export default function PaymentRevenueDashboardScreen() {
     const fetchDashboard = async () => {
       try {
         const token = await AsyncStorage.getItem('access_token');
-        const res = await fetch('http://10.0.2.2:8000/admin/dashboard', {
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+        const res = await fetch(`${apiUrl}/admin/dashboard`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {

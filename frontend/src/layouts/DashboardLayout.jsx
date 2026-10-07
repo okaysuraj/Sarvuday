@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { auth } from '../config/firebase';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
+import { auth } from "../config/firebase";
+import sarvudayLogo from "../assets/sarvuday_logo.png";
 
 const DashboardLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [userType, setUserType] = useState('normal_user');
+  const [userType, setUserType] = useState("normal_user");
 
   useEffect(() => {
-    const storedType = localStorage.getItem('userType');
+    const storedType = localStorage.getItem("userType");
     if (storedType) {
       setUserType(storedType);
     }
@@ -18,174 +19,256 @@ const DashboardLayout = () => {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('userType');
-      navigate('/login');
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userType");
+      navigate("/login");
     } catch (error) {
-      console.error('Logout error', error);
+      console.error("Logout error", error);
     }
   };
 
   const patientNav = [
-    { label: 'Home', path: '/normal-user-dashboard', icon: 'home' },
-    { label: 'AI Chat', path: '/ai-chat', icon: 'smart_toy' },
-    { label: 'Book', path: '/therapists', icon: 'calendar_month' },
-    { label: 'Profile', path: '/profile', icon: 'person' },
-    { label: 'Mood Tracker', path: '/mood-tracker', icon: 'mood' },
-    { label: 'My Records', path: '/my-records', icon: 'assignment' },
-    { label: 'Insights', path: '/insights', icon: 'leaderboard' }
+    { label: "Dashboard", path: "/normal-user-dashboard", icon: "dashboard" },
+    { label: "AI Companion", path: "/ai-chat", icon: "smart_toy" },
+    { label: "Therapists", path: "/therapists", icon: "calendar_month" },
+    { label: "Mood Tracker", path: "/mood-tracker", icon: "mood" },
+    { label: "Daily Journal", path: "/journal", icon: "edit_note" },
+    { label: "My Records", path: "/my-records", icon: "assignment" },
+    { label: "Insights", path: "/insights", icon: "insights" },
+    { label: "Community", path: "/community", icon: "forum" },
   ];
 
   const therapistNav = [
-    { label: 'Patients', path: '/counsellor-dashboard', icon: 'group' },
-    { label: 'Schedule', path: '/schedule', icon: 'calendar_today' },
-    { label: 'Earnings', path: '/earnings', icon: 'payments' },
-    { label: 'Settings', path: '/settings', icon: 'settings' }
+    { label: "Patients", path: "/counsellor-dashboard", icon: "group" },
+    { label: "Schedule", path: "/schedule", icon: "calendar_today" },
+    { label: "Earnings", path: "/earnings", icon: "payments" },
+    { label: "Settings", path: "/settings", icon: "settings" },
   ];
 
   const adminNav = [
-    { label: 'Overview', path: '/admin-dashboard', icon: 'dashboard' },
-    { label: 'Users', path: '/admin/users', icon: 'group' },
-    { label: 'Moderation', path: '/admin/moderation', icon: 'gavel' },
-    { label: 'Analytics', path: '/admin/analytics', icon: 'analytics' }
+    { label: "Overview", path: "/admin-dashboard", icon: "dashboard" },
+    { label: "Users", path: "/admin/users", icon: "group" },
+    { label: "Moderation", path: "/admin/moderation", icon: "gavel" },
+    { label: "Analytics", path: "/admin/analytics", icon: "analytics" },
   ];
 
   let navItems = patientNav;
-  if (userType === 'counsellor') navItems = therapistNav;
-  if (userType === 'admin') navItems = adminNav;
+  if (userType === "counsellor") navItems = therapistNav;
+  if (userType === "admin") navItems = adminNav;
 
   return (
-    <div className="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden flex flex-col md:flex-row">
-      <style>{`
-        .neo-card {
-            border: 1.5px solid #1A1A1A;
-            border-radius: 24px;
-        }
-        .neo-button-primary {
-            border: 1.5px solid #1A1A1A;
-            box-shadow: 4px 4px 0px 0px #1A1A1A;
-            transition: all 0.2s ease-in-out;
-        }
-        .neo-button-primary:active {
-            box-shadow: 0px 0px 0px 0px #1A1A1A;
-            transform: translate(2px, 2px);
-        }
-        .neo-shadow {
-            box-shadow: 4px 4px 0px 0px #1A1A1A;
-        }
-        .neo-interaction:active {
-            transform: translate(2px, 2px);
-            box-shadow: none !important;
-        }
-      `}</style>
-
-      {/* Desktop NavigationDrawer (hidden on mobile) */}
-      <nav className="hidden md:flex w-[280px] h-screen flex-col p-6 rounded-r-xl border-r-[1.5px] border-ink-black bg-surface dark:bg-surface-container shadow-[4px_0px_0px_0px_rgba(26,26,26,1)] sticky top-0 shrink-0 z-40">
-        <div className="flex items-center mb-10 gap-4">
-          <div className="w-12 h-12 rounded-full border-[1.5px] border-ink-black overflow-hidden shrink-0 bg-primary/20 flex items-center justify-center text-primary font-bold">
-            {userType.charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <h2 className="font-headline-sm text-headline-sm text-primary capitalize">{userType.replace('_', ' ')}</h2>
-            <p className="font-body-md text-body-md text-on-surface-variant">Active</p>
-          </div>
+    <div className="bg-[#FAF9F6] text-[#121214] min-h-screen flex flex-col md:flex-row antialiased selection:bg-[#18181B] selection:text-white">
+      {/* Desktop Minimalist Sidebar */}
+      <aside className="hidden md:flex w-[260px] h-screen flex-col p-5 border-r border-[#EAEAEA] bg-white sticky top-0 shrink-0 z-40">
+        {/* Brand Header */}
+        <div className="flex items-center justify-between pb-5 mb-5 border-b border-[#EAEAEA]">
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#FAF9F6] border border-[#EAEAEA] p-0.5 flex items-center justify-center overflow-hidden">
+              <img src={sarvudayLogo} alt="SarvUday" className="w-full h-full object-contain" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-semibold text-[15px] tracking-tight text-[#121214] leading-tight">
+                SarvUday
+              </span>
+              <span className="text-[10px] uppercase tracking-wider text-[#71717A] font-medium leading-none">
+                {userType.replace("_", " ")}
+              </span>
+            </div>
+          </Link>
+          <div className="w-2 h-2 rounded-full bg-emerald-500" title="Connected"></div>
         </div>
 
-        <ul className="flex flex-col gap-2 flex-grow">
+        {/* Navigation Items */}
+        <nav className="flex flex-col gap-1 flex-grow overflow-y-auto pr-1">
           {navItems.map((item, idx) => {
-            const isActive = location.pathname.startsWith(item.path);
+            const isActive = location.pathname === item.path || (item.path !== '/normal-user-dashboard' && location.pathname.startsWith(item.path));
             return (
-              <li key={idx}>
-                <Link 
-                  to={item.path} 
-                  className={`flex items-center gap-3 p-3 rounded-lg transition-transform ${isActive ? 'bg-primary text-on-primary border-[1.5px] border-ink-black scale-[0.98]' : 'text-on-surface hover:bg-surface-variant hover:translate-x-1'}`}
+              <Link
+                key={idx}
+                to={item.path}
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg text-[14px] font-medium transition-all duration-150 ${
+                  isActive
+                    ? "bg-[#18181B] text-white shadow-sm"
+                    : "text-[#6E6D7A] hover:text-[#121214] hover:bg-[#F5F4F0]"
+                }`}
+              >
+                <span
+                  className="material-symbols-rounded text-[19px]"
+                  style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}
                 >
-                  <span className="material-symbols-outlined" style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}>{item.icon}</span>
-                  <span className="font-label-md text-label-md">{item.label}</span>
-                </Link>
-              </li>
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+              </Link>
             );
           })}
-        </ul>
+        </nav>
 
-        <ul className="flex flex-col gap-2 mt-auto border-t-[1.5px] border-ink-black pt-4">
-          <li>
-            <Link to="/settings" className="flex items-center gap-3 p-3 text-on-surface hover:bg-surface-variant rounded-lg hover:translate-x-1 transition-transform">
-              <span className="material-symbols-outlined">settings</span>
-              <span className="font-label-md text-label-md">Settings</span>
-            </Link>
-          </li>
-          <li>
-            <button onClick={handleLogout} className="w-full flex items-center gap-3 p-3 text-on-surface hover:bg-error/20 hover:text-error rounded-lg hover:translate-x-1 transition-transform">
-              <span className="material-symbols-outlined">logout</span>
-              <span className="font-label-md text-label-md">Logout</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
+        {/* Bottom Actions & Crisis Help */}
+        <div className="mt-auto pt-4 border-t border-[#EAEAEA] space-y-2">
+          <Link
+            to="/emergency"
+            className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium bg-[#FDEBEC] text-[#8F2B26] hover:bg-[#FADBDC] transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#8F2B26] animate-pulse"></span>
+              24/7 Crisis Support
+            </span>
+            <span className="text-[11px] font-mono">988</span>
+          </Link>
 
-      {/* Main Content Area */}
+          <Link
+            to="/settings"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-[#6E6D7A] hover:text-[#121214] hover:bg-[#F5F4F0] transition-colors"
+          >
+            <span className="material-symbols-rounded text-[18px]">settings</span>
+            <span>Settings</span>
+          </Link>
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-[#6E6D7A] hover:text-[#8F2B26] hover:bg-[#FDEBEC]/60 transition-colors text-left"
+          >
+            <span className="material-symbols-rounded text-[18px]">logout</span>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Workspace Area */}
       <main className="flex-grow flex flex-col w-full min-h-screen">
-        {/* Mobile TopAppBar (hidden on desktop) */}
-        <header className="md:hidden sticky top-0 border-b-[1.5px] border-ink-black bg-surface dark:bg-surface-container-low flex justify-between items-center w-full px-margin-mobile py-4 z-40">
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-on-surface-variant hover:bg-surface-variant/20 p-2 rounded-full transition-all">
-            <span className="material-symbols-outlined">menu</span>
-          </button>
-          <h1 className="font-headline-sm font-bold text-primary dark:text-primary-fixed-dim">SarvUday</h1>
-          <button className="text-on-surface-variant hover:bg-surface-variant/20 p-2 rounded-full transition-all">
-            <span className="material-symbols-outlined">account_circle</span>
-          </button>
+        {/* Top App Header */}
+        <header className="sticky top-0 z-30 h-16 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-[#EAEAEA] flex items-center justify-between px-4 md:px-8">
+          {/* Mobile menu button */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg text-[#121214] hover:bg-black/[0.04] transition-colors"
+              aria-label="Toggle menu"
+            >
+              <span className="material-symbols-rounded text-2xl">menu</span>
+            </button>
+            <span className="text-xs sm:text-sm font-medium text-[#71717A] hidden sm:inline-block">
+              SarvUday Digital Care
+            </span>
+          </div>
+
+          {/* Quick Actions & Notifications */}
+          <div className="flex items-center gap-3">
+            <Link
+              to="/emergency"
+              className="sm:hidden px-2.5 py-1 rounded-full text-xs font-medium bg-[#FDEBEC] text-[#8F2B26]"
+            >
+              SOS
+            </Link>
+
+            <Link
+              to="/notifications"
+              className="p-2 rounded-lg text-[#6E6D7A] hover:text-[#121214] hover:bg-black/[0.04] transition-colors relative"
+              aria-label="Notifications"
+            >
+              <span className="material-symbols-rounded text-[20px]">notifications</span>
+              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#8F2B26]"></span>
+            </Link>
+
+            <Link
+              to="/profile"
+              className="w-8 h-8 rounded-full bg-[#EAE8E2] border-[#EAEAEA] flex items-center justify-center text-xs font-semibold text-[#121214] hover:border-outline/20 transition-all"
+            >
+              {userType.charAt(0).toUpperCase()}
+            </Link>
+          </div>
         </header>
 
-        {/* Mobile Nav Overlay */}
+        {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setIsMobileMenuOpen(false)}>
-            <nav className="w-[280px] h-full bg-surface p-6 border-r-[1.5px] border-ink-black shadow-[4px_0px_0px_0px_rgba(26,26,26,1)]" onClick={e => e.stopPropagation()}>
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="font-headline-sm text-primary">Menu</h2>
-                <button onClick={() => setIsMobileMenuOpen(false)}>
-                  <span className="material-symbols-outlined">close</span>
+          <div
+            className="md:hidden fixed inset-0 z-50 bg-black/30 backdrop-blur-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div
+              className="w-[280px] h-full bg-white p-5 flex flex-col justify-between shadow-2xl border-r border-[#EAEAEA]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#EAEAEA]">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-[#FAF9F6] border border-[#EAEAEA] p-0.5 flex items-center justify-center overflow-hidden">
+                      <img src={sarvudayLogo} alt="SarvUday" className="w-full h-full object-contain" />
+                    </div>
+                    <span className="font-semibold text-base">SarvUday</span>
+                  </div>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-1.5 rounded-lg text-[#71717A] hover:bg-black/[0.04]"
+                  >
+                    <span className="material-symbols-rounded text-xl">close</span>
+                  </button>
+                </div>
+
+                <nav className="flex flex-col gap-1">
+                  {navItems.map((item, idx) => (
+                    <Link
+                      key={idx}
+                      to={item.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#121214] hover:bg-[#F5F4F0]"
+                    >
+                      <span className="material-symbols-rounded text-lg text-[#71717A]">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              <div className="pt-4 border-t border-[#EAEAEA] space-y-2">
+                <Link
+                  to="/settings"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#71717A] hover:bg-[#F5F4F0]"
+                >
+                  <span className="material-symbols-rounded text-lg">settings</span>
+                  <span>Settings</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#8F2B26] hover:bg-[#FDEBEC]"
+                >
+                  <span className="material-symbols-rounded text-lg">logout</span>
+                  <span>Log Out</span>
                 </button>
               </div>
-              <ul className="flex flex-col gap-2">
-                {navItems.map((item, idx) => (
-                  <li key={idx}>
-                    <Link to={item.path} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 text-on-surface hover:bg-surface-variant rounded-lg">
-                      <span className="material-symbols-outlined">{item.icon}</span>
-                      <span className="font-label-md">{item.label}</span>
-                    </Link>
-                  </li>
-                ))}
-                <li className="mt-4 border-t-[1.5px] border-ink-black pt-4">
-                  <button onClick={handleLogout} className="w-full flex items-center gap-3 p-3 text-error hover:bg-error/10 rounded-lg">
-                    <span className="material-symbols-outlined">logout</span>
-                    <span className="font-label-md">Logout</span>
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            </div>
           </div>
         )}
 
-        {/* Dashboard Canvas */}
-        <div className="flex-grow p-margin-mobile md:p-margin-desktop overflow-y-auto mb-[80px] md:mb-0">
-          <div className="max-w-7xl mx-auto w-full relative">
-            <Link to="/notifications" className="absolute top-4 right-4 p-2 bg-surface rounded-full border-[1.5px] border-ink-black neo-shadow hover:bg-surface-container-high transition-colors text-primary font-bold z-50">
-              <span className="material-symbols-outlined">notifications</span>
-            </Link>
+        {/* Content Outlet Canvas */}
+        <div className="flex-grow p-4 sm:p-6 md:p-8 overflow-y-auto mb-16 md:mb-0">
+          <div className="max-w-6xl mx-auto w-full">
             <Outlet />
           </div>
         </div>
       </main>
 
-      {/* Mobile BottomNavBar (hidden on desktop) */}
-      <nav className="md:hidden fixed bottom-0 w-full z-50 border-t-[1.5px] border-ink-black bg-surface dark:bg-surface-container-low flex justify-around items-center h-[80px] px-4 pb-safe">
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="md:hidden fixed bottom-0 w-full z-40 bg-white/95 backdrop-blur-md border-t border-[#EAEAEA] flex justify-around items-center h-16 px-2">
         {navItems.slice(0, 4).map((item, idx) => {
           const isActive = location.pathname.startsWith(item.path);
           return (
-            <Link key={idx} to={item.path} className={`flex flex-col items-center justify-center ${isActive ? 'bg-secondary-container text-on-secondary-container border-[1.5px] border-ink-black rounded-xl px-4 py-1 scale-95 transition-transform' : 'text-on-surface-variant hover:text-primary transition-colors'}`}>
-              <span className="material-symbols-outlined" style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}>{item.icon}</span>
-              <span className="font-label-md text-label-md mt-1">{item.label}</span>
+            <Link
+              key={idx}
+              to={item.path}
+              className={`flex flex-col items-center justify-center flex-1 py-1 text-xs transition-colors ${
+                isActive ? "text-[#121214] font-medium" : "text-[#71717A] hover:text-[#121214]"
+              }`}
+            >
+              <span
+                className="material-symbols-rounded text-[20px]"
+                style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}
+              >
+                {item.icon}
+              </span>
+              <span className="text-[11px] mt-0.5">{item.label}</span>
             </Link>
           );
         })}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import useAuthStore from '../../store/authStore';
+import { Ionicons } from '@expo/vector-icons';
+import { useAuthStore } from '../../store/authStore';
 import { userApi } from '../../api/user';
 
 export default function EditProfileScreen() {

@@ -21,24 +21,7 @@ const GuidedMeditation = () => {
 
   return (
     <div className="flex-1 pb-24">
-      <style>{`
-        .neo-shadow {
-            box-shadow: 4px 4px 0px 0px rgba(26, 26, 26, 1);
-        }
-        .neo-shadow-active {
-            box-shadow: 0px 0px 0px 0px rgba(26, 26, 26, 1);
-            transform: translate(2px, 2px);
-        }
-        .neo-border {
-            border: 1.5px solid #1A1A1A;
-        }
-        .neo-border-dashed {
-            border: 1.5px dashed #1A1A1A;
-        }
-        .fill-icon {
-            font-variation-settings: 'FILL' 1;
-        }
-      `}</style>
+      
 
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 mb-8">
@@ -51,13 +34,13 @@ const GuidedMeditation = () => {
         {/* Left: Immersive Audio Player Module (8/12) */}
         <section className="lg:col-span-8 space-y-6">
           {/* Audio Canvas Card */}
-          <div className="relative bg-white neo-border rounded-[48px] overflow-hidden p-6 md:p-10 aspect-square md:aspect-video flex flex-col justify-between min-h-[400px]">
+          <div className="relative bg-white neo-border rounded-xl overflow-hidden p-6 md:p-10 aspect-square md:aspect-video flex flex-col justify-between min-h-[400px]">
             {/* Background Decorative Element */}
-            <div className="absolute -top-10 -right-10 w-64 h-64 bg-accent-pink rounded-full opacity-20 blur-3xl"></div>
+            <div className="absolute -top-10 -right-10 w-64 h-64 bg-surface rounded-full opacity-20 blur-3xl"></div>
             
             {/* Illustration Content */}
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 h-full">
-              <div className="w-48 h-48 md:w-64 md:h-64 neo-border rounded-[40px] overflow-hidden bg-accent-orange neo-shadow shrink-0">
+              <div className="w-48 h-48 md:w-64 md:h-64 neo-border rounded-xl overflow-hidden bg-surface shadow-subtle shrink-0">
                 <img 
                   className="w-full h-full object-cover" 
                   alt="Illustration" 
@@ -69,7 +52,7 @@ const GuidedMeditation = () => {
                 <p className="font-body-lg text-on-surface-variant">Guided by Dr. Sarah Chen • 12 Minutes</p>
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                   <span className="px-3 py-1 bg-accent-sage neo-border rounded-full font-label-bold text-sm">Mindfulness</span>
-                  <span className="px-3 py-1 bg-accent-pink neo-border rounded-full font-label-bold text-sm">Healing</span>
+                  <span className="px-3 py-1 bg-surface neo-border rounded-full font-label-bold text-sm">Healing</span>
                 </div>
               </div>
             </div>
@@ -85,7 +68,7 @@ const GuidedMeditation = () => {
                 <div className="w-full h-4 bg-surface-container neo-border rounded-full overflow-hidden relative">
                   <div className="h-full bg-secondary-container transition-all duration-300" style={{width: `${progress}%`}}></div>
                   <div 
-                    className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white neo-border rounded-full shadow-[2px_2px_0px_0px_rgba(26,26,26,1)] cursor-pointer hover:scale-110 transition-transform"
+                    className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white neo-border rounded-full shadow-subtle cursor-pointer hover:scale-110 transition-transform"
                     style={{left: `calc(${progress}% - 12px)`}}
                   ></div>
                 </div>
@@ -96,16 +79,16 @@ const GuidedMeditation = () => {
                 <button className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl hover:bg-surface-container transition-colors">
                   <span className="material-symbols-outlined text-ink-black text-2xl md:text-3xl">shuffle</span>
                 </button>
-                <button className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-white neo-border rounded-2xl neo-shadow hover:-translate-y-1 transition-transform">
+                <button className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-white neo-border rounded-2xl shadow-subtle transition-transform">
                   <span className="material-symbols-outlined text-ink-black text-2xl md:text-3xl">skip_previous</span>
                 </button>
                 <button 
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className={`w-16 h-16 md:w-20 md:h-20 flex items-center justify-center neo-border rounded-[28px] neo-shadow hover:-translate-y-1 transition-transform \${isPlaying ? 'bg-primary text-white' : 'bg-white text-ink-black'}`}
+                  className={`w-16 h-16 md:w-20 md:h-20 flex items-center justify-center neo-border rounded-xl shadow-subtle  transition-transform \${isPlaying ? 'bg-primary text-white' : 'bg-white text-ink-black'}`}
                 >
                   <span className="material-symbols-outlined text-4xl md:text-5xl">{isPlaying ? 'pause' : 'play_arrow'}</span>
                 </button>
-                <button className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-white neo-border rounded-2xl neo-shadow hover:-translate-y-1 transition-transform">
+                <button className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-white neo-border rounded-2xl shadow-subtle transition-transform">
                   <span className="material-symbols-outlined text-ink-black text-2xl md:text-3xl">skip_next</span>
                 </button>
                 <button className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl hover:bg-surface-container transition-colors">
@@ -116,7 +99,7 @@ const GuidedMeditation = () => {
           </div>
 
           {/* Volume & Audio Settings */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white neo-border rounded-3xl p-6 md:px-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white neo-border rounded-xl p-6 md:px-10">
             <div className="flex items-center gap-4 w-full md:max-w-xs">
               <span className="material-symbols-outlined text-on-surface-variant">volume_up</span>
               <div className="flex-1 h-2 bg-surface-container neo-border rounded-full overflow-hidden">
@@ -139,7 +122,7 @@ const GuidedMeditation = () => {
         {/* Right: Sidebar Modules (4/12) */}
         <aside className="lg:col-span-4 space-y-6">
           {/* Meditative Path Module */}
-          <div className="bg-accent-sage neo-border rounded-[40px] p-6 md:p-8 neo-shadow">
+          <div className="bg-accent-sage neo-border rounded-xl p-6 md:p-8 shadow-subtle">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-white neo-border rounded-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-primary">timeline</span>
@@ -181,15 +164,15 @@ const GuidedMeditation = () => {
               </div>
             </div>
             
-            <button className="w-full mt-8 py-4 bg-white neo-border rounded-2xl neo-shadow font-label-bold hover:-translate-y-1 transition-transform">
+            <button className="w-full mt-8 py-4 bg-white neo-border rounded-2xl shadow-subtle font-label-bold transition-transform">
               View Full Journey
             </button>
           </div>
           
           {/* Reflection Tips Module */}
-          <div className="bg-white neo-border rounded-[40px] p-6 md:p-8">
+          <div className="bg-white neo-border rounded-xl p-6 md:p-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-accent-pink neo-border rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-surface neo-border rounded-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-tertiary">lightbulb</span>
               </div>
               <h2 className="font-headline-sm text-2xl text-ink-black">Reflection Tips</h2>
@@ -206,10 +189,10 @@ const GuidedMeditation = () => {
               </li>
             </ul>
             
-            <div className="mt-6 pt-6 border-t-[1.5px] border-ink-black">
+            <div className="mt-6 pt-6 border-t-[1.5px] border-outline">
               <p className="font-label-bold text-on-surface-variant mb-2">Up Next</p>
-              <div className="flex items-center gap-3 p-3 hover:bg-surface-container rounded-xl transition-colors cursor-pointer group border-[1.5px] border-transparent hover:border-ink-black">
-                <div className="w-12 h-12 bg-accent-orange neo-border rounded-lg shrink-0 overflow-hidden">
+              <div className="flex items-center gap-3 p-3 hover:bg-surface-container rounded-xl transition-colors cursor-pointer group border-transparent hover:border-outline">
+                <div className="w-12 h-12 bg-surface neo-border rounded-lg shrink-0 overflow-hidden">
                   <img 
                     className="w-full h-full object-cover" 
                     alt="Next" 

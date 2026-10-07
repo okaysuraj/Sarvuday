@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { communityApi } from '../../api/community';
-import useAuthStore from '../../store/authStore';
+import { Ionicons } from '@expo/vector-icons';
+import { communityApi } from '@/api/community';
+import { useAuthStore } from '@/store/authStore';
 import { format } from 'date-fns';
 
 export default function GroupChatScreen() {

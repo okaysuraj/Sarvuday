@@ -1,15 +1,23 @@
+/* BookAppointmentButton.module.css — Minimalist System */
+
 .bookBtn {
-  margin-top: 12px;
-  padding: 10px 16px;
-  background-color: #5e3fa5;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
+  margin-top: 8px;
+  padding: 9px 16px;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.3s;
+  font-size: 13px;
+  font-family: var(--font-body);
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .bookBtn:hover {
-  background-color: #472c84;
+  opacity: 0.92;
+}
+
+.bookBtn:active {
+  transform: scale(0.98);
 }

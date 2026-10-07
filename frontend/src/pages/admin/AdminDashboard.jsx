@@ -34,240 +34,391 @@ const AdminDashboard = () => {
   }, []);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64"><span className="material-symbols-outlined animate-spin text-4xl text-primary">autorenew</span></div>;
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '256px' }}>
+        <span className="material-symbols-rounded" style={{
+          fontSize: '28px',
+          color: 'var(--color-on-surface-variant)',
+          animation: 'spin 1s linear infinite',
+        }}>autorenew</span>
+      </div>
+    );
   }
 
+  const statCards = [
+    {
+      label: 'Total Community',
+      value: dashboardData?.total_active_users || 0,
+      trend: '+12.4%',
+      trendIcon: 'trending_up',
+      bg: 'var(--color-sage-bg)',
+      accent: 'var(--color-sage-text)',
+    },
+    {
+      label: 'Licensed Staff',
+      value: dashboardData?.active_therapists || 0,
+      trend: 'Active Now',
+      trendIcon: 'groups',
+      bg: 'var(--color-sky-bg)',
+      accent: 'var(--color-sky-text)',
+    },
+  ];
+
   return (
-    <div className="space-y-gutter">
-      <style>{`
-        .neo-shadow-large {
-            box-shadow: 8px 8px 0px 0px rgba(26, 26, 26, 1);
-        }
-        .sticker-card {
-            border: 1.5px solid #1A1A1A;
-            transition: all 0.2s ease;
-        }
-        .neo-button-active:active {
-            transform: translate(2px, 2px);
-            box-shadow: none;
-        }
-      `}</style>
-
-      {/* Hero Stats Row (Bento Style) */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
-        {/* User Growth */}
-        <div className="sticker-card neo-shadow-large p-6 rounded-[32px] bg-accent-pink flex flex-col justify-between">
-          <div>
-            <p className="font-label-bold text-on-surface-variant uppercase text-xs mb-1">Total Community</p>
-            <h3 className="font-display-lg text-display-lg text-ink-black">{dashboardData?.total_active_users || 0}</h3>
-          </div>
-          <div className="flex items-center gap-1 text-primary font-label-bold mt-4">
-            <span className="material-symbols-outlined">trending_up</span>
-            <span>+12.4%</span>
-          </div>
-        </div>
-
-        {/* Active Therapists */}
-        <div className="sticker-card neo-shadow-large p-6 rounded-[32px] bg-secondary-fixed flex flex-col justify-between">
-          <div>
-            <p className="font-label-bold text-on-surface-variant uppercase text-xs mb-1">Licensed Staff</p>
-            <h3 className="font-display-lg text-display-lg text-ink-black">{dashboardData?.active_therapists || 0}</h3>
-          </div>
-          <div className="flex items-center gap-1 text-ink-black font-label-bold mt-4">
-            <span className="material-symbols-outlined">groups</span>
-            <span>Active Now</span>
-          </div>
-        </div>
-
-        {/* Revenue */}
-        <div className="sticker-card neo-shadow-large p-6 rounded-[32px] bg-accent-sage flex flex-col justify-between col-span-1 md:col-span-2">
-          <div className="flex justify-between items-start">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {/* Stats Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+        {statCards.map((stat, i) => (
+          <div key={i} style={{
+            backgroundColor: stat.bg,
+            border: `1px solid rgba(0,0,0,0.06)`,
+            borderRadius: 'var(--radius-lg)',
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            minHeight: '140px',
+          }}>
             <div>
-              <p className="font-label-bold text-on-surface-variant uppercase text-xs mb-1">Monthly Revenue</p>
-              <h3 className="font-display-lg text-display-lg text-ink-black">${dashboardData?.total_revenue || 0}</h3>
+              <p style={{
+                fontSize: '11px',
+                fontWeight: 500,
+                color: stat.accent,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                marginBottom: '6px',
+              }}>{stat.label}</p>
+              <h3 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '2rem',
+                fontWeight: 700,
+                color: 'var(--color-on-surface)',
+                letterSpacing: '-0.03em',
+              }}>{stat.value}</h3>
             </div>
-            <div className="h-16 w-32 relative">
-              {/* Mini Sparkline visualization placeholder */}
-              <div className="absolute inset-0 flex items-end gap-1">
-                <div className="w-2 bg-primary h-[40%] border border-black"></div>
-                <div className="w-2 bg-primary h-[60%] border border-black"></div>
-                <div className="w-2 bg-primary h-[50%] border border-black"></div>
-                <div className="w-2 bg-primary h-[80%] border border-black"></div>
-                <div className="w-2 bg-primary h-[90%] border border-black"></div>
-              </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '12px',
+              fontWeight: 500,
+              color: stat.accent,
+              marginTop: '12px',
+            }}>
+              <span className="material-symbols-rounded" style={{ fontSize: '16px' }}>{stat.trendIcon}</span>
+              <span>{stat.trend}</span>
             </div>
           </div>
-          <div className="flex items-center gap-1 text-on-surface-variant font-label-md mt-4">
-            <span className="material-symbols-outlined">info</span>
+        ))}
+
+        {/* Revenue Card - wider */}
+        <div style={{
+          backgroundColor: 'var(--color-surface)',
+          border: '1px solid var(--border-color)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '24px',
+          boxShadow: 'var(--shadow-subtle)',
+          gridColumn: 'span 2',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <p style={{
+                fontSize: '11px',
+                fontWeight: 500,
+                color: 'var(--color-on-surface-variant)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                marginBottom: '6px',
+              }}>Monthly Revenue</p>
+              <h3 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '2rem',
+                fontWeight: 700,
+                color: 'var(--color-on-surface)',
+                letterSpacing: '-0.03em',
+              }}>${dashboardData?.total_revenue || 0}</h3>
+            </div>
+            <div style={{ height: '48px', display: 'flex', alignItems: 'flex-end', gap: '3px' }}>
+              {[40, 60, 50, 80, 90].map((h, i) => (
+                <div key={i} style={{
+                  width: '6px',
+                  height: `${h}%`,
+                  backgroundColor: 'var(--color-primary)',
+                  borderRadius: '2px',
+                  opacity: 0.6 + (i * 0.1),
+                }} />
+              ))}
+            </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '12px',
+            color: 'var(--color-on-surface-variant)',
+            marginTop: '12px',
+          }}>
+            <span className="material-symbols-rounded" style={{ fontSize: '16px' }}>info</span>
             <span>Forecasted: +5% from previous month</span>
           </div>
         </div>
       </div>
 
-      {/* Main Dashboard Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
-        {/* Safety Snapshot Column */}
-        <div className="lg:col-span-2 space-y-gutter">
-          <div className="sticker-card bg-white p-8 rounded-[48px]">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-              <div>
-                <h4 className="font-headline-md text-headline-md text-ink-black">Safety Snapshot</h4>
-                <p className="text-on-surface-variant font-body-md">Live monitoring of high-priority intervention triggers.</p>
-              </div>
-              <button className="sticker-card neo-shadow px-6 py-2 bg-primary text-white font-label-bold rounded-full hover:bg-primary/90 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all">
-                View Full Logs
-              </button>
+      {/* Main Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '20px' }}>
+        {/* Safety Snapshot */}
+        <div style={{
+          backgroundColor: 'var(--color-surface)',
+          border: '1px solid var(--border-color)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '28px',
+          boxShadow: 'var(--shadow-subtle)',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+            <div>
+              <h4 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.1rem',
+                fontWeight: 600,
+                color: 'var(--color-on-surface)',
+                letterSpacing: '-0.01em',
+              }}>Safety Snapshot</h4>
+              <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>
+                Live monitoring of high-priority intervention triggers.
+              </p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-              {/* Critical Incident A */}
-              <div className="sticker-card bg-accent-orange p-6 rounded-[24px]">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-white border-[1.5px] border-ink-black flex items-center justify-center">
-                    <span className="material-symbols-outlined text-error">warning</span>
+            <button className="btn-secondary" style={{ fontSize: '13px', padding: '8px 16px' }}>View Full Logs</button>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+            {/* Critical Incident Cards */}
+            {[
+              { title: 'Suicidal Ideation', priority: 'Critical Priority', count: '04', label: 'Active Alerts', icon: 'warning', bg: 'var(--color-rose-bg)', accent: 'var(--color-rose-text)' },
+              { title: 'Harassment', priority: 'Moderate Risk', count: '12', label: 'In Moderation', icon: 'block', bg: 'var(--color-sand-bg)', accent: 'var(--color-sand-text)' },
+            ].map((incident, i) => (
+              <div key={i} style={{
+                backgroundColor: incident.bg,
+                borderRadius: 'var(--radius-lg)',
+                padding: '20px',
+                border: `1px solid rgba(0,0,0,0.04)`,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+                  <div style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: 'var(--radius-md)',
+                    backgroundColor: 'var(--color-surface)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <span className="material-symbols-rounded" style={{ fontSize: '18px', color: incident.accent }}>{incident.icon}</span>
                   </div>
                   <div>
-                    <p className="font-label-bold text-ink-black">Suicidal Ideation</p>
-                    <p className="text-xs text-on-error-container">Critical Priority</p>
+                    <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-on-surface)' }}>{incident.title}</p>
+                    <p style={{ fontSize: '11px', color: incident.accent }}>{incident.priority}</p>
                   </div>
                 </div>
-                <div className="flex justify-between items-end">
-                  <span className="font-display-lg text-4xl text-ink-black">04</span>
-                  <span className="font-label-md bg-white px-3 py-1 rounded-full border border-ink-black">Active Alerts</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <span style={{ fontSize: '2rem', fontWeight: 700, fontFamily: 'var(--font-heading)', color: 'var(--color-on-surface)', letterSpacing: '-0.03em' }}>{incident.count}</span>
+                  <span className="pill-badge" style={{
+                    backgroundColor: 'var(--color-surface)',
+                    border: '1px solid var(--border-color)',
+                    fontSize: '11px',
+                  }}>{incident.label}</span>
                 </div>
               </div>
+            ))}
+          </div>
 
-              {/* Critical Incident B */}
-              <div className="sticker-card bg-primary-fixed p-6 rounded-[24px]">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-white border-[1.5px] border-ink-black flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary">block</span>
-                  </div>
-                  <div>
-                    <p className="font-label-bold text-ink-black">Harassment</p>
-                    <p className="text-xs text-on-surface-variant">Moderate Risk</p>
-                  </div>
-                </div>
-                <div className="flex justify-between items-end">
-                  <span className="font-display-lg text-4xl text-ink-black">12</span>
-                  <span className="font-label-md bg-white px-3 py-1 rounded-full border border-ink-black">In Moderation</span>
-                </div>
-              </div>
+          {/* Telemetry */}
+          <div style={{
+            marginTop: '20px',
+            padding: '20px',
+            backgroundColor: 'var(--color-surface-container)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--border-color)',
+          }}>
+            <h5 style={{
+              fontSize: '11px',
+              fontWeight: 500,
+              color: 'var(--color-on-surface-variant)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              marginBottom: '14px',
+            }}>Platform Health Telemetry</h5>
+            <div style={{ height: '100px', display: 'flex', alignItems: 'flex-end', gap: '4px', overflow: 'hidden' }}>
+              {telemetry.map((h, i) => (
+                <div key={i} style={{
+                  flex: 1,
+                  height: `${h}%`,
+                  backgroundColor: i === 8 ? 'var(--color-sage-text)' : 'var(--color-primary)',
+                  borderRadius: '3px 3px 0 0',
+                  transition: 'height 0.5s ease',
+                  opacity: 0.7 + (i * 0.03),
+                }} />
+              ))}
             </div>
-
-            {/* Real-time Health Telemetry Visualizer */}
-            <div className="mt-gutter p-6 bg-surface-container rounded-[24px] border-[1.5px] border-ink-black">
-              <h5 className="font-label-bold text-on-surface-variant mb-4 uppercase text-xs tracking-widest">Platform Health Telemetry</h5>
-              <div className="h-32 w-full flex items-end gap-2 overflow-hidden">
-                {/* Dynamic bar placeholder */}
-                {telemetry.map((h, i) => (
-                  <div key={i} className={`flex-grow border-[1.5px] border-ink-black rounded-t-lg transition-all duration-500 ${i === 8 ? 'bg-secondary' : 'bg-primary'}`} style={{ height: `${h}%` }}></div>
-                ))}
-              </div>
-              <div className="flex justify-between mt-4 text-xs font-label-md text-on-surface-variant">
-                <span>00:00</span>
-                <span>Session Throughput (Peak: 14.2k/s)</span>
-                <span>23:59</span>
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>
+              <span>00:00</span>
+              <span>Session Throughput (Peak: 14.2k/s)</span>
+              <span>23:59</span>
             </div>
           </div>
         </div>
 
-        {/* AI Risk Level Sidebar */}
-        <div className="space-y-gutter">
-          <div className="sticker-card bg-white p-8 rounded-[48px] h-full flex flex-col">
-            <div className="mb-8">
-              <h4 className="font-headline-sm text-headline-sm text-ink-black">AI Risk Distribution</h4>
-              <p className="text-on-surface-variant text-sm mt-1">Real-time classification by GuardBot AI</p>
-            </div>
-            
-            <div className="space-y-6 flex-grow">
-              {/* High Risk Progress */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-label-bold text-error">High Risk</span>
-                  <span className="font-label-md">1.2%</span>
-                </div>
-                <div className="h-4 w-full bg-surface-container border-[1.5px] border-ink-black rounded-full overflow-hidden">
-                  <div className="h-full bg-error transition-all duration-1000" style={{ width: '12%' }}></div>
-                </div>
-              </div>
+        {/* AI Risk Sidebar */}
+        <div style={{
+          backgroundColor: 'var(--color-surface)',
+          border: '1px solid var(--border-color)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '28px',
+          boxShadow: 'var(--shadow-subtle)',
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+          <div style={{ marginBottom: '24px' }}>
+            <h4 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1rem',
+              fontWeight: 600,
+              color: 'var(--color-on-surface)',
+              letterSpacing: '-0.01em',
+            }}>AI Risk Distribution</h4>
+            <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>
+              Real-time classification by GuardBot AI
+            </p>
+          </div>
 
-              {/* Monitoring Needed */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-label-bold text-secondary">Monitoring Needed</span>
-                  <span className="font-label-md">18.5%</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', flex: 1 }}>
+            {[
+              { label: 'High Risk', value: '1.2%', width: '12%', color: 'var(--color-rose-text)', bg: 'var(--color-rose-bg)' },
+              { label: 'Monitoring Needed', value: '18.5%', width: '45%', color: 'var(--color-sage-text)', bg: 'var(--color-sage-bg)' },
+              { label: 'Stable', value: '80.3%', width: '80%', color: 'var(--color-primary)', bg: 'var(--color-surface-container)' },
+            ].map((risk, i) => (
+              <div key={i}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 500, color: risk.color }}>{risk.label}</span>
+                  <span style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)' }}>{risk.value}</span>
                 </div>
-                <div className="h-4 w-full bg-surface-container border-[1.5px] border-ink-black rounded-full overflow-hidden">
-                  <div className="h-full bg-secondary transition-all duration-1000" style={{ width: '45%' }}></div>
+                <div style={{
+                  height: '8px',
+                  width: '100%',
+                  backgroundColor: 'var(--color-surface-container)',
+                  borderRadius: 'var(--radius-full)',
+                  overflow: 'hidden',
+                }}>
+                  <div style={{
+                    height: '100%',
+                    width: risk.width,
+                    backgroundColor: risk.color,
+                    borderRadius: 'var(--radius-full)',
+                    transition: 'width 1s ease',
+                  }} />
                 </div>
               </div>
+            ))}
+          </div>
 
-              {/* Stable */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-label-bold text-primary">Stable</span>
-                  <span className="font-label-md">80.3%</span>
-                </div>
-                <div className="h-4 w-full bg-surface-container border-[1.5px] border-ink-black rounded-full overflow-hidden">
-                  <div className="h-full bg-primary transition-all duration-1000" style={{ width: '80%' }}></div>
-                </div>
-              </div>
+          {/* AI Insight */}
+          <div style={{
+            marginTop: '24px',
+            padding: '16px',
+            backgroundColor: 'var(--color-surface-container)',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid var(--border-color)',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+              <span className="material-symbols-rounded" style={{ fontSize: '18px', color: 'var(--color-sage-text)' }}>psychology</span>
+              <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', lineHeight: '1.5', fontStyle: 'italic' }}>
+                AI prediction accuracy for suicide risk has increased to 94.2% following last night's model update.
+              </p>
             </div>
+          </div>
 
-            <div className="mt-8 p-4 bg-surface-container-low rounded-[24px] border-[1.5px] border-ink-black">
-              <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-secondary">psychology</span>
-                <p className="text-xs italic leading-relaxed">AI prediction accuracy for suicide risk has increased to 94.2% following last night's model update.</p>
+          {/* Recent Activities */}
+          <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h5 style={{
+              fontSize: '11px',
+              fontWeight: 500,
+              color: 'var(--color-on-surface-variant)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              paddingBottom: '8px',
+              borderBottom: '1px solid var(--border-color)',
+            }}>Recent Activities</h5>
+            {[
+              { label: 'New Critical Incident #8921', time: '2m ago', color: 'var(--color-rose-text)' },
+              { label: 'Therapist #203 Verified', time: '14m ago', color: 'var(--color-primary)' },
+              { label: 'Payouts Processed (Manual)', time: '1h ago', color: 'var(--color-sage-text)' },
+            ].map((activity, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                <div style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: activity.color,
+                  flexShrink: 0,
+                }} />
+                <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-on-surface)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{activity.label}</span>
+                <span style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', flexShrink: 0 }}>{activity.time}</span>
               </div>
-            </div>
-
-            {/* System Audit Log Fragment */}
-            <div className="mt-8 space-y-4">
-              <h5 className="font-label-bold text-xs uppercase text-on-surface-variant tracking-widest border-b-[1.5px] border-ink-black pb-2">Recent Activities</h5>
-              
-              <div className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-2 h-2 rounded-full bg-error"></div>
-                <span className="text-sm font-label-md truncate">New Critical Incident #8921</span>
-                <span className="text-[10px] ml-auto text-on-surface-variant">2m ago</span>
-              </div>
-              
-              <div className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span className="text-sm font-label-md truncate">Therapist #203 Verified</span>
-                <span className="text-[10px] ml-auto text-on-surface-variant">14m ago</span>
-              </div>
-              
-              <div className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-2 h-2 rounded-full bg-secondary"></div>
-                <span className="text-sm font-label-md truncate">Payouts Processed (Manual)</span>
-                <span className="text-[10px] ml-auto text-on-surface-variant">1h ago</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Crisis Center Real-time Feed */}
-      <div className="sticker-card bg-ink-black text-white p-8 rounded-[48px] flex flex-col md:flex-row items-center justify-between overflow-hidden relative gap-6">
-        <div className="absolute right-0 top-0 opacity-20 pointer-events-none hidden md:block">
-          <span className="material-symbols-outlined text-[200px]">emergency_share</span>
+      {/* Crisis Center Banner */}
+      <div style={{
+        backgroundColor: 'var(--color-primary)',
+        color: 'var(--color-on-primary)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '32px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '24px',
+        flexWrap: 'wrap',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.06 }}>
+          <span className="material-symbols-rounded" style={{ fontSize: '200px' }}>emergency_share</span>
         </div>
-        
-        <div className="z-10">
-          <h3 className="font-headline-md text-headline-md text-accent-pink">Crisis Response Center</h3>
-          <p className="font-body-lg text-surface-variant mt-2 max-w-xl">
-            3 rapid-response teams are currently active. Average connection time is <span className="font-label-bold text-secondary-fixed">24 seconds</span>.
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <h3 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.25rem',
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            marginBottom: '6px',
+          }}>Crisis Response Center</h3>
+          <p style={{ fontSize: '14px', opacity: 0.8, maxWidth: '480px' }}>
+            3 rapid-response teams are currently active. Average connection time is <span style={{ fontWeight: 600, opacity: 1 }}>24 seconds</span>.
           </p>
         </div>
-        
-        <div className="z-10 flex gap-4 w-full md:w-auto">
-          <button className="w-full md:w-auto bg-error px-8 py-4 border-[1.5px] border-white rounded-full font-label-bold text-lg hover:-translate-y-1 transition-transform">
-            Manage Escalations
-          </button>
-        </div>
+        <button style={{
+          backgroundColor: 'var(--color-rose-bg)',
+          color: 'var(--color-rose-text)',
+          border: 'none',
+          borderRadius: 'var(--radius-md)',
+          padding: '12px 24px',
+          fontWeight: 500,
+          fontSize: '14px',
+          fontFamily: 'var(--font-body)',
+          cursor: 'pointer',
+          position: 'relative',
+          zIndex: 1,
+          transition: 'opacity 0.15s ease, transform 0.15s ease',
+        }}>
+          Manage Escalations
+        </button>
       </div>
+
+      
     </div>
   );
 };

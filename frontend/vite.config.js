@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,       // Allows access via local IP
-    port: 5173,       // Optional: change port if needed
+    port: 5180,       // Dedicated port for Sarvuday
   },
   build: {
     rollupOptions: {

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import Slider from '@react-native-community/slider';
 
 const { width } = Dimensions.get('window');
 
@@ -159,7 +158,7 @@ export default function AIPersonalityCustomizationScreen() {
 
       {/* Bottom Navigation Bar */}
       <View className="absolute bottom-0 w-full bg-white border-t-[1.5px] border-ink-black flex-row justify-around items-center h-20 px-4">
-        <TouchableOpacity className="flex-col items-center justify-center active:scale-95 transition-transform" onPress={() => router.push('/patient/dashboard')}>
+        <TouchableOpacity className="flex-col items-center justify-center active:scale-95 transition-transform" onPress={() => router.push('/(tabs)')}>
           <Ionicons name="home" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant font-bold text-xs">Home</Text>
         </TouchableOpacity>
@@ -179,3 +178,4 @@ export default function AIPersonalityCustomizationScreen() {
     </View>
   );
 }
+

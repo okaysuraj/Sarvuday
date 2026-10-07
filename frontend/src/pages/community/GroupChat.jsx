@@ -29,7 +29,7 @@ const GroupChat = () => {
       avatar: 'water_drop',
       color: 'bg-tertiary-fixed',
       iconColor: 'text-tertiary',
-      reactions: [{ emoji: '❤️', count: 3 }]
+      reactions: [{ emoji: '<span className="material-symbols-outlined text-sm text-rose-text">favorite</span>️', count: 3 }]
     },
     {
       id: 3,
@@ -94,28 +94,22 @@ const GroupChat = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-[calc(100vh-80px)] bg-cream-bg">
-      <style>{`
-        .neo-shadow { box-shadow: 4px 4px 0px 0px rgba(26, 26, 26, 1); }
-        .neo-shadow-sm { box-shadow: 2px 2px 0px 0px rgba(26, 26, 26, 1); }
-        .neo-border { border: 1.5px solid #1A1A1A; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+    <div className="flex-1 flex flex-col h-[calc(100vh-80px)] bg-background">
+      
       
       {/* Chat Header */}
-      <div className="px-4 md:px-margin-desktop py-4 border-b-[1.5px] border-ink-black bg-surface-bright flex items-center justify-between shrink-0 sticky top-0 z-10">
+      <div className="px-4 md:px-margin-desktop py-4 border-b border-outline bg-surface-bright flex items-center justify-between shrink-0 sticky top-0 z-10">
         <div className="flex items-center gap-4">
           <button onClick={() => navigate('/community/groups')} className="md:hidden p-2 text-on-surface hover:bg-surface-container rounded-full">
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
-          <div className="w-14 h-14 rounded-2xl bg-accent-pink neo-border neo-shadow-sm flex items-center justify-center rotate-[-3deg] shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-surface neo-border shadow-subtle flex items-center justify-center rotate-[-3deg] shrink-0">
             <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>self_improvement</span>
           </div>
           <div>
             <h2 className="font-headline-sm text-headline-sm text-ink-black flex items-center gap-2 flex-wrap">
               Mindful Circle
-              <span className="px-2 py-0.5 rounded-full border border-ink-black bg-secondary-container text-on-secondary-container text-xs font-label-bold">Verified</span>
+              <span className="px-2 py-0.5 rounded-full border-outline bg-secondary-container text-on-secondary-container text-xs font-label-bold">Verified</span>
             </h2>
             <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-green-500 neo-border"></span>
@@ -124,10 +118,10 @@ const GroupChat = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3">
-          <button className="p-2 rounded-xl border-[1.5px] border-ink-black bg-surface hover:bg-accent-sage transition-colors">
+          <button className="p-2 rounded-xl border-outline bg-surface hover:bg-accent-sage transition-colors">
             <span className="material-symbols-outlined">search</span>
           </button>
-          <button className="p-2 rounded-xl border-[1.5px] border-ink-black bg-surface hover:bg-accent-sage transition-colors">
+          <button className="p-2 rounded-xl border-outline bg-surface hover:bg-accent-sage transition-colors">
             <span className="material-symbols-outlined">more_vert</span>
           </button>
         </div>
@@ -138,7 +132,7 @@ const GroupChat = () => {
         
         {/* Date Divider */}
         <div className="flex justify-center my-4">
-          <span className="px-4 py-1 rounded-full border-[1.5px] border-ink-black bg-surface-variant text-on-surface-variant font-label-bold text-label-bold text-xs">Today</span>
+          <span className="px-4 py-1 rounded-full border-outline bg-surface-variant text-on-surface-variant font-label-bold text-label-bold text-xs">Today</span>
         </div>
 
         {messages.map((msg, idx) => (
@@ -153,7 +147,7 @@ const GroupChat = () => {
                 <span className="text-xs text-on-surface-variant">{msg.time}</span>
               </div>
               
-              <div className={`${msg.isSelf ? 'bg-primary-fixed text-on-surface rounded-tr-sm' : 'bg-surface text-ink-black rounded-tl-sm'} border-[1.5px] border-ink-black rounded-2xl p-4 neo-shadow-sm`}>
+              <div className={`${msg.isSelf ? 'bg-primary-fixed text-on-surface rounded-tr-sm' : 'bg-surface text-ink-black rounded-tl-sm'} border-outline rounded-2xl p-4 shadow-subtle`}>
                 <p className="font-body-lg text-body-lg">{msg.content}</p>
               </div>
               
@@ -161,7 +155,7 @@ const GroupChat = () => {
               {msg.reactions && msg.reactions.length > 0 && (
                 <div className={`flex gap-2 mt-1 ${msg.isSelf ? 'justify-end' : ''}`}>
                   {msg.reactions.map((r, i) => (
-                    <button key={i} className="px-2 py-1 rounded-full border-[1.5px] border-ink-black bg-secondary-fixed text-sm flex items-center gap-1 hover:bg-secondary-fixed-dim transition-colors">
+                    <button key={i} className="px-2 py-1 rounded-full border-outline bg-secondary-fixed text-sm flex items-center gap-1 hover:bg-secondary-fixed-dim transition-colors">
                       {r.emoji} <span className="font-label-bold">{r.count}</span>
                     </button>
                   ))}
@@ -173,7 +167,7 @@ const GroupChat = () => {
         
         {/* System Message */}
         <div className="flex justify-center my-6">
-          <div className="flex items-center gap-2 bg-accent-sage/30 px-4 py-2 rounded-full border border-dashed border-outline-variant">
+          <div className="flex items-center gap-2 bg-accent-sage/30 px-4 py-2 rounded-full border-dashed border-outline-variant">
             <span className="material-symbols-outlined text-sm text-outline-variant">campaign</span>
             <span className="font-label-md text-label-md text-on-surface-variant text-center">Reminder: Group meditation starts in 15 minutes.</span>
           </div>
@@ -188,7 +182,7 @@ const GroupChat = () => {
             <div className="flex items-baseline gap-2">
               <span className="font-label-bold text-label-bold text-ink-black">Anonymous Bear</span>
             </div>
-            <div className="bg-surface border-[1.5px] border-ink-black rounded-2xl rounded-tl-sm p-4 neo-shadow-sm flex items-center gap-1 w-16">
+            <div className="bg-surface border-outline rounded-2xl rounded-tl-sm p-4 shadow-subtle flex items-center gap-1 w-16">
               <div className="w-2 h-2 bg-outline rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
               <div className="w-2 h-2 bg-outline rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
               <div className="w-2 h-2 bg-outline rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
@@ -200,7 +194,7 @@ const GroupChat = () => {
       </div>
       
       {/* Input Area */}
-      <div className="px-4 md:px-margin-desktop pb-4 md:pb-margin-desktop pt-4 bg-cream-bg shrink-0">
+      <div className="px-4 md:px-margin-desktop pb-4 md:pb-margin-desktop pt-4 bg-background shrink-0">
         
         {/* Quick Replies */}
         <div className="flex gap-3 mb-4 overflow-x-auto scrollbar-hide pb-2">
@@ -208,7 +202,7 @@ const GroupChat = () => {
             <button 
               key={i}
               onClick={() => setMessage(reply.replace(/"/g, ''))}
-              className="shrink-0 px-4 py-2 rounded-full border-[1.5px] border-ink-black bg-surface hover:bg-accent-sage transition-colors font-label-md text-label-md"
+              className="shrink-0 px-4 py-2 rounded-full border-outline bg-surface hover:bg-accent-sage transition-colors font-label-md text-label-md"
             >
               {reply}
             </button>
@@ -216,7 +210,7 @@ const GroupChat = () => {
         </div>
         
         {/* Input Bar */}
-        <div className="flex items-end gap-2 md:gap-4 bg-surface border-[1.5px] border-ink-black rounded-2xl p-2 neo-shadow focus-within:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus-within:translate-x-[2px] focus-within:translate-y-[2px] transition-all">
+        <div className="flex items-end gap-2 md:gap-4 bg-surface border-outline rounded-2xl p-2 shadow-subtle focus-within:shadow-subtle focus-within:translate-x-[2px] focus-within:translate-y-[2px] transition-all">
           <button className="p-2 md:p-3 text-outline hover:text-primary transition-colors shrink-0">
             <span className="material-symbols-outlined">add_circle</span>
           </button>
@@ -238,7 +232,7 @@ const GroupChat = () => {
             <button 
               onClick={handleSend}
               disabled={!message.trim()}
-              className="p-2 bg-primary text-on-primary rounded-xl border-[1.5px] border-ink-black hover:bg-primary-container transition-colors flex items-center justify-center disabled:opacity-50"
+              className="p-2 bg-primary text-on-primary rounded-xl border-outline hover:bg-primary-container transition-colors flex items-center justify-center disabled:opacity-50"
             >
               <span className="material-symbols-outlined">send</span>
             </button>

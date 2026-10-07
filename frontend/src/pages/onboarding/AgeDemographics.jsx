@@ -34,63 +34,11 @@ const AgeDemographics = () => {
   };
 
   return (
-    <div className="bg-cream-bg min-h-screen flex flex-col font-body-md text-on-surface overflow-x-hidden">
-      <style>{`
-        .neo-shadow {
-            box-shadow: 4px 4px 0px 0px #1A1A1A;
-            transition: all 0.2s ease-in-out;
-        }
-        .neo-shadow:active {
-            box-shadow: 0px 0px 0px 0px #1A1A1A;
-            transform: translate(4px, 4px);
-        }
-        .neo-card {
-            border: 1.5px solid #1A1A1A;
-            border-radius: 24px;
-        }
-        .neo-input {
-            border: 1.5px solid #1A1A1A;
-            border-radius: 12px;
-            background-color: #f9f8f3;
-        }
-        .neo-input:focus {
-            border-color: #002da5;
-            box-shadow: 2px 2px 0px 0px #1A1A1A;
-            outline: none;
-        }
-        .neo-btn-primary {
-            border: 1.5px solid #1A1A1A;
-            background-color: #002da5;
-            color: #ffffff;
-            border-radius: 9999px;
-        }
-        .neo-chip {
-            border: 1.5px solid #1A1A1A;
-            border-radius: 9999px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .neo-chip.selected {
-            background-color: #002da5;
-            color: white;
-            box-shadow: 2px 2px 0px 0px #1A1A1A;
-        }
-        .neo-progress-bar {
-            border: 1.5px solid #1A1A1A;
-            border-radius: 9999px;
-            height: 12px;
-            overflow: hidden;
-            background-color: #ffffff;
-        }
-        .neo-progress-fill {
-            background-color: #ffe082; /* secondary-fixed */
-            height: 100%;
-            border-right: 1.5px solid #1A1A1A;
-        }
-      `}</style>
+    <div className="bg-background min-h-screen flex flex-col font-body-md text-on-surface overflow-x-hidden">
+      
 
       {/* TopAppBar */}
-      <header className="w-full top-0 sticky bg-cream-bg border-b-[1.5px] border-ink-black z-50">
+      <header className="w-full top-0 sticky bg-background border-b border-outline z-50">
         <div className="flex justify-between items-center w-full px-margin-desktop py-4 max-w-7xl mx-auto">
           <button onClick={() => navigate(-1)} aria-label="Go back" className="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant transition-colors">
             <span className="material-symbols-outlined text-primary text-2xl">arrow_back</span>
@@ -105,12 +53,12 @@ const AgeDemographics = () => {
       {/* Main Content Canvas */}
       <main className="flex-grow flex items-center justify-center py-12 px-margin-desktop w-full max-w-7xl mx-auto relative">
         {/* Decorative Memphis Elements */}
-        <div className="absolute top-20 left-10 w-24 h-24 bg-accent-pink rounded-full border-[1.5px] border-ink-black -z-10 opacity-60 mix-blend-multiply pointer-events-none hidden md:block"></div>
-        <div className="absolute bottom-40 right-20 w-32 h-32 bg-secondary-fixed rotate-12 border-[1.5px] border-ink-black -z-10 opacity-60 mix-blend-multiply pointer-events-none hidden md:block"></div>
-        <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-accent-sage rounded-xl rotate-45 border-[1.5px] border-ink-black -z-10 opacity-60 mix-blend-multiply pointer-events-none hidden md:block"></div>
+        <div className="absolute top-20 left-10 w-24 h-24 bg-surface rounded-full border-outline -z-10 opacity-60 mix-blend-multiply pointer-events-none hidden md:block"></div>
+        <div className="absolute bottom-40 right-20 w-32 h-32 bg-secondary-fixed border-outline -z-10 opacity-60 mix-blend-multiply pointer-events-none hidden md:block"></div>
+        <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-accent-sage rounded-xl border-outline -z-10 opacity-60 mix-blend-multiply pointer-events-none hidden md:block"></div>
 
         {/* Central Form Container */}
-        <div className="w-full max-w-2xl bg-surface-container-lowest neo-card neo-shadow p-10 md:p-12 relative">
+        <div className="w-full max-w-2xl bg-surface-container-lowest neo-card shadow-subtle p-10 md:p-12 relative">
           
           {/* Progress Section */}
           <div className="mb-8">
@@ -171,8 +119,8 @@ const AgeDemographics = () => {
             </div>
 
             {/* Actions */}
-            <div className="pt-8 flex flex-col md:flex-row-reverse gap-4 justify-between items-center border-t-[1.5px] border-ink-black/10 mt-8">
-              <button className="w-full md:w-auto neo-btn-primary px-10 py-4 font-label-bold text-label-bold neo-shadow flex items-center justify-center gap-2 group" type="submit">
+            <div className="pt-8 flex flex-col md:flex-row-reverse gap-4 justify-between items-center border-t-[1.5px] border-outline/10 mt-8">
+              <button className="w-full md:w-auto neo-btn-primary px-10 py-4 font-label-bold text-label-bold shadow-subtle flex items-center justify-center gap-2 group" type="submit">
                 Continue
                 <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
               </button>

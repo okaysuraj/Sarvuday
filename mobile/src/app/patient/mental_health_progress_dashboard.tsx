@@ -119,7 +119,7 @@ export default function MentalHealthProgressDashboardScreen() {
 
       {/* BottomNavBar */}
       <View className="md:hidden absolute bottom-0 w-full bg-surface border-t-[1.5px] border-ink-black h-20 px-4 pb-4 flex-row justify-around items-center z-50">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center w-16">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center w-16">
           <Ionicons name="home" size={24} color="#434655" className="mb-1" />
           <Text className="font-label-md text-on-surface-variant text-[10px]">Home</Text>
         </TouchableOpacity>
@@ -139,3 +139,4 @@ export default function MentalHealthProgressDashboardScreen() {
     </View>
   );
 }
+

@@ -13,7 +13,8 @@ export default function EmergencyContactsScreen() {
     const fetchProfile = async () => {
       try {
         const token = await AsyncStorage.getItem('access_token');
-        const res = await fetch('http://10.0.2.2:8000/normal_user/dashboard/profile', {
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+        const res = await fetch(`${apiUrl}/normal_user/dashboard/profile`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -191,19 +192,19 @@ export default function EmergencyContactsScreen() {
 
       {/* BottomNavBar */}
       <View className="absolute bottom-0 w-full z-50 flex-row justify-around items-center px-4 py-2 bg-cream-bg border-t-[1.5px] border-ink-black pb-8">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center p-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center p-2">
           <Ionicons name="home" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant mt-1">Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="flex-col items-center justify-center p-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)/insights')} className="flex-col items-center justify-center p-2">
           <Ionicons name="stats-chart" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant mt-1">Insights</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="flex-col items-center justify-center p-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)/community')} className="flex-col items-center justify-center p-2">
           <Ionicons name="people" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant mt-1">Community</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="flex-col items-center justify-center bg-secondary-container rounded-xl border-[1.5px] border-ink-black px-4 py-1">
+        <TouchableOpacity onPress={() => router.push('/(tabs)/profile')} className="flex-col items-center justify-center bg-secondary-container rounded-xl border-[1.5px] border-ink-black px-4 py-1">
           <Ionicons name="person" size={24} color="#715b00" />
           <Text className="font-label-md text-on-secondary-container font-bold mt-1">Profile</Text>
         </TouchableOpacity>

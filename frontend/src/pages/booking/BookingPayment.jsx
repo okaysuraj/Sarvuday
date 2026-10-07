@@ -60,39 +60,10 @@ const BookingPayment = () => {
 
   return (
     <div className="max-w-7xl mx-auto py-8">
-      <style>{`
-        .neo-shadow {
-            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
-        }
-        .active-press:active {
-            box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
-            transform: translate(2px, 2px);
-        }
-        .custom-radio {
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 1.5px solid #1A1A1A;
-            border-radius: 50%;
-            background-color: #fff;
-            position: relative;
-            cursor: pointer;
-        }
-        .custom-radio:checked::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px;
-            height: 10px;
-            background-color: #002da5;
-            border-radius: 50%;
-        }
-      `}</style>
+      
 
       {/* Top Header */}
-      <div className="flex justify-between items-center mb-12 border-b-[1.5px] border-ink-black pb-6">
+      <div className="flex justify-between items-center mb-12 border-b border-outline pb-6">
         <div className="flex items-center gap-4">
           <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors">
             <span className="material-symbols-outlined">arrow_back</span>
@@ -114,7 +85,7 @@ const BookingPayment = () => {
           </div>
 
           {/* Saved Cards Accordion */}
-          <div className="bg-white border-[1.5px] border-ink-black rounded-3xl p-8">
+          <div className="bg-white border-outline rounded-xl p-8">
             <div className="flex items-center gap-3 mb-6">
               <span className="material-symbols-outlined text-primary">credit_card</span>
               <h2 className="font-headline-sm text-ink-black">Saved Cards</h2>
@@ -122,7 +93,7 @@ const BookingPayment = () => {
             
             <div className="flex flex-col gap-4">
               {/* Card Option 1 */}
-              <label className="flex items-center justify-between p-4 border-[1.5px] border-ink-black rounded-xl hover:bg-surface-container transition-colors cursor-pointer group">
+              <label className="flex items-center justify-between p-4 border-outline rounded-xl hover:bg-surface-container transition-colors cursor-pointer group">
                 <div className="flex items-center gap-4">
                   <input 
                     checked={paymentMethod === 'card_4242'} 
@@ -131,7 +102,7 @@ const BookingPayment = () => {
                     name="payment_method" 
                     type="radio"
                   />
-                  <div className="w-12 h-8 bg-surface-container-high rounded flex items-center justify-center border border-ink-black/20">
+                  <div className="w-12 h-8 bg-surface-container-high rounded flex items-center justify-center border-outline/20">
                     <span className="font-label-bold text-[10px]">VISA</span>
                   </div>
                   <div className="flex flex-col">
@@ -149,7 +120,7 @@ const BookingPayment = () => {
           </div>
 
           {/* UPI Option */}
-          <div className="bg-white border-[1.5px] border-ink-black rounded-3xl p-6 hover:bg-surface-container transition-colors cursor-pointer">
+          <div className="bg-white border-outline rounded-xl p-6 hover:bg-surface-container transition-colors cursor-pointer">
             <label className="flex items-center justify-between cursor-pointer w-full">
               <div className="flex items-center gap-4">
                 <input 
@@ -159,7 +130,7 @@ const BookingPayment = () => {
                   name="payment_method" 
                   type="radio"
                 />
-                <div className="w-10 h-10 rounded-full bg-accent-sage flex items-center justify-center border-[1.5px] border-ink-black">
+                <div className="w-10 h-10 rounded-full bg-accent-sage flex items-center justify-center border-outline">
                   <span className="material-symbols-outlined">qr_code_scanner</span>
                 </div>
                 <span className="font-headline-sm text-ink-black text-xl">UPI / QR</span>
@@ -170,8 +141,8 @@ const BookingPayment = () => {
 
         {/* Right Column: Order Summary Sidebar */}
         <aside className="w-full lg:w-[400px] flex-shrink-0 flex flex-col gap-6">
-          <div className="bg-accent-sage border-[1.5px] border-ink-black rounded-3xl p-8 sticky top-28 neo-shadow">
-            <h3 className="font-headline-md text-ink-black border-b-[1.5px] border-ink-black pb-4 mb-4">Order Summary</h3>
+          <div className="bg-accent-sage border-outline rounded-xl p-8 sticky top-28 shadow-subtle">
+            <h3 className="font-headline-md text-ink-black border-b border-outline pb-4 mb-4">Order Summary</h3>
             
             <div className="flex flex-col gap-4 mb-6">
               <div className="flex justify-between items-start">
@@ -184,7 +155,7 @@ const BookingPayment = () => {
               </div>
             </div>
             
-            <div className="border-t-[1.5px] border-ink-black pt-4 flex flex-col gap-2 mb-6">
+            <div className="border-t-[1.5px] border-outline pt-4 flex flex-col gap-2 mb-6">
               <div className="flex justify-between">
                 <span className="font-body-md text-ink-black/70">Subtotal</span>
                 <span className="font-body-md">₹{fee.toFixed(2)}</span>
@@ -193,7 +164,7 @@ const BookingPayment = () => {
                 <span className="font-body-md text-ink-black/70">Tax (Estimated)</span>
                 <span className="font-body-md">₹{tax.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between mt-2 pt-2 border-t-[1.5px] border-ink-black border-dashed">
+              <div className="flex justify-between mt-2 pt-2 border-t-[1.5px] border-outline border-dashed">
                 <span className="font-headline-sm text-ink-black">Total</span>
                 <span className="font-headline-sm text-ink-black">₹{total.toFixed(2)}</span>
               </div>
@@ -202,7 +173,7 @@ const BookingPayment = () => {
             <button 
               onClick={handleConfirm}
               disabled={loading}
-              className="w-full h-14 bg-primary text-white border-[1.5px] border-ink-black rounded-xl font-label-bold text-lg flex items-center justify-center gap-2 neo-shadow active-press transition-all disabled:opacity-50"
+              className="w-full h-14 bg-primary text-white border-outline rounded-xl font-label-bold text-lg flex items-center justify-center gap-2 shadow-subtle active:scale-[0.98] transition-all disabled:opacity-50"
             >
               {loading ? 'Processing...' : 'Confirm & Pay'}
               {!loading && <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_forward</span>}

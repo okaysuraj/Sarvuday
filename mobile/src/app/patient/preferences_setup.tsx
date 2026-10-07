@@ -174,7 +174,7 @@ export default function PreferencesSetupScreen() {
         {/* Action Area */}
         <View className="flex-row justify-end mb-8">
           <TouchableOpacity 
-            onPress={() => router.push('/patient/dashboard')}
+            onPress={() => router.push('/(tabs)')}
             className="bg-primary px-8 py-4 rounded-xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex-row items-center gap-2"
           >
             <Text className="text-white font-label-bold font-bold text-lg">Complete Onboarding</Text>
@@ -186,3 +186,4 @@ export default function PreferencesSetupScreen() {
     </View>
   );
 }
+

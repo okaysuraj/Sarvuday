@@ -13,29 +13,29 @@ export const MessageBubble: React.FC<{ message: MessageProps }> = ({ message }) 
   const isUser = message.sender === 'user';
   
   return (
-    <View className={`w-full flex-row ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+    <View className={`w-full flex-row ${isUser ? 'justify-end' : 'justify-start'} mb-3`}>
       {!isUser && (
-        <View className="w-10 h-10 rounded-full bg-secondary-fixed border-[1.5px] border-ink-black flex items-center justify-center mr-3 self-end shadow-[2px_2px_0px_0px_#1A1A1A]">
+        <View className="w-8 h-8 rounded-full bg-secondary-container border border-outline flex items-center justify-center mr-2.5 self-end">
           {message.sender === 'ai' ? (
-            <Ionicons name="hardware-chip" size={20} color="#1A1A1A" />
+            <Ionicons name="sparkles-outline" size={14} color="#2E4B3E" />
           ) : (
-            <Ionicons name="medkit" size={20} color="#1A1A1A" />
+            <Ionicons name="medkit-outline" size={14} color="#204165" />
           )}
         </View>
       )}
       
       <View 
-        className={`max-w-[75%] px-4 py-3 rounded-2xl ${
+        className={`max-w-[78%] px-4 py-3 rounded-2xl ${
           isUser 
-            ? 'bg-primary border-[1.5px] border-ink-black rounded-br-sm shadow-[2px_2px_0px_0px_#1A1A1A]' 
-            : 'bg-white border-[1.5px] border-ink-black rounded-bl-sm'
+            ? 'bg-primary rounded-br-sm' 
+            : 'bg-surface border border-outline rounded-bl-sm'
         }`}
       >
-        <Text className={`font-body-md text-base ${isUser ? 'text-white' : 'text-ink-black'}`}>
+        <Text className={`text-sm leading-relaxed ${isUser ? 'text-white' : 'text-on-surface'}`}>
           {message.text}
         </Text>
         {message.timestamp ? (
-          <Text className={`font-label-md text-xs mt-1 text-right ${isUser ? 'text-primary-fixed-dim' : 'text-on-surface-variant'}`}>
+          <Text className={`text-[10px] mt-1 text-right ${isUser ? 'text-white/60' : 'text-on-surface-variant'}`}>
             {message.timestamp}
           </Text>
         ) : null}

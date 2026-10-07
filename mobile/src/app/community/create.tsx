@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Switch, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Switch, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomButton } from '../../components/CustomButton';
@@ -19,9 +20,9 @@ export default function CreatePostScreen() {
     try {
       await communityApi.createPost({
         content,
-        isAnonymous,
-        hasTriggerWarning,
-        groupId: groupId ? String(groupId) : undefined
+        is_anonymous: isAnonymous,
+        has_trigger_warning: hasTriggerWarning,
+        group_id: groupId ? String(groupId) : undefined
       });
       Alert.alert('Posted', 'Your message has been shared with the community.', [
         { text: 'OK', onPress: () => router.back() }

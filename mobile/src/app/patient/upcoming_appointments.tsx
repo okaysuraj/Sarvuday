@@ -158,7 +158,7 @@ export default function UpcomingAppointmentsScreen() {
 
       {/* BottomNavBar */}
       <View className="md:hidden absolute bottom-0 w-full bg-surface border-t-[1.5px] border-ink-black h-20 px-4 pb-4 flex-row justify-around items-center z-50">
-        <TouchableOpacity className="flex-col items-center justify-center px-2" onPress={() => router.push('/patient/dashboard')}>
+        <TouchableOpacity className="flex-col items-center justify-center px-2" onPress={() => router.push('/(tabs)')}>
           <Ionicons name="home" size={24} color="#434655" />
           <Text className="font-label-bold text-on-surface-variant font-bold text-[10px] mt-1">Home</Text>
         </TouchableOpacity>
@@ -178,3 +178,4 @@ export default function UpcomingAppointmentsScreen() {
     </View>
   );
 }
+

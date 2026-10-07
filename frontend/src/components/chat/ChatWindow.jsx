@@ -261,7 +261,7 @@ const ChatWindow = ({ room, currentUserId }) => {
             {room?.other_user_pic ? (
               <img src={room.other_user_pic} alt={otherUser} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
             ) : (
-              <span>👤</span>
+              <span><span className="material-symbols-outlined text-lg">person</span></span>
             )}
           </div>
           <div className={styles.headerText}>

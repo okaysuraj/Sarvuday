@@ -116,7 +116,7 @@ export default function PaymentScreen() {
         {/* Pay Button */}
         <View className="mt-4 pb-12">
           <TouchableOpacity 
-            onPress={() => router.push('/patient/dashboard')}
+            onPress={() => router.push('/(tabs)')}
             className="w-full bg-primary border-[1.5px] border-ink-black py-4 rounded-xl shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex-row items-center justify-center gap-2"
           >
             <Ionicons name="lock-closed" size={24} color="#ffffff" />
@@ -132,3 +132,4 @@ export default function PaymentScreen() {
     </View>
   );
 }
+

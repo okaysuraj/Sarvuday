@@ -78,7 +78,7 @@ export default function StressTriggerAnalysisScreen() {
           <View className="flex-[1] bg-accent-pink border-[1.5px] border-ink-black rounded-[24px] p-6 flex-col justify-between">
             <View>
               <View className="w-12 h-12 rounded-full bg-surface-container-lowest border-[1.5px] border-ink-black flex items-center justify-center mb-4">
-                <Ionicons name="brain" size={24} color="#754650" />
+                <Ionicons name="fitness" size={24} color="#754650" />
               </View>
               <Text className="font-headline-sm text-ink-black font-bold text-xl mb-3">Pattern Noticed</Text>
               <Text className="font-body-md text-ink-black text-base mb-6">You consistently report higher stress levels on Tuesday afternoons, typically coinciding with "Work" and "Deadlines".</Text>
@@ -132,7 +132,7 @@ export default function StressTriggerAnalysisScreen() {
 
       {/* BottomNavBar */}
       <View className="md:hidden absolute bottom-0 w-full bg-surface border-t-[1.5px] border-ink-black h-20 px-4 pb-4 flex-row justify-around items-center z-50">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center px-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center px-2">
           <Ionicons name="home" size={24} color="#434655" className="mb-1" />
           <Text className="font-label-md text-on-surface-variant text-[10px]">Home</Text>
         </TouchableOpacity>
@@ -152,3 +152,4 @@ export default function StressTriggerAnalysisScreen() {
     </View>
   );
 }
+

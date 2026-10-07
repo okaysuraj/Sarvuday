@@ -86,56 +86,11 @@ const PreferencesSetup = () => {
   };
 
   return (
-    <div className="h-full min-h-screen flex flex-col antialiased bg-cream-bg text-ink-black">
-      <style>{`
-        .sticker-card {
-            border: 1.5px solid #1A1A1A;
-            border-radius: 24px;
-        }
-        
-        .sticker-button {
-            border: 1.5px solid #1A1A1A;
-            box-shadow: 4px 4px 0px 0px #1A1A1A;
-            transition: all 0.15s ease-in-out;
-        }
-        
-        .sticker-button:active {
-            box-shadow: 0px 0px 0px 0px #1A1A1A;
-            transform: translate(2px, 2px);
-        }
-
-        .sticker-button-secondary {
-            border: 1.5px solid #1A1A1A;
-            transition: all 0.15s ease-in-out;
-        }
-
-        .sticker-button-secondary:active {
-            transform: translate(2px, 2px);
-        }
-
-        .radio-custom-label {
-            background-color: transparent;
-            color: #1A1A1A;
-        }
-        .radio-custom-label.selected {
-            background-color: #002da5;
-            color: white;
-            border-color: #1A1A1A;
-        }
-        
-        .checkbox-custom-label {
-            background-color: white;
-            color: #1A1A1A;
-        }
-        .checkbox-custom-label.selected {
-            background-color: #002da5;
-            color: white;
-            border-color: #1A1A1A;
-        }
-      `}</style>
+    <div className="h-full min-h-screen flex flex-col antialiased bg-background text-ink-black">
+      
 
       {/* TopAppBar */}
-      <header className="bg-cream-bg dark:bg-ink-black w-full top-0 sticky z-50 border-b-[1.5px] border-ink-black px-margin-mobile md:px-margin-desktop py-4 flex justify-between items-center">
+      <header className="bg-background dark:bg-ink-black w-full top-0 sticky z-50 border-b border-outline px-margin-mobile md:px-margin-desktop py-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <button onClick={handlePrevious} aria-label="Go back" className="text-on-surface-variant hover:opacity-80 transition-opacity active:translate-x-[2px] active:translate-y-[2px]">
             <span className="material-symbols-outlined text-[24px]">arrow_back</span>
@@ -145,7 +100,7 @@ const PreferencesSetup = () => {
         {/* Step Indicator */}
         <div className="hidden md:flex items-center gap-2">
           <span className="font-label-bold text-label-bold text-ink-black uppercase tracking-wider">Step 8 of 8</span>
-          <div className="w-32 h-3 border-[1.5px] border-ink-black rounded-full overflow-hidden bg-white">
+          <div className="w-32 h-3 border-outline rounded-full overflow-hidden bg-white">
             <div className="w-full h-full bg-accent-sage"></div>
           </div>
         </div>
@@ -166,9 +121,9 @@ const PreferencesSetup = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
               
               {/* Language Selection */}
-              <div className="sticker-card bg-white p-container-padding flex flex-col gap-stack-sm md:col-span-2">
+              <div className="bg-surface border-outline rounded-xl bg-white p-container-padding flex flex-col gap-stack-sm md:col-span-2">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-accent-pink border-[1.5px] border-ink-black flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-surface border-outline flex items-center justify-center">
                     <span className="material-symbols-outlined text-ink-black">language</span>
                   </div>
                   <h3 className="font-headline-sm text-headline-sm text-ink-black">Preferred Language</h3>
@@ -185,7 +140,7 @@ const PreferencesSetup = () => {
                       <button
                         type="button"
                         onClick={() => handleLanguageChange(lang.id)}
-                        className={`block w-full text-center py-3 px-4 border-[1.5px] border-outline-variant rounded-xl cursor-pointer hover:border-ink-black transition-colors font-label-bold text-label-bold radio-custom-label ${formData.language === lang.id ? 'selected' : ''}`}
+                        className={`block w-full text-center py-3 px-4 border-outline-variant rounded-xl cursor-pointer hover:border-outline transition-colors font-label-bold text-label-bold radio-custom-label ${formData.language === lang.id ? 'selected' : ''}`}
                       >
                         {lang.label}
                       </button>
@@ -195,9 +150,9 @@ const PreferencesSetup = () => {
               </div>
 
               {/* Therapy Type Preference */}
-              <div className="sticker-card bg-accent-sage/30 p-container-padding flex flex-col gap-stack-sm h-full">
+              <div className="bg-surface border-outline rounded-xl bg-accent-sage/30 p-container-padding flex flex-col gap-stack-sm h-full">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-white border-[1.5px] border-ink-black flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-white border-outline flex items-center justify-center">
                     <span className="material-symbols-outlined text-ink-black">groups</span>
                   </div>
                   <h3 className="font-headline-sm text-headline-sm text-ink-black">Therapy Type</h3>
@@ -213,7 +168,7 @@ const PreferencesSetup = () => {
                       <button
                         type="button"
                         onClick={() => handleTherapyTypeChange(type.id)}
-                        className={`flex items-center justify-between w-full py-4 px-5 border-[1.5px] border-outline-variant rounded-xl cursor-pointer hover:border-ink-black transition-colors radio-custom-label ${formData.therapyType === type.id ? 'selected' : 'bg-white'}`}
+                        className={`flex items-center justify-between w-full py-4 px-5 border-outline-variant rounded-xl cursor-pointer hover:border-outline transition-colors radio-custom-label ${formData.therapyType === type.id ? 'selected' : 'bg-white'}`}
                       >
                         <span className="font-label-bold text-label-bold">{type.label}</span>
                         <span className="material-symbols-outlined">{type.icon}</span>
@@ -224,9 +179,9 @@ const PreferencesSetup = () => {
               </div>
 
               {/* Notification Settings */}
-              <div className="sticker-card bg-accent-orange/30 p-container-padding flex flex-col gap-stack-sm h-full">
+              <div className="bg-surface border-outline rounded-xl bg-surface/30 p-container-padding flex flex-col gap-stack-sm h-full">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-white border-[1.5px] border-ink-black flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-white border-outline flex items-center justify-center">
                     <span className="material-symbols-outlined text-ink-black">notifications_active</span>
                   </div>
                   <h3 className="font-headline-sm text-headline-sm text-ink-black">Notifications</h3>
@@ -242,9 +197,9 @@ const PreferencesSetup = () => {
                       <button
                         type="button"
                         onClick={() => handleNotificationChange(notif.id)}
-                        className={`flex items-center gap-3 w-full py-4 px-5 border-[1.5px] border-outline-variant rounded-xl cursor-pointer hover:border-ink-black transition-colors checkbox-custom-label ${formData.notifications[notif.id] ? 'selected' : 'bg-white'}`}
+                        className={`flex items-center gap-3 w-full py-4 px-5 border-outline-variant rounded-xl cursor-pointer hover:border-outline transition-colors checkbox-custom-label ${formData.notifications[notif.id] ? 'selected' : 'bg-white'}`}
                       >
-                        <div className={`w-5 h-5 border-[1.5px] border-ink-black rounded flex items-center justify-center ${formData.notifications[notif.id] ? 'bg-primary' : 'bg-white'}`}>
+                        <div className={`w-5 h-5 border-outline rounded flex items-center justify-center ${formData.notifications[notif.id] ? 'bg-primary' : 'bg-white'}`}>
                           <span className={`material-symbols-outlined text-[16px] text-white transition-opacity ${formData.notifications[notif.id] ? 'opacity-100' : 'opacity-0'}`} style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
                         </div>
                         <span className="font-label-bold text-label-bold flex-grow text-left">{notif.label}</span>
@@ -271,7 +226,7 @@ const PreferencesSetup = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-surface-container dark:bg-surface-dim w-full py-8 border-t-[1.5px] border-ink-black px-margin-mobile md:px-margin-desktop mt-auto">
+      <footer className="bg-surface-container dark:bg-surface-dim w-full py-8 border-t-[1.5px] border-outline px-margin-mobile md:px-margin-desktop mt-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-stack-sm">
           <span className="font-label-bold text-label-bold text-ink-black">© 2024 SarvUday. All rights reserved.</span>
           <div className="flex gap-4">

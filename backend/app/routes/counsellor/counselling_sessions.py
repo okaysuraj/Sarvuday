@@ -28,4 +28,4 @@ async def delete_session_rooms(
     if status:
         return None
     else:
-        raise HTTPException("Failed to delete the session room")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to delete the session room")

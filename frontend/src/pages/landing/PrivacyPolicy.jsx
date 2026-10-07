@@ -2,38 +2,64 @@ import React from 'react';
 
 const PrivacyPolicy = () => {
   return (
-    <div className="container" style={{ padding: '80px 0', minHeight: '80vh' }}>
-      <div className="sticker-container" style={{ padding: '40px' }}>
-        <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-primary)', marginBottom: '24px' }}>Privacy Policy</h1>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          Effective Date: {new Date().toLocaleDateString()}
-        </p>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          At Sarvuday, your privacy is our priority. This Privacy Policy outlines how we collect, use, and protect
-          your personal information when you use our services.
-        </p>
-        
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: '40px', marginBottom: '16px' }}>Information We Collect</h2>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          We collect information that you provide directly to us, such as your name, email address, and any mental health
-          assessments or chat logs you choose to engage with. All sensitive data is securely stored and encrypted.
-        </p>
+    <div className="bg-[#FAF9F6] text-[#121214] min-h-[calc(100vh-64px)] py-16 sm:py-24">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="bg-white border-[#EAEAEA] rounded-2xl p-8 sm:p-12 shadow-sm space-y-8">
+          <div className="border-b border-[#EAEAEA] pb-6">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">
+              Confidentiality Standards
+            </span>
+            <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-[#121214] mt-2">
+              Privacy &amp; Data Ethics Policy
+            </h1>
+            <p className="text-xs text-[#71717A] mt-2">
+              Last updated: September 2026 &bull; Compliant with HIPAA &amp; Digital Health Ethics
+            </p>
+          </div>
 
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: '40px', marginBottom: '16px' }}>How We Use Your Information</h2>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          Your data is used to provide, maintain, and improve our services. We use it to match you with counselors,
-          personalize your meditation recommendations, and ensure a seamless experience. We do not sell your personal data to third parties.
-        </p>
+          <div className="space-y-6 text-sm leading-relaxed text-[#6E6D7A]">
+            <p className="text-base text-[#121214] font-medium">
+              At SarvUday, protecting your mental wellness data is our most sacred obligation. We believe confidentiality is the absolute prerequisite for psychological safety.
+            </p>
 
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginTop: '40px', marginBottom: '16px' }}>Data Security</h2>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
-          We implement rigorous security measures to protect your personal information against unauthorized access, alteration,
-          or destruction. However, no method of transmission over the Internet is 100% secure.
-        </p>
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold text-[#121214]">1. Information We Collect</h2>
+              <p>
+                We only collect data necessary to provide effective tele-health and personalized tracking:
+              </p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Identity credentials (name, verified email, telephone number).</li>
+                <li>Self-reported mood check-ins, journal reflections, and clinical intake history.</li>
+                <li>Telehealth connection metadata (video and audio streams are end-to-end encrypted).</li>
+              </ul>
+            </div>
 
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginTop: '40px' }}>
-          If you have any questions about this Privacy Policy, please contact us at privacy@sarvuday.com.
-        </p>
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold text-[#121214]">2. How We Use and Protect Your Data</h2>
+              <p>
+                Your records are used strictly to coordinate appointments with your licensed counsellor and generate personal insights. We never monetize, sell, or disclose your clinical or emotional data to advertisers or third parties.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold text-[#121214]">3. AI Companion Ethics &amp; Safety</h2>
+              <p>
+                Conversations with the SarvUday AI Companion are securely processed in accordance with privacy safeguards. Sentiment tracking operates locally or via isolated secure endpoints to assist with de-escalation and crisis detection.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold text-[#121214]">4. Right to Erasure</h2>
+              <p>
+                Under GDPR and our user privacy mandate, you retain the permanent right to request full export or complete deletion of your session history, journals, and account records at any time via Account Settings.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-[#EAEAEA] text-xs text-[#71717A]">
+              For inquiries regarding HIPAA compliance or privacy, contact us at <a href="mailto:privacy@sarvuday.com" className="text-[#121214] underline">privacy@sarvuday.com</a>.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

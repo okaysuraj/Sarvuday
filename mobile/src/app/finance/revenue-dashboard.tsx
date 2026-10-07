@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,7 +15,8 @@ export default function RevenueDashboardScreen() {
     const fetchDashboard = async () => {
       try {
         const token = await AsyncStorage.getItem('access_token');
-        const res = await fetch('http://10.0.2.2:8000/counsellor/dashboard', {
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+        const res = await fetch(`${apiUrl}/counsellor/dashboard`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {

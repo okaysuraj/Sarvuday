@@ -1,46 +1,49 @@
+/* ChatSidebar.module.css — Minimalist System */
+
 .chatList {
   flex: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  padding-right: 5px; /* space for scrollbar */
+  gap: 4px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
 .chatList::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
+
 .chatList::-webkit-scrollbar-thumb {
-  background: var(--color-outline-variant);
-  border-radius: 3px;
+  background: var(--border-color);
+  border-radius: var(--radius-full);
 }
 
 .chatItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: var(--border-width) solid transparent;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
-  transition: all 0.2s;
-  color: var(--color-on-surface);
-  background: var(--color-surface);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  color: var(--color-on-surface-variant);
+  background: transparent;
 }
 
 .chatItem:hover {
-  border-color: var(--color-outline);
-  background: var(--color-surface-container-highest);
+  background: var(--color-surface-container);
+  color: var(--color-on-surface);
 }
 
 .active {
-  background: var(--color-secondary-container) !important;
-  color: var(--color-on-secondary-container) !important;
+  background: var(--color-surface) !important;
+  color: var(--color-on-surface) !important;
   border-color: var(--border-color) !important;
-  box-shadow: 2px 2px 0px 0px rgba(26, 26, 26, 1);
+  box-shadow: var(--shadow-subtle) !important;
+  font-weight: 600;
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../store/authStore';
@@ -116,7 +117,7 @@ export default function AppointmentsScreen() {
         {!isTherapist && activeTab === 'upcoming' && !isLoading && (
           <CustomButton 
             title="Find a Therapist" 
-            onPress={() => router.push('/therapists/search')}
+            onPress={() => router.push('/(tabs)/therapists' as any)}
             className="mt-4 mb-8"
           />
         )}

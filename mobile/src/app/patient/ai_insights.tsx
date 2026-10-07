@@ -124,7 +124,7 @@ export default function AIInsightsScreen() {
 
       {/* BottomNavBar */}
       <View className="fixed bottom-0 w-full z-50 flex-row justify-around items-center px-4 py-3 bg-[#fbf8ff] border-t-[1.5px] border-ink-black pb-safe">
-        <TouchableOpacity className="flex-col items-center justify-center" onPress={() => router.push('/patient/dashboard')}>
+        <TouchableOpacity className="flex-col items-center justify-center" onPress={() => router.push('/(tabs)')}>
           <Ionicons name="home-outline" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant text-xs mt-1">Home</Text>
         </TouchableOpacity>
@@ -145,3 +145,4 @@ export default function AIInsightsScreen() {
     </View>
   );
 }
+

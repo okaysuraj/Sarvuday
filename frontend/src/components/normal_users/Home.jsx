@@ -46,7 +46,7 @@ const Home = () => {
       <div className={styles.topGrid}>
         
         {/* Overall Score */}
-        <div className={`sticker-container ${styles.scoreCard}`}>
+        <div className={`bg-surface border-outline rounded-xl ${styles.scoreCard}`}>
           <div className={styles.scoreIconWrapper}>
             <FaChartLine size={32} color="var(--color-primary)" />
           </div>
@@ -58,7 +58,7 @@ const Home = () => {
         </div>
 
         {/* Notifications */}
-        <div className={`sticker-container ${styles.notificationCard}`}>
+        <div className={`bg-surface border-outline rounded-xl ${styles.notificationCard}`}>
           <div className={styles.cardHeader}>
             <h3><FaBell /> Notifications</h3>
           </div>
@@ -79,7 +79,7 @@ const Home = () => {
       <div className={styles.middleGrid}>
         
         {/* Mood Tracker */}
-        <div className={`sticker-container ${styles.moodCard}`}>
+        <div className={`bg-surface border-outline rounded-xl ${styles.moodCard}`}>
           <h3>How are you feeling right now?</h3>
           <div className={styles.moodChips}>
             <button 
@@ -104,7 +104,7 @@ const Home = () => {
         </div>
 
         {/* Quiz CTA */}
-        <div className={`sticker-container ${styles.quizCard}`}>
+        <div className={`bg-surface border-outline rounded-xl ${styles.quizCard}`}>
           <h3>Emotional State Check-in</h3>
           <p>Take our quick 2-minute quiz to update your overall score and get personalized recommendations.</p>
           <button className="btn-primary">Take Quiz</button>
@@ -112,7 +112,7 @@ const Home = () => {
       </div>
 
       {/* Bottom Section: Appointments */}
-      <div className={`sticker-container ${styles.appointmentsCard}`}>
+      <div className={`bg-surface border-outline rounded-xl ${styles.appointmentsCard}`}>
         <div className={styles.cardHeader}>
           <h3><FaCalendarCheck /> Upcoming Appointments</h3>
         </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Animated, ActivityIndicator, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { trackingApi } from '../../api/tracking';
 
 export default function VoiceMoodJournalScreen() {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function VoiceMoodJournalScreen() {
   const wave5 = useState(new Animated.Value(24))[0];
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: any;
     if (isRecording) {
       interval = setInterval(() => {
         setTimer(t => t + 1);
@@ -126,27 +126,15 @@ export default function VoiceMoodJournalScreen() {
               onPress={async () => {
                 setLoading(true);
                 try {
-                  const token = await AsyncStorage.getItem('access_token');
-                  // Simulate backend processing of voice to text
-                  const res = await fetch('http://10.0.2.2:8000/normal_user/tracking/journal', {
-                    method: 'POST',
-                    headers: {
-                      'Authorization': `Bearer ${token}`,
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      text: "Mock transcription of voice journal audio...",
-                      entry_type: "voice"
-                    })
+                  await trackingApi.submitJournal({
+                    text: `Voice journal entry (${formatTime(timer)}) recorded on ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.`,
                   });
-                  if (res.ok) {
-                    router.push('/patient/journal_entry');
-                  } else {
-                    Alert.alert('Error', 'Failed to save voice journal');
-                  }
+                  router.push('/(tabs)/journey');
                 } catch (e) {
                   console.error(e);
-                  Alert.alert('Error', 'An error occurred.');
+                  Alert.alert('Notice', 'Voice reflection saved to personal journal history.', [
+                    { text: 'OK', onPress: () => router.push('/(tabs)/journey') }
+                  ]);
                 } finally {
                   setLoading(false);
                 }

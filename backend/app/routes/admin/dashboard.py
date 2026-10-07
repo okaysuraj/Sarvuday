@@ -25,7 +25,7 @@ async def get_admin_dashboard(
     current_admin: Admin = Depends(ensure_admin_user)
 ):
     from sqlalchemy import select, func
-    from app.models import NormalUser, Counsellor, Payment
+    from app.models import NormalUser, Counsellor, UserPayment as Payment
 
     # Get active users
     users_result = await db.execute(select(func.count(NormalUser.user_id)))

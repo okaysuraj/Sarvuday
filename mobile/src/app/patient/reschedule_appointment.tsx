@@ -18,9 +18,10 @@ export default function RescheduleAppointmentScreen() {
       try {
         const token = await AsyncStorage.getItem('access_token');
         const headers = { 'Authorization': `Bearer ${token}` };
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
         
         // Fetch current appointment (either by ID or just list and take first)
-        const apptRes = await fetch(`http://10.0.2.2:8000/normal_user/appointments`, { headers });
+        const apptRes = await fetch(`${apiUrl}/normal_user/appointments`, { headers });
         if (apptRes.ok) {
           const apptJson = await apptRes.json();
           const targetAppt = apptJson.appointments?.find((a: any) => a.appointment_id === id) || apptJson.appointments?.[0];
@@ -28,7 +29,7 @@ export default function RescheduleAppointmentScreen() {
         }
 
         // Fetch slots
-        const slotsRes = await fetch('http://10.0.2.2:8000/normal_user/appointments/slots', { headers });
+        const slotsRes = await fetch(`${apiUrl}/normal_user/appointments/slots`, { headers });
         if (slotsRes.ok) {
           const slotsJson = await slotsRes.json();
           setAvailableSlots(slotsJson.slots || []);

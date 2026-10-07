@@ -46,7 +46,7 @@ const DailyJournal = () => {
   });
 
   return (
-    <div className="flex-1 w-full bg-cream-bg p-margin-mobile md:p-margin-desktop flex flex-col gap-stack-lg">
+    <div className="flex-1 w-full bg-background p-margin-mobile md:p-margin-desktop flex flex-col gap-stack-lg">
       {/* Header Section */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
@@ -54,13 +54,13 @@ const DailyJournal = () => {
           <h2 className="font-display-lg text-display-lg text-ink-black">{today}</h2>
         </div>
         <div className="flex gap-4">
-          <button className="bg-surface-container-lowest border-[1.5px] border-ink-black p-3 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all text-ink-black">
+          <button className="bg-surface-container-lowest border-outline p-3 rounded-xl shadow-subtle hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all text-ink-black">
             <span className="material-symbols-outlined">bookmark_add</span>
           </button>
           <button 
             onClick={handleSaveEntry}
             disabled={isSaving}
-            className="bg-primary text-on-primary font-label-bold text-label-bold px-6 py-3 rounded-xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 flex items-center gap-2"
+            className="bg-primary text-on-primary font-label-bold text-label-bold px-6 py-3 rounded-xl border-outline shadow-subtle hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 flex items-center gap-2"
           >
             {isSaving ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : null}
             {isSaving ? 'Saving...' : 'Save Entry'}
@@ -74,8 +74,8 @@ const DailyJournal = () => {
         {/* Main Reflection Area (8 columns) */}
         <div className="lg:col-span-8 flex flex-col gap-stack-md h-full">
           {/* Prompt Card (Yellow Sticker) */}
-          <div className="bg-secondary-fixed border-[1.5px] border-ink-black rounded-[24px] p-container-padding relative shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mt-4">
-            <div className="absolute -top-4 -left-4 bg-primary text-on-primary font-label-bold text-label-bold px-4 py-2 rounded-full border-[1.5px] border-ink-black rotate-[-6deg]">
+          <div className="bg-secondary-fixed border-outline rounded-xl p-container-padding relative shadow-subtle mt-4">
+            <div className="absolute -top-4 -left-4 bg-primary text-on-primary font-label-bold text-label-bold px-4 py-2 rounded-full border-outline rotate-[-6deg]">
               Prompt of the Day
             </div>
             <div className="flex items-start gap-4 mt-2">
@@ -88,7 +88,7 @@ const DailyJournal = () => {
           </div>
 
           {/* Text Area Card */}
-          <div className="bg-surface-container-lowest border-[1.5px] border-ink-black rounded-[24px] p-container-padding shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex-grow flex flex-col min-h-[400px]">
+          <div className="bg-surface-container-lowest border-outline rounded-xl p-container-padding shadow-subtle flex-grow flex flex-col min-h-[400px]">
             <textarea 
               className="w-full h-full min-h-[400px] resize-none border-none focus:ring-0 font-body-lg text-body-lg text-ink-black placeholder:text-outline-variant bg-transparent outline-none" 
               placeholder="Start typing your reflection here... Let your thoughts flow freely without judgment."
@@ -101,24 +101,24 @@ const DailyJournal = () => {
         {/* Sidebar Context Area (4 columns) */}
         <div className="lg:col-span-4 flex flex-col gap-stack-md mt-4 lg:mt-0">
           {/* Mood Tagging Card */}
-          <div className="bg-accent-pink border-[1.5px] border-ink-black rounded-[24px] p-container-padding">
+          <div className="bg-surface border-outline rounded-xl p-container-padding">
             <h4 className="font-headline-sm text-headline-sm text-ink-black mb-4 flex items-center gap-2">
               <span className="material-symbols-outlined">sentiment_satisfied</span>
               Today's Mood
             </h4>
             <div className="flex flex-wrap gap-2">
-              <button className="bg-surface-container-lowest border-[1.5px] border-ink-black px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Calm</button>
-              <button className="bg-primary border-[1.5px] border-ink-black px-4 py-2 rounded-full font-label-bold text-label-bold text-on-primary transition-colors translate-x-[1px] translate-y-[1px] shadow-none">Grateful</button>
-              <button className="bg-surface-container-lowest border-[1.5px] border-ink-black px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Productive</button>
-              <button className="bg-surface-container-lowest border-[1.5px] border-ink-black px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Anxious</button>
-              <button className="bg-surface-container-lowest border-[1.5px] border-ink-black p-2 rounded-full text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none flex items-center justify-center">
+              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Calm</button>
+              <button className="bg-primary border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-on-primary transition-colors translate-x-[1px] translate-y-[1px] shadow-none">Grateful</button>
+              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Productive</button>
+              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Anxious</button>
+              <button className="bg-surface-container-lowest border-outline p-2 rounded-full text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none flex items-center justify-center">
                 <span className="material-symbols-outlined text-sm">add</span>
               </button>
             </div>
           </div>
 
           {/* Previous Entries Card */}
-          <div className="bg-accent-sage border-[1.5px] border-ink-black rounded-[24px] p-container-padding flex-grow">
+          <div className="bg-accent-sage border-outline rounded-xl p-container-padding flex-grow">
             <div className="flex justify-between items-center mb-6">
               <h4 className="font-headline-sm text-headline-sm text-ink-black flex items-center gap-2">
                 <span className="material-symbols-outlined">history</span>
@@ -135,7 +135,7 @@ const DailyJournal = () => {
                   const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                   
                   return (
-                    <div key={journal.id} className="bg-surface-container-lowest border-[1.5px] border-ink-black rounded-xl p-4 cursor-pointer hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+                    <div key={journal.id} className="bg-surface-container-lowest border-outline rounded-xl p-4 cursor-pointer hover:shadow-subtle transition-all">
                       <div className="flex justify-between items-start mb-2">
                         <span className="font-label-bold text-label-bold text-ink-black">{dateStr}</span>
                         <span className="material-symbols-outlined text-sm text-outline">history_edu</span>

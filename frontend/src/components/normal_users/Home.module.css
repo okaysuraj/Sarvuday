@@ -1,32 +1,34 @@
-/* src/components/normal_users/Home.module.css */
+/* src/components/normal_users/Home.module.css — Minimalist System */
 
 .dashboardContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
-  padding-bottom: var(--space-lg);
+  gap: 24px;
+  padding-bottom: 32px;
 }
 
 .headerSection {
-  margin-bottom: var(--space-sm);
+  margin-bottom: 4px;
 }
 
 .greetingTitle {
   font-family: var(--font-heading);
-  font-size: 32px;
+  font-size: 1.75rem;
+  font-weight: 700;
   color: var(--color-on-background);
-  margin-bottom: 8px;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
 }
 
 .greetingSubtitle {
   color: var(--color-on-surface-variant);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .topGrid, .middleGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
 }
 
 /* Card General */
@@ -34,130 +36,159 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: var(--space-md);
+  margin-bottom: 18px;
 }
 
 .cardHeader h3 {
-  font-size: 20px;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 8px;
+  letter-spacing: -0.01em;
 }
 
 /* Overall Score Card */
 .scoreCard {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  background-color: var(--color-primary-fixed);
+  gap: 20px;
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-subtle) !important;
 }
 
 .scoreIconWrapper {
-  background-color: var(--color-surface-container-lowest);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-full);
-  padding: 16px;
-  box-shadow: 2px 2px 0px var(--border-color);
+  background-color: var(--color-sky-bg);
+  border: 1px solid rgba(33, 68, 103, 0.08);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  flex-shrink: 0;
 }
 
 .scoreContent h3 {
-  font-size: 18px;
-  color: var(--color-on-primary-fixed);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-on-surface-variant);
   margin-bottom: 4px;
+  letter-spacing: 0;
 }
 
 .scoreNumber {
   font-family: var(--font-heading);
-  font-size: 48px;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-on-surface);
   line-height: 1;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  letter-spacing: -0.03em;
 }
 
 .scoreTotal {
-  font-size: 24px;
-  color: var(--color-outline);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--color-on-surface-variant);
 }
 
 .scoreContent p {
-  font-size: 14px;
-  color: var(--color-on-primary-fixed-variant);
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+  line-height: 1.5;
 }
 
 /* Notifications Card */
 .notificationCard {
-  background-color: var(--color-secondary-fixed);
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-subtle) !important;
 }
 
 .notificationList {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
 .notificationList li {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  background-color: var(--color-surface-container-lowest);
-  padding: 16px;
+  gap: 10px;
+  background-color: var(--color-surface-container);
+  padding: 14px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .notifDot {
-  width: 12px;
-  height: 12px;
-  background-color: var(--color-error);
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-rose-text);
   border-radius: 50%;
-  margin-top: 4px;
-  border: 1px solid var(--border-color);
+  margin-top: 5px;
+  flex-shrink: 0;
 }
 
 /* Mood Tracker */
 .moodCard {
-  background-color: var(--color-tertiary-fixed);
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-subtle) !important;
 }
 
 .moodCard h3 {
-  font-size: 20px;
-  margin-bottom: var(--space-md);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
 }
 
 .moodChips {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .moodChip {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 8px 16px;
-  background-color: var(--color-surface-container-lowest);
+  background-color: var(--color-surface-container);
   border: 1px solid var(--border-color);
-  border-radius: 100px; /* Pill shape */
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  font-family: var(--font-body);
 }
 
 .moodChip:hover {
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface-container-high);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.moodChip:active {
+  transform: scale(0.98);
 }
 
 .chipActive {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
+  border-color: var(--color-primary);
 }
 
 /* Quiz Card */
 .quizCard {
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-subtle) !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -165,49 +196,62 @@
 }
 
 .quizCard h3 {
-  font-size: 20px;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
   margin-bottom: 8px;
+  letter-spacing: -0.01em;
 }
 
 .quizCard p {
   color: var(--color-on-surface-variant);
-  margin-bottom: var(--space-md);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 18px;
 }
 
 /* Appointments */
 .appointmentsCard {
-  background-color: var(--color-surface-container-lowest);
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-subtle) !important;
 }
 
 .emptyState {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding: var(--space-lg) 0;
+  gap: 14px;
+  padding: 40px 0;
   color: var(--color-on-surface-variant);
+  font-size: 14px;
 }
 
 .appointmentList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
 .appointmentItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  border: var(--border-width) solid var(--border-color);
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface-container);
+  transition: border-color 0.15s ease;
+}
+
+.appointmentItem:hover {
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 .aptDate {
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-on-surface);
 }
 
 .aptDetails {
@@ -217,10 +261,25 @@
 }
 
 .aptDetails strong {
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .aptDetails span {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--color-on-surface-variant);
+}
+
+.loading {
+  text-align: center;
+  color: var(--color-on-surface-variant);
+  padding: 48px;
+  font-size: 14px;
+}
+
+.error {
+  text-align: center;
+  color: var(--color-error);
+  padding: 48px;
+  font-size: 14px;
 }

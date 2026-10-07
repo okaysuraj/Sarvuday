@@ -40,7 +40,7 @@ const EmergencyConnect = () => {
       
       <div className={styles.grid}>
         {helplines.map((helpline, index) => (
-          <div key={index} className={`sticker-container ${styles.helplineCard}`}>
+          <div key={index} className={`bg-surface border-outline rounded-xl ${styles.helplineCard}`}>
             <div className={styles.iconWrapper}>
               {helpline.icon}
             </div>

@@ -37,7 +37,7 @@ export default function CrisisScreen() {
         {/* Primary Actions Grid */}
         <View className="flex-col md:flex-row gap-6 mb-8">
           <TouchableOpacity 
-            onPress={() => router.push('/crisis/emergency_contact')}
+            onPress={() => router.push('/emergency/contact' as any)}
             className="flex-1 bg-accent-orange border-[1.5px] border-ink-black rounded-[48px] p-6 items-center shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
           >
             <View className="bg-white w-16 h-16 rounded-full border-[1.5px] border-ink-black items-center justify-center mb-4">
@@ -48,7 +48,7 @@ export default function CrisisScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity 
-            onPress={() => router.push('/crisis/immediate_help')}
+            onPress={() => router.push('/emergency/hub' as any)}
             className="flex-1 bg-primary border-[1.5px] border-ink-black rounded-[48px] p-6 items-center shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
           >
             <View className="bg-white w-16 h-16 rounded-full border-[1.5px] border-ink-black items-center justify-center mb-4">

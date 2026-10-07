@@ -68,6 +68,16 @@ api_router.include_router(
     },
 )
 
+# Route alias for mobile and backward compatibility
+api_router.include_router(
+    normal_user_router, 
+    prefix="/normal_user",
+    responses={
+        status.HTTP_404_NOT_FOUND: {"description": "Not found"},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {"description": "Internal server error"},
+    },
+)
+
 api_router.include_router(
     counsellor_router, 
     prefix="/counsellor",

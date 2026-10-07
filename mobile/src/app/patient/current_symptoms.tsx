@@ -85,11 +85,11 @@ export default function CurrentSymptomsSelectionScreen() {
 
       {/* Bottom Actions */}
       <View className="w-full px-4 md:px-10 py-6 mt-auto bg-surface border-t-[1.5px] border-ink-black flex-row justify-between items-center sticky bottom-0 z-10">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="px-6 py-3 rounded-lg border-[1.5px] border-transparent active:bg-surface-variant">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="px-6 py-3 rounded-lg border-[1.5px] border-transparent active:bg-surface-variant">
           <Text className="font-label-bold text-ink-black font-bold text-base">Skip for now</Text>
         </TouchableOpacity>
         <TouchableOpacity 
-          onPress={() => router.push('/patient/dashboard')} 
+          onPress={() => router.push('/(tabs)')} 
           className="bg-primary px-8 py-3 rounded-lg border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
         >
           <Text className="text-white font-label-bold font-bold text-base">Continue</Text>
@@ -98,3 +98,4 @@ export default function CurrentSymptomsSelectionScreen() {
     </View>
   );
 }
+

@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 
 const AIMoodAnalysisResult = () => {
   return (
-    <div className="flex-1 p-margin-mobile md:p-margin-desktop bg-cream-bg flex flex-col gap-stack-lg min-h-full">
-      <style>{`
-        .neo-shadow { box-shadow: 4px 4px 0px 0px rgba(26, 26, 26, 1); }
-      `}</style>
+    <div className="flex-1 p-margin-mobile md:p-margin-desktop bg-background flex flex-col gap-stack-lg min-h-full">
+      
 
       {/* Page Header */}
       <header className="flex items-center justify-between">
@@ -17,7 +15,7 @@ const AIMoodAnalysisResult = () => {
           </p>
         </div>
         {/* Decorative element */}
-        <div className="hidden md:flex items-center justify-center w-16 h-16 bg-accent-pink rounded-full border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] rotate-12 shrink-0">
+        <div className="hidden md:flex items-center justify-center w-16 h-16 bg-surface rounded-full border-outline shadow-subtle shrink-0">
           <span className="material-symbols-outlined text-ink-black text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
         </div>
       </header>
@@ -26,15 +24,15 @@ const AIMoodAnalysisResult = () => {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
         {/* AI Summary Card (Left Column) */}
         <div className="md:col-span-5 flex flex-col gap-stack-md">
-          <div className="bg-accent-sage border-[1.5px] border-ink-black rounded-[32px] p-container-padding shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] flex flex-col relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 h-full">
+          <div className="bg-accent-sage border-outline rounded-xl p-container-padding shadow-subtle flex flex-col relative overflow-hidden group transition-transform duration-300 h-full">
             {/* Illustration Placeholder */}
-            <div className="w-full h-48 bg-surface-container-lowest border-[1.5px] border-ink-black rounded-2xl mb-6 relative overflow-hidden flex items-center justify-center">
-              <div className="text-6xl">🧠</div>
+            <div className="w-full h-48 bg-surface-container-lowest border-outline rounded-2xl mb-6 relative overflow-hidden flex items-center justify-center">
+              <div className="text-6xl"><span className="material-symbols-outlined text-4xl text-primary">psychology</span></div>
             </div>
             
             {/* Content */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="bg-surface-container-lowest border-[1.5px] border-ink-black rounded-full w-10 h-10 flex items-center justify-center">
+              <div className="bg-surface-container-lowest border-outline rounded-full w-10 h-10 flex items-center justify-center">
                 <span className="material-symbols-outlined text-primary">psychology</span>
               </div>
               <h3 className="font-headline-md text-headline-md text-ink-black">AI Summary</h3>
@@ -44,7 +42,7 @@ const AIMoodAnalysisResult = () => {
             </p>
             
             {/* Action Button */}
-            <Link to="/journal" className="w-full bg-surface-container-lowest text-ink-black font-label-bold text-label-bold py-3 px-6 rounded-xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] hover:bg-primary-fixed transition-colors active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex items-center justify-center gap-2 mt-auto">
+            <Link to="/journal" className="w-full bg-surface-container-lowest text-ink-black font-label-bold text-label-bold py-3 px-6 rounded-xl border-outline shadow-subtle hover:bg-primary-fixed transition-colors active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex items-center justify-center gap-2 mt-auto">
               <span className="material-symbols-outlined">edit_note</span>
               Add Note
             </Link>
@@ -53,10 +51,10 @@ const AIMoodAnalysisResult = () => {
 
         {/* Mood Profile Visualization (Right Column) */}
         <div className="md:col-span-7 flex flex-col gap-stack-md mt-6 md:mt-0">
-          <div className="bg-surface-container-lowest border-[1.5px] border-ink-black rounded-[32px] p-container-padding shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] h-full flex flex-col">
-            <div className="flex items-center justify-between mb-8 pb-6 border-b-[1.5px] border-ink-black border-dashed">
+          <div className="bg-surface-container-lowest border-outline rounded-xl p-container-padding shadow-subtle h-full flex flex-col">
+            <div className="flex items-center justify-between mb-8 pb-6 border-b border-outline border-dashed">
               <h3 className="font-headline-md text-headline-md text-ink-black">Mood Profile</h3>
-              <div className="bg-surface-container border-[1.5px] border-ink-black rounded-full px-4 py-2 font-label-bold text-label-bold text-ink-black shadow-[2px_2px_0px_0px_rgba(26,26,26,1)]">
+              <div className="bg-surface-container border-outline rounded-full px-4 py-2 font-label-bold text-label-bold text-ink-black shadow-subtle">
                   Confidence: 92%
               </div>
             </div>
@@ -67,13 +65,13 @@ const AIMoodAnalysisResult = () => {
               <div>
                 <div className="flex justify-between items-end mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-accent-sage border-[1px] border-ink-black"></span>
+                    <span className="w-3 h-3 rounded-full bg-accent-sage border-[1px] border-outline"></span>
                     <span className="font-headline-sm text-headline-sm text-ink-black">Calm</span>
                   </div>
                   <span className="font-label-bold text-label-bold text-on-surface-variant">70%</span>
                 </div>
-                <div className="w-full h-[16px] bg-surface-container-high rounded-full border-[1.5px] border-ink-black overflow-hidden flex shadow-inner">
-                  <div className="h-full bg-accent-sage border-r-[1.5px] border-ink-black" style={{ width: '70%' }}></div>
+                <div className="w-full h-[16px] bg-surface-container-high rounded-full border-outline overflow-hidden flex shadow-inner">
+                  <div className="h-full bg-accent-sage border-r-[1.5px] border-outline" style={{ width: '70%' }}></div>
                 </div>
               </div>
               
@@ -81,13 +79,13 @@ const AIMoodAnalysisResult = () => {
               <div>
                 <div className="flex justify-between items-end mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-primary-fixed border-[1px] border-ink-black"></span>
+                    <span className="w-3 h-3 rounded-full bg-primary-fixed border-[1px] border-outline"></span>
                     <span className="font-headline-sm text-headline-sm text-ink-black">Reflective</span>
                   </div>
                   <span className="font-label-bold text-label-bold text-on-surface-variant">20%</span>
                 </div>
-                <div className="w-full h-[16px] bg-surface-container-high rounded-full border-[1.5px] border-ink-black overflow-hidden flex shadow-inner">
-                  <div className="h-full bg-primary-fixed border-r-[1.5px] border-ink-black" style={{ width: '20%' }}></div>
+                <div className="w-full h-[16px] bg-surface-container-high rounded-full border-outline overflow-hidden flex shadow-inner">
+                  <div className="h-full bg-primary-fixed border-r-[1.5px] border-outline" style={{ width: '20%' }}></div>
                 </div>
               </div>
               
@@ -95,13 +93,13 @@ const AIMoodAnalysisResult = () => {
               <div>
                 <div className="flex justify-between items-end mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-accent-orange border-[1px] border-ink-black"></span>
+                    <span className="w-3 h-3 rounded-full bg-surface border-[1px] border-outline"></span>
                     <span className="font-headline-sm text-headline-sm text-ink-black">Anxious</span>
                   </div>
                   <span className="font-label-bold text-label-bold text-on-surface-variant">5%</span>
                 </div>
-                <div className="w-full h-[16px] bg-surface-container-high rounded-full border-[1.5px] border-ink-black overflow-hidden flex shadow-inner">
-                  <div className="h-full bg-accent-orange border-r-[1.5px] border-ink-black" style={{ width: '5%' }}></div>
+                <div className="w-full h-[16px] bg-surface-container-high rounded-full border-outline overflow-hidden flex shadow-inner">
+                  <div className="h-full bg-surface border-r-[1.5px] border-outline" style={{ width: '5%' }}></div>
                 </div>
               </div>
               
@@ -109,13 +107,13 @@ const AIMoodAnalysisResult = () => {
               <div>
                 <div className="flex justify-between items-end mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-surface-container-high border-[1px] border-ink-black"></span>
+                    <span className="w-3 h-3 rounded-full bg-surface-container-high border-[1px] border-outline"></span>
                     <span className="font-headline-sm text-headline-sm text-ink-black">Other</span>
                   </div>
                   <span className="font-label-bold text-label-bold text-on-surface-variant">5%</span>
                 </div>
-                <div className="w-full h-[16px] bg-surface-container-high rounded-full border-[1.5px] border-ink-black overflow-hidden flex shadow-inner">
-                  <div className="h-full bg-surface-variant border-r-[1.5px] border-ink-black" style={{ width: '5%' }}></div>
+                <div className="w-full h-[16px] bg-surface-container-high rounded-full border-outline overflow-hidden flex shadow-inner">
+                  <div className="h-full bg-surface-variant border-r-[1.5px] border-outline" style={{ width: '5%' }}></div>
                 </div>
               </div>
             </div>

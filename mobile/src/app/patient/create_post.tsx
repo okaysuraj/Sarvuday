@@ -21,7 +21,8 @@ export default function CreatePostScreen() {
     setLoading(true);
     try {
       const token = await AsyncStorage.getItem('access_token');
-      const response = await fetch('http://10.0.2.2:8000/general/community/posts', {
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+      const response = await fetch(`${apiUrl}/general/community/posts`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -226,7 +227,7 @@ export default function CreatePostScreen() {
 
       {/* Bottom Navigation (Mobile Only) */}
       <View className="md:hidden absolute bottom-0 left-0 w-full bg-[#fbf8ff] border-t-[1.5px] border-ink-black h-20 flex-row justify-around items-center px-4 z-50">
-        <TouchableOpacity className="flex-col items-center justify-center" onPress={() => router.push('/patient/dashboard')}>
+        <TouchableOpacity className="flex-col items-center justify-center" onPress={() => router.push('/(tabs)')}>
           <Ionicons name="home-outline" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant text-xs mt-1">Home</Text>
         </TouchableOpacity>
@@ -246,3 +247,4 @@ export default function CreatePostScreen() {
     </View>
   );
 }
+

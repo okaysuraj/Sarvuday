@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { auth } from '../../config/firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import sarvudayLogo from '../../assets/sarvuday_logo.png';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -14,69 +16,130 @@ const ForgotPassword = () => {
       toast.error('Please enter your email.');
       return;
     }
+    setIsLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
       toast.success('Password reset email sent! Please check your inbox.');
       navigate('/login');
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="bg-cream-bg text-on-surface min-h-screen flex items-center justify-center p-margin-desktop font-body-md relative z-0">
-        <style>{`
-            .custom-bg {
-                background-image: radial-gradient(var(--color-surface-dim) 2px, transparent 2px);
-                background-size: 32px 32px;
-                background-position: 0 0, 16px 16px;
-            }
-        `}</style>
-      <div className="absolute inset-0 z-[-1] custom-bg opacity-30"></div>
-      
-      <main className="w-full max-w-lg relative z-10">
-        <div className="bg-surface border-[1.5px] border-ink-black rounded-[32px] p-container-padding flex flex-col items-center text-center shadow-[4px_4px_0px_0px_#1a1a1a]">
-          <div className="w-16 h-16 rounded-full bg-accent-pink border-[1.5px] border-ink-black flex items-center justify-center mb-stack-md shadow-[2px_2px_0px_0px_#1a1a1a]">
-            <span className="material-symbols-outlined text-[32px] text-ink-black" style={{ fontVariationSettings: "'FILL' 1" }}>refresh</span>
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'var(--color-background)',
+      padding: '24px',
+    }}>
+      <main style={{ width: '100%', maxWidth: '420px' }}>
+        <div style={{
+          backgroundColor: 'var(--color-surface)',
+          border: '1px solid var(--border-color)',
+          borderRadius: 'var(--radius-xl)',
+          padding: '40px 32px',
+          boxShadow: 'var(--shadow-card)',
+          textAlign: 'center',
+        }}>
+          {/* Brand Logo */}
+          <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '20px', textDecoration: 'none' }}>
+            <img src={sarvudayLogo} alt="SarvUday" style={{ width: '38px', height: '38px', borderRadius: '10px', objectFit: 'contain', padding: '2px', border: '1px solid var(--border-color)', backgroundColor: 'var(--color-surface)' }} />
+            <span style={{ fontWeight: 600, fontSize: '18px', color: 'var(--color-on-surface)', letterSpacing: '-0.02em' }}>SarvUday</span>
+          </Link>
+
+          {/* Icon */}
+          <div style={{
+            width: '52px',
+            height: '52px',
+            borderRadius: 'var(--radius-md)',
+            backgroundColor: 'var(--color-sky-bg)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 24px',
+          }}>
+            <span className="material-symbols-rounded" style={{
+              fontSize: '24px',
+              color: 'var(--color-sky-text)',
+              fontVariationSettings: "'FILL' 1",
+            }}>lock_reset</span>
           </div>
-          
-          <h1 className="font-headline-md text-headline-md text-ink-black mb-base">Forgot Password?</h1>
-          
-          <p className="font-body-md text-body-md text-on-surface-variant mb-stack-lg max-w-[85%]">
-            No worries, it happens to the best of us. Enter your email address below and we'll send you a link to reset it securely.
+
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: 'var(--color-on-surface)',
+            letterSpacing: '-0.025em',
+            marginBottom: '8px',
+          }}>Forgot your password?</h1>
+
+          <p style={{
+            fontSize: '14px',
+            color: 'var(--color-on-surface-variant)',
+            lineHeight: '1.6',
+            marginBottom: '28px',
+            maxWidth: '320px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}>
+            No worries. Enter your email and we'll send you a secure link to reset it.
           </p>
-          
-          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-stack-md">
-            <div className="w-full text-left">
-              <label className="font-label-bold text-label-bold text-ink-black block mb-base uppercase" htmlFor="email">Email Address</label>
-              <input 
-                className="w-full bg-[#f9f8f3] border-[1.5px] border-ink-black rounded-xl px-4 py-3 font-body-md text-body-md text-ink-black placeholder-outline-variant focus:outline-none focus:border-primary focus:ring-0 focus:shadow-[2px_2px_0px_0px_#1a1a1a] transition-all duration-200" 
-                id="email" 
-                name="email" 
-                placeholder="you@example.com" 
-                required 
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            
-            <button className="w-full bg-primary text-on-primary font-label-bold text-label-bold py-4 rounded-xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200 uppercase tracking-widest mt-base" type="submit">
-              Send Link
+
+          <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
+            <label htmlFor="email" style={{
+              fontSize: '13px',
+              fontWeight: 500,
+              color: 'var(--color-on-surface)',
+              marginBottom: '6px',
+              display: 'block',
+            }}>Email address</label>
+            <input
+              className="input-field"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ marginBottom: '20px' }}
+            />
+
+            <button
+              className="btn-primary"
+              type="submit"
+              disabled={isLoading}
+              style={{ width: '100%', padding: '12px 20px' }}
+            >
+              {isLoading ? 'Sending…' : 'Send reset link'}
             </button>
           </form>
-          
-          <div className="mt-stack-lg border-t-[1.5px] border-ink-black w-full pt-stack-md">
-            <Link to="/login" className="inline-flex items-center gap-2 font-label-bold text-label-bold text-ink-black hover:text-primary transition-colors duration-200 group">
-              <span className="material-symbols-outlined group-hover:-translate-x-1 transition-transform duration-200">arrow_back</span>
-              BACK TO LOGIN
+
+          <div style={{
+            marginTop: '24px',
+            paddingTop: '20px',
+            borderTop: '1px solid var(--border-color)',
+          }}>
+            <Link to="/login" style={{
+              fontSize: '13px',
+              fontWeight: 500,
+              color: 'var(--color-on-surface-variant)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'color 0.15s ease',
+            }}>
+              <span className="material-symbols-rounded" style={{ fontSize: '16px' }}>arrow_back</span>
+              Back to login
             </Link>
           </div>
         </div>
-
-        {/* Decorative Memphis Element (Behind Card) */}
-        <div className="absolute -z-10 w-24 h-24 rounded-full bg-secondary-container border-[1.5px] border-ink-black top-[-20px] right-[-30px]"></div>
-        <div className="absolute -z-10 w-16 h-16 rotate-12 bg-accent-orange border-[1.5px] border-ink-black bottom-[-10px] left-[-20px]"></div>
       </main>
     </div>
   );

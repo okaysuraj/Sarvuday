@@ -1,19 +1,20 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, FlatList, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, FlatList, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { MessageBubble, MessageProps } from '../../components/chat/MessageBubble';
 import { CrisisAlertModal } from '../../components/chat/CrisisAlertModal';
 import { chatApi } from '../../api/chat';
-import { useAuthStore } from '../../store/useAuthStore';
+import { useAuthStore } from '../../store/authStore';
 import { format, parseISO } from 'date-fns';
 
 export default function ChatScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, initialTopic } = useLocalSearchParams<{ id: string; initialTopic?: string }>();
   const router = useRouter();
   const { user } = useAuthStore();
   
-  const isAi = id === 'ai';
+  const isAi = id === 'ai' || id === 'ai-session';
   
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const [inputText, setInputText] = useState('');
@@ -40,10 +41,12 @@ export default function ChatScreen() {
           }));
           setMessages(formattedMessages);
         } else {
-           setMessages([
+          setMessages([
             {
               id: 'initial',
-              text: "Good morning! I'm here to help you process your thoughts today. How are you feeling right now?",
+              text: initialTopic 
+                ? `Welcome to your session on ${initialTopic}. Take your time, breathe deeply, and tell me what is on your mind.`
+                : "Hello. I am here to help you process your thoughts today. Take a moment, and share whatever is present for you.",
               sender: 'ai',
               timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }
@@ -64,14 +67,14 @@ export default function ChatScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, [id, isAi, user?.user_id]);
+  }, [id, isAi, user?.user_id, initialTopic]);
 
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
 
   const handleSend = async () => {
-    if (!inputText.trim() || !user) return;
+    if (!inputText.trim()) return;
 
     const currentText = inputText.trim();
     setInputText('');
@@ -87,9 +90,10 @@ export default function ChatScreen() {
 
     try {
       if (isAi) {
-        const response = await chatApi.sendAiMessage(currentText, sessionId);
+        // Fixed: correct argument order (sessionId, currentText)
+        const response = await chatApi.sendAiMessage(sessionId, currentText);
         if (response.session_id && !sessionId) {
-            setSessionId(response.session_id);
+          setSessionId(response.session_id);
         }
         
         const aiMessage: MessageProps = {
@@ -102,13 +106,20 @@ export default function ChatScreen() {
         setMessages(prev => [...prev, aiMessage]);
         
         if (response.is_crisis) {
-            setCrisisModalVisible(true);
+          setCrisisModalVisible(true);
         }
-      } else {
+      } else if (user) {
         await chatApi.sendMessageREST(id as string, user.user_id, currentText, user.user_type);
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      const errorMessage: MessageProps = {
+        id: (Date.now() + 1).toString(),
+        text: 'Unable to connect to the assistant. Please check your connection and try again.',
+        sender: 'ai',
+        timestamp: ''
+      };
+      setMessages(prev => [...prev, errorMessage]);
     }
   };
 
@@ -117,54 +128,62 @@ export default function ChatScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-cream-bg">
-      {/* Header */}
-      <View className="flex-row items-center px-6 py-4 border-b-[1.5px] border-ink-black bg-cream-bg">
-        <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 justify-center items-center border-[1.5px] border-ink-black rounded-full shadow-[2px_2px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none bg-white mr-4">
-          <Ionicons name="arrow-back" size={20} color="#1A1A1A" />
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+      {/* Editorial Header */}
+      <View className="flex-row items-center px-4 py-3.5 border-b border-outline bg-background">
+        <TouchableOpacity 
+          onPress={() => router.back()} 
+          className="w-8 h-8 justify-center items-center border border-outline rounded-full bg-surface mr-3"
+        >
+          <Ionicons name="arrow-back" size={16} color="#18181B" />
         </TouchableOpacity>
         
         <View className="flex-1 flex-row items-center">
-          <View className="w-10 h-10 rounded-full bg-accent-sage border-[1.5px] border-ink-black items-center justify-center mr-3 overflow-hidden shadow-[2px_2px_0px_0px_#1A1A1A]">
-             <Ionicons name={isAi ? "hardware-chip" : "medical"} size={20} color="#1A1A1A" />
+          <View className="w-8 h-8 rounded-full bg-secondary-container border border-outline items-center justify-center mr-2.5">
+             <Ionicons name={isAi ? "sparkles-outline" : "medkit-outline"} size={14} color="#2E4B3E" />
           </View>
           <View>
-            <Text className="font-headline-md text-ink-black font-bold text-lg uppercase tracking-tighter">
-              {isAi ? 'MindEase AI' : 'Chat'}
+            <Text className="text-on-surface font-semibold text-sm">
+              {isAi ? 'Sarvuday AI' : 'Consultation'}
             </Text>
-            <Text className="font-body-md text-on-surface-variant text-xs">
-              {isAi ? 'Always active' : 'Connected'}
+            <Text className="text-on-surface-variant text-[11px]">
+              {isAi ? 'Continuous reflection' : 'Active session'}
             </Text>
           </View>
         </View>
 
         {isAi && (
-          <TouchableOpacity onPress={() => router.push('/chat/insights')} className="w-10 h-10 justify-center items-center border-[1.5px] border-ink-black rounded-full bg-secondary-fixed shadow-[2px_2px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
-            <Ionicons name="bulb" size={20} color="#1A1A1A" />
+          <TouchableOpacity 
+            onPress={() => router.push('/chat/insights')} 
+            className="w-8 h-8 justify-center items-center border border-outline rounded-full bg-surface"
+          >
+            <Ionicons name="bulb-outline" size={16} color="#18181B" />
           </TouchableOpacity>
         )}
       </View>
 
-      {/* Messages */}
+      {/* Messages Feed */}
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        className="flex-1 bg-cream-bg"
+        className="flex-1 bg-background"
       >
         {isLoading ? (
-          <ActivityIndicator size="large" color="#002da5" className="mt-8 flex-1" />
+          <View className="flex-1 justify-center items-center">
+            <ActivityIndicator size="small" color="#18181B" />
+          </View>
         ) : (
           <FlatList
             ref={flatListRef}
             data={messages}
             keyExtractor={item => item.id}
             renderItem={({ item }) => <MessageBubble message={item} />}
-            contentContainerStyle={{ padding: 16, paddingBottom: 24 }}
+            contentContainerStyle={{ padding: 16, paddingBottom: 20 }}
             onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
           />
         )}
 
         {/* Input Area */}
-        <View className="border-t-[1.5px] border-ink-black bg-cream-bg pb-safe pt-2">
+        <View className="border-t border-outline bg-background pb-safe pt-2">
           
           {/* Quick Replies */}
           {isAi && (
@@ -172,32 +191,32 @@ export default function ChatScreen() {
               horizontal
               showsHorizontalScrollIndicator={false}
               className="px-4 pb-2"
-              contentContainerStyle={{ gap: 8 }}
+              contentContainerStyle={{ gap: 6 }}
               data={[
-                { label: 'Grounding Exercise', icon: 'leaf', color: 'bg-accent-sage' },
-                { label: 'Talk it out', icon: 'chatbubbles', color: 'bg-accent-pink' },
-                { label: 'Journal this', icon: 'book', color: 'bg-surface-container' },
+                { label: 'Grounding exercise', icon: 'leaf-outline' },
+                { label: 'Challenge this thought', icon: 'git-branch-outline' },
+                { label: 'Summarize our conversation', icon: 'document-text-outline' },
               ]}
               keyExtractor={item => item.label}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <TouchableOpacity 
                   onPress={() => handleQuickReply(item.label)}
-                  className={`px-4 py-2 rounded-full border-[1.5px] border-ink-black flex-row items-center gap-1 shadow-[2px_2px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ${item.color}`}
+                  className="px-3 py-1.5 rounded-full border border-outline bg-surface flex-row items-center gap-1.5"
                 >
-                  <Ionicons name={item.icon as any} size={16} color="#1A1A1A" />
-                  <Text className="font-label-bold text-ink-black text-xs font-bold">{item.label}</Text>
+                  <Ionicons name={item.icon as any} size={12} color="#18181B" />
+                  <Text className="text-on-surface text-xs font-medium">{item.label}</Text>
                 </TouchableOpacity>
               )}
             />
           )}
 
           {/* Text Input */}
-          <View className="flex-row items-end px-4 py-3 gap-2">
-            <View className="flex-1 relative justify-center">
+          <View className="flex-row items-end px-4 py-2 gap-2">
+            <View className="flex-1">
               <TextInput
-                className="w-full bg-surface-container border-[1.5px] border-ink-black rounded-xl px-4 py-3 font-body-md text-ink-black min-h-[50px] max-h-32 focus:border-primary focus:shadow-[2px_2px_0px_0px_#1A1A1A]"
-                placeholder="Type a message..."
-                placeholderTextColor="#747687"
+                className="w-full bg-surface border border-outline rounded-xl px-3.5 py-2.5 text-on-surface text-sm min-h-[42px] max-h-28"
+                placeholder="Share what is on your mind..."
+                placeholderTextColor="#8E8D9A"
                 value={inputText}
                 onChangeText={setInputText}
                 multiline
@@ -206,9 +225,9 @@ export default function ChatScreen() {
             <TouchableOpacity 
               onPress={handleSend}
               disabled={!inputText.trim()}
-              className={`w-[50px] h-[50px] shrink-0 rounded-xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] flex items-center justify-center transition-all ${inputText.trim() ? 'bg-primary' : 'bg-surface-variant'}`}
+              className={`w-10 h-10 rounded-xl items-center justify-center ${inputText.trim() ? 'bg-primary' : 'bg-surface-container opacity-50'}`}
             >
-              <Ionicons name="send" size={20} color={inputText.trim() ? "#ffffff" : "#1A1A1A"} />
+              <Ionicons name="arrow-up" size={18} color={inputText.trim() ? "#FFFFFF" : "#8E8D9A"} />
             </TouchableOpacity>
           </View>
 

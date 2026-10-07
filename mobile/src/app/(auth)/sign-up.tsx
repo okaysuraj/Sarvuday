@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from '../../components/CustomInput';
@@ -42,7 +43,7 @@ export default function SignUpScreen() {
       
       // Go to intake profile for patients, or dashboard for therapists
       if (userType === 'patient') {
-        router.replace('/intake/consent');
+        router.replace('/intake' as any);
       } else {
         router.replace('/');
       }

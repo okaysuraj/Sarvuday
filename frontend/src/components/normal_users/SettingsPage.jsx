@@ -69,7 +69,7 @@ const SettingsPage = () => {
         </button>
       </div>
 
-      <div className={`sticker-container ${styles.contentArea}`}>
+      <div className={`bg-surface border-outline rounded-xl ${styles.contentArea}`}>
         {activeTab === 'refund' && (
           <div className={styles.section}>
             <h2>Request a Refund</h2>

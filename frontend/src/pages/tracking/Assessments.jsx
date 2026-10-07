@@ -16,7 +16,7 @@ const Assessments = () => {
   const fetchQuestions = async (type) => {
     try {
       const res = await axiosInstance.get(`/assessments/${type}`);
-      console.log('Fetched questions:', res.data.questions); // 🔍 Debug
+      console.log('Fetched questions:', res.data.questions); // <span className="material-symbols-outlined text-sm">search</span> Debug
       setAssessmentType(type);
       setQuestions(res.data.questions);
       setCurrentQuestionIndex(0);
@@ -61,7 +61,7 @@ const Assessments = () => {
         
         const payload = { responses: formattedAnswers };
 
-        // 🔍 Debug: Check payload structure
+        // <span className="material-symbols-outlined text-sm">search</span> Debug: Check payload structure
         console.log('Submitting payload:', JSON.stringify(payload, null, 2));
 
         const res = await axiosInstance.post(

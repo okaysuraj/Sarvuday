@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomButton } from '../../components/CustomButton';
@@ -45,7 +46,7 @@ export default function EmotionWheelScreen() {
       if (moodIndex !== undefined) {
         await trackingApi.logMood({
           moodIndex: Number(moodIndex),
-          emotions: selectedEmotions
+          notes: selectedEmotions.length > 0 ? selectedEmotions.join(', ') : undefined
         });
       }
       router.push('/(tabs)');

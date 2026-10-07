@@ -15,7 +15,8 @@ export default function SleepVsMoodCorrelationScreen() {
     const fetchData = async () => {
       try {
         const token = await AsyncStorage.getItem('access_token');
-        const response = await fetch('http://10.0.2.2:8000/normal_user/tracking/correlation', {
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+        const response = await fetch(`${apiUrl}/normal_user/tracking/correlation`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -159,7 +160,7 @@ export default function SleepVsMoodCorrelationScreen() {
 
       {/* BottomNavBar */}
       <View className="md:hidden absolute bottom-0 w-full bg-surface border-t-[1.5px] border-ink-black h-20 px-4 pb-4 flex-row justify-around items-center z-50">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center px-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center px-2">
           <Ionicons name="home" size={24} color="#434655" className="mb-1" />
           <Text className="font-label-md text-on-surface-variant text-[10px]">Home</Text>
         </TouchableOpacity>
@@ -179,3 +180,4 @@ export default function SleepVsMoodCorrelationScreen() {
     </View>
   );
 }
+

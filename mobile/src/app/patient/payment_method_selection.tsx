@@ -196,7 +196,7 @@ export default function PaymentMethodSelectionScreen() {
 
       {/* Bottom Navigation Shell (Mobile Only) */}
       <View className="md:hidden absolute bottom-0 w-full bg-surface border-t-[1.5px] border-ink-black h-[80px] px-4 pb-4 flex-row justify-around items-center z-50">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center p-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center p-2">
           <Ionicons name="home" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant mt-1">Home</Text>
         </TouchableOpacity>
@@ -216,3 +216,4 @@ export default function PaymentMethodSelectionScreen() {
     </View>
   );
 }
+

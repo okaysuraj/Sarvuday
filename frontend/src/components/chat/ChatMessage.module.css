@@ -1,3 +1,5 @@
+/* ChatMessage.module.css — Minimalist System */
+
 .messageRow {
   display: flex;
   width: 100%;
@@ -12,9 +14,9 @@
 }
 
 .messageContent {
-  max-width: 75%;
+  max-width: 72%;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: flex-end;
 }
 
@@ -23,51 +25,65 @@
 }
 
 .avatar {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-weight: bold;
-  font-size: 14px;
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: 2px 2px 0px 0px rgba(26, 26, 26, 1);
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid var(--border-color);
 }
 
 .botContent .avatar {
-  background: #ffb4e5;
-  color: var(--color-on-surface);
+  background: var(--color-sky-bg);
+  color: var(--color-sky-text);
+  border-color: rgba(33, 68, 103, 0.12);
 }
 
 .userContent .avatar {
-  background: var(--color-primary-container);
-  color: var(--color-on-primary-container);
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface);
 }
 
 .bubble {
-  padding: 14px 18px;
-  border: var(--border-width) solid var(--border-color);
-  font-size: 15px;
+  padding: 12px 18px;
+  font-size: 0.925rem;
   line-height: 1.6;
-  color: var(--color-on-surface);
   white-space: pre-wrap;
   word-wrap: break-word;
-  box-shadow: var(--shadow-hard);
+  font-family: var(--font-body);
 }
 
 .botContent .bubble {
   background: var(--color-surface);
-  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 0;
+  color: var(--color-on-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 18px 18px 18px 4px;
+  box-shadow: var(--shadow-subtle);
 }
 
 .userContent .bubble {
-  background: var(--color-primary-container);
-  color: var(--color-on-primary-container);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 var(--radius-lg);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: 18px 18px 4px 18px;
+  box-shadow: var(--shadow-subtle);
 }
 
 .bubble p {
   margin: 0;
+}
+
+@media (max-width: 640px) {
+  .messageContent {
+    max-width: 86%;
+  }
+
+  .bubble {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+  }
 }

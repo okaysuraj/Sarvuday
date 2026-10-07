@@ -1,140 +1,156 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { communityApi } from '../../api/community';
 
 export default function CommunityScreen() {
   const router = useRouter();
 
-  const posts = [
+  const [activeTab, setActiveTab] = useState<'feed' | 'groups'>('feed');
+  const [posts, setPosts] = useState<any[]>([
     {
       id: '1',
       author: 'Blue Elephant',
-      time: '2 hours ago',
-      avatarBg: 'bg-accent-sage',
-      icon: 'paw',
+      time: '2h ago',
       title: 'Taking one step at a time today.',
-      content: 'It felt heavy waking up this morning, but I managed to make a cup of tea and sit by the window. Sometimes the smallest wins feel the biggest. Grateful for this quiet moment.',
+      content: 'Waking up felt heavy this morning, but I made tea and sat by the window. Sometimes the smallest wins are the most meaningful.',
       likes: 24,
       comments: 12,
+      isLiked: false
     },
     {
       id: '2',
       author: 'Calm River',
-      time: '5 hours ago',
-      avatarBg: 'bg-white',
-      icon: 'water',
-      title: 'Finding peace in the noise.',
-      content: "Work has been incredibly overwhelming lately. I started using a 5-minute breathing technique every hour and it's making a world of difference. Does anyone else have quick grounding tips?",
+      time: '5h ago',
+      title: 'Finding stillness amid the noise.',
+      content: 'Work has felt intense. Practicing 5-minute box breathing between meetings has helped ground my nervous system.',
       likes: 42,
       comments: 8,
-    },
-    {
-      id: '3',
-      author: 'Silent Forest',
-      time: '8 hours ago',
-      avatarBg: 'bg-white',
-      icon: 'leaf',
-      title: "Nature's healing power.",
-      content: 'Spent the afternoon in the park without my phone. The sound of the wind in the trees is so much better than any notification sound. Highly recommend a digital detox weekend.',
-      likes: 31,
-      comments: 5,
+      isLiked: false
     }
-  ];
+  ]);
+  const [groups, setGroups] = useState<any[]>([
+    { id: 'g1', name: 'Anxiety & Panic Support', members: 142, desc: 'Safe space to discuss symptoms and grounding techniques.' },
+    { id: 'g2', name: 'Mindful Daily Reflections', members: 89, desc: 'Daily gratitude and small habit tracking.' },
+    { id: 'g3', name: 'Workplace Stress & Burnout', members: 110, desc: 'Navigating career fatigue and setting gentle boundaries.' }
+  ]);
+
+  const toggleLike = (postId: string) => {
+    setPosts(prev => prev.map(p => {
+      if (p.id === postId) {
+        return {
+          ...p,
+          likes: p.isLiked ? p.likes - 1 : p.likes + 1,
+          isLiked: !p.isLiked
+        };
+      }
+      return p;
+    }));
+  };
 
   return (
-    <View className="flex-1 bg-cream-bg">
-      {/* Header */}
-      <View className="w-full top-0 bg-cream-bg border-b-[1.5px] border-ink-black flex-row justify-between items-center px-6 py-4 z-50">
-        <View className="flex-row items-center gap-4">
-          <TouchableOpacity onPress={() => router.back()} className="p-2 rounded-full active:bg-surface-variant">
-            <Ionicons name="arrow-back" size={24} color="#002da5" />
-          </TouchableOpacity>
-          <Text className="font-headline-sm font-bold text-primary text-xl tracking-tighter">SarvUday</Text>
+    <View className="flex-1 bg-background">
+      {/* Editorial Header */}
+      <View className="flex-row justify-between items-center px-5 pt-12 pb-4 bg-background border-b border-outline">
+        <View>
+          <Text className="text-on-surface font-semibold text-base tracking-tight">Community Commons</Text>
+          <Text className="text-on-surface-variant text-xs">Anonymous, compassionate peer circle</Text>
         </View>
-        <View className="flex-row items-center gap-2">
-          <TouchableOpacity className="p-2 rounded-full active:bg-surface-variant">
-            <Ionicons name="search" size={24} color="#002da5" />
-          </TouchableOpacity>
-          <TouchableOpacity className="p-2 rounded-full active:bg-surface-variant">
-            <Ionicons name="person-circle" size={24} color="#002da5" />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity 
+          onPress={() => router.push('/(tabs)/profile')}
+          className="w-8 h-8 rounded-full border border-outline bg-surface items-center justify-center"
+        >
+          <Ionicons name="person-outline" size={16} color="#18181B" />
+        </TouchableOpacity>
       </View>
 
-      <ScrollView className="flex-1 px-4 py-8" contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView className="flex-1 px-5 py-6" contentContainerStyle={{ paddingBottom: 100 }}>
         
-        {/* Intro */}
-        <View className="mb-8">
-          <Text className="font-headline-sm text-ink-black font-bold text-2xl mb-2">Community Space</Text>
-          <Text className="font-body-md text-on-surface-variant text-base">A safe haven to share, listen, and grow together anonymously.</Text>
+        {/* Toggle Pills */}
+        <View className="flex-row gap-2 mb-6">
+          <TouchableOpacity
+            onPress={() => setActiveTab('feed')}
+            className={`flex-1 py-2 rounded-xl border items-center ${
+              activeTab === 'feed' ? 'bg-primary border-primary' : 'bg-surface border-outline'
+            }`}
+          >
+            <Text className={`text-xs font-medium ${activeTab === 'feed' ? 'text-white' : 'text-on-surface'}`}>
+              Community Feed
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setActiveTab('groups')}
+            className={`flex-1 py-2 rounded-xl border items-center ${
+              activeTab === 'groups' ? 'bg-primary border-primary' : 'bg-surface border-outline'
+            }`}
+          >
+            <Text className={`text-xs font-medium ${activeTab === 'groups' ? 'text-white' : 'text-on-surface'}`}>
+              Support Circles
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Filter Chips */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row mb-8 -mx-4 px-4 overflow-visible">
-          <TouchableOpacity className="bg-secondary-container border-[1.5px] border-ink-black rounded-full px-4 py-2 shadow-[4px_4px_0px_0px_#1A1A1A] mr-3 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
-            <Text className="font-label-bold text-ink-black font-bold">All Posts</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="bg-white border-[1.5px] border-ink-black rounded-full px-4 py-2 mr-3 active:bg-accent-sage">
-            <Text className="font-label-bold text-ink-black font-bold">Daily Reflections</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="bg-white border-[1.5px] border-ink-black rounded-full px-4 py-2 mr-3 active:bg-accent-pink">
-            <Text className="font-label-bold text-ink-black font-bold">Advice Wanted</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="bg-white border-[1.5px] border-ink-black rounded-full px-4 py-2 mr-3 active:bg-accent-orange">
-            <Text className="font-label-bold text-ink-black font-bold">Small Wins</Text>
-          </TouchableOpacity>
-        </ScrollView>
+        {activeTab === 'feed' ? (
+          <View className="flex-col gap-4">
+            {posts.map((post) => (
+              <View key={post.id} className="bg-surface border border-outline rounded-2xl p-5">
+                <View className="flex-row items-center justify-between mb-3">
+                  <View className="flex-row items-center gap-2.5">
+                    <View className="w-7 h-7 rounded-full bg-secondary-container items-center justify-center">
+                      <Ionicons name="person" size={14} color="#2E4B3E" />
+                    </View>
+                    <Text className="text-xs font-semibold text-on-surface">{post.author}</Text>
+                  </View>
+                  <Text className="text-[11px] text-on-surface-variant">{post.time}</Text>
+                </View>
 
-        {/* Feed Grid */}
-        <View className="flex-col gap-6">
-          {posts.map((post, index) => (
-            <TouchableOpacity 
-              key={post.id} 
-              onPress={() => router.push(`/community/post/${post.id}`)}
-              className={`border-[1.5px] border-ink-black rounded-[32px] p-6 shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ${index % 2 === 0 ? 'bg-white' : 'bg-accent-pink'}`}
-            >
-              <View className="flex-row items-center gap-3 mb-4">
-                <View className={`w-10 h-10 rounded-full border-[1.5px] border-ink-black ${post.avatarBg} items-center justify-center`}>
-                  <Ionicons name={post.icon as any} size={20} color="#1A1A1A" />
-                </View>
-                <View>
-                  <Text className="font-label-bold text-ink-black font-bold">{post.author}</Text>
-                  <Text className="text-xs font-label-md text-on-surface-variant">{post.time}</Text>
-                </View>
-              </View>
-              
-              <Text className="font-headline-sm text-ink-black font-bold text-xl mb-3">{post.title}</Text>
-              <Text className="font-body-md text-on-surface-variant mb-6">{post.content}</Text>
-              
-              <View className="flex-row items-center justify-between border-t border-ink-black/20 pt-4">
-                <View className="flex-row gap-4">
-                  <View className="flex-row items-center gap-1">
-                    <Ionicons name="heart" size={20} color="#ba1a1a" />
-                    <Text className="font-label-bold text-on-surface-variant font-bold">{post.likes}</Text>
-                  </View>
-                  <View className="flex-row items-center gap-1">
-                    <Ionicons name="chatbubble" size={20} color="#434655" />
-                    <Text className="font-label-bold text-on-surface-variant font-bold">{post.comments}</Text>
+                <Text className="text-sm font-semibold text-on-surface mb-1.5">{post.title}</Text>
+                <Text className="text-xs text-on-surface-variant leading-relaxed mb-4">{post.content}</Text>
+
+                <View className="flex-row items-center justify-between pt-3 border-t border-outline">
+                  <TouchableOpacity 
+                    onPress={() => toggleLike(post.id)}
+                    className="flex-row items-center gap-1.5"
+                  >
+                    <Ionicons 
+                      name={post.isLiked ? "heart" : "heart-outline"} 
+                      size={16} 
+                      color={post.isLiked ? "#932924" : "#6E6D7A"} 
+                    />
+                    <Text className="text-xs text-on-surface-variant font-medium">{post.likes}</Text>
+                  </TouchableOpacity>
+
+                  <View className="flex-row items-center gap-1.5">
+                    <Ionicons name="chatbubble-outline" size={15} color="#6E6D7A" />
+                    <Text className="text-xs text-on-surface-variant font-medium">{post.comments} thoughts</Text>
                   </View>
                 </View>
-                <View className="bg-primary border-[1.5px] border-ink-black rounded-xl px-4 py-2 shadow-[2px_2px_0px_0px_#1A1A1A]">
-                  <Text className="font-label-bold text-white font-bold">Join Discussion</Text>
-                </View>
               </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+            ))}
+          </View>
+        ) : (
+          <View className="flex-col gap-3">
+            {groups.map((group) => (
+              <View key={group.id} className="bg-surface border border-outline rounded-2xl p-5">
+                <View className="flex-row justify-between items-start mb-2">
+                  <Text className="text-sm font-semibold text-on-surface flex-1 mr-2">{group.name}</Text>
+                  <View className="px-2 py-0.5 rounded-full bg-surface-container border border-outline">
+                    <Text className="text-[10px] text-on-surface-variant font-medium">{group.members} members</Text>
+                  </View>
+                </View>
+                <Text className="text-xs text-on-surface-variant leading-relaxed mb-4">{group.desc}</Text>
+                
+                <TouchableOpacity className="py-2.5 rounded-xl bg-surface-container border border-outline items-center active:bg-primary">
+                  <Text className="text-xs font-semibold text-on-surface">Enter Circle Discussion →</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        )}
 
       </ScrollView>
-
-      {/* Floating Action Button */}
-      <TouchableOpacity 
-        onPress={() => router.push('/community/create_post')}
-        className="absolute bottom-[24px] right-6 w-16 h-16 bg-primary border-[1.5px] border-ink-black rounded-2xl items-center justify-center shadow-[6px_6px_0px_0px_#1A1A1A] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none z-50"
-      >
-        <Ionicons name="add" size={32} color="#ffffff" />
-      </TouchableOpacity>
     </View>
   );
 }

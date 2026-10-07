@@ -63,7 +63,7 @@ export default function TherapistReviewsScreen() {
                 <Text className="font-label-bold text-ink-black font-bold w-4 text-right">{row.stars}</Text>
                 <Ionicons name="star" size={16} color="#fdd33f" />
                 <View className="flex-1 h-3 bg-[#f5f2f9] rounded-full border-[1.5px] border-ink-black overflow-hidden flex-row">
-                  <View className="h-full bg-[#ffe082] border-r-[1.5px] border-ink-black" style={{ width: row.percent }} />
+                  <View className="h-full bg-[#ffe082] border-r-[1.5px] border-ink-black" style={{ width: `${row.percent}%` as any }} />
                 </View>
                 <Text className="font-body-md text-on-surface-variant w-8">{row.count}</Text>
               </View>

@@ -162,7 +162,7 @@ export default function PrivacySettingsScreen() {
 
       {/* BottomNavBar */}
       <View className="absolute bottom-0 w-full z-50 flex-row justify-around items-center px-4 py-2 bg-cream-bg border-t-[1.5px] border-ink-black pb-8">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center p-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center p-2">
           <Ionicons name="home" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant mt-1">Home</Text>
         </TouchableOpacity>
@@ -182,3 +182,4 @@ export default function PrivacySettingsScreen() {
     </View>
   );
 }
+

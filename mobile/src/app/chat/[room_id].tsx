@@ -35,10 +35,10 @@ export default function ChatConversationScreen() {
   useEffect(() => {
     if (!user) return;
     
-    // Connect WebSocket
-    // Use the appropriate backend URL (assuming localhost or specific IP for dev)
-    const wsUrl = `ws://10.0.2.2:8000/chat/${room_id}?token=${user.token || ''}`; 
-    // Note: React Native needs absolute IP for local testing, e.g. 10.0.2.2 for Android emulator
+    // Connect WebSocket dynamically using EXPO_PUBLIC_API_URL
+    const apiBase = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+    const wsBase = apiBase.replace(/^http/, 'ws');
+    const wsUrl = `${wsBase}/chat/${room_id}?token=${user.token || ''}`;
     
     // We'll use a mocked ws approach for UI completeness if actual connection fails
     // In production, this would be the actual WS logic

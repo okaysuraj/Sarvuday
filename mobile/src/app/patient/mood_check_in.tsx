@@ -66,7 +66,7 @@ export default function MoodCheckInScreen() {
 
           {/* Action Button */}
           <TouchableOpacity 
-            onPress={() => router.replace('/patient/dashboard')} // Or next step
+            onPress={() => router.replace('/(tabs)')} // Or next step
             className="w-full md:w-auto bg-primary border-[1.5px] border-ink-black py-4 px-8 rounded-xl shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex-row items-center justify-center gap-2"
           >
             <Text className="text-white font-label-bold font-bold text-base">Continue</Text>
@@ -78,3 +78,4 @@ export default function MoodCheckInScreen() {
     </View>
   );
 }
+

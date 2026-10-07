@@ -64,7 +64,7 @@ export default function ExerciseDetailScreen() {
 
   // Phase text interval
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: any;
     if (isPlaying) {
       const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
       let idx = 0;

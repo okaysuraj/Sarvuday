@@ -1,168 +1,142 @@
-/* Shared Auth Styles */
+/* Shared Auth Styles — Minimalist System */
 .authPageContainer {
   display: flex;
-  justify-content: flex-end; /* Align content to the right */
+  justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 80px); /* minus header */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  min-height: 100vh;
+  background-color: var(--color-background);
   position: relative;
-  padding: var(--space-lg) 10%; /* Add padding to push it away from absolute edge */
-  overflow: hidden;
+  padding: 24px;
 }
 
-.loginBackground {
-  background-image: url('../../assets/sethmaughan-UI1SFTkGKNw-unsplash.jpg');
-}
-
+.loginBackground,
 .registerBackground {
-  background-image: url('../../assets/john-towner-3Kv48NS4WUU-unsplash.jpg');
+  background: var(--color-background);
 }
 
-/* Semi-transparent overlay to ensure text readability if needed */
 .authPageContainer::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0) 40%, rgba(0,0,0,0.3) 100%);
-  z-index: 0;
+  display: none;
 }
 
-.decorationSun {
-  position: absolute;
-  top: 30%;
-  left: 15%;
-  width: 80px;
-  height: 80px;
-  background-color: var(--color-secondary-container);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: 50%;
-  box-shadow: var(--shadow-hard);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  z-index: 1;
-}
-
+/* Remove old cartoon decorations */
+.decorationSun,
 .decorationFlower {
-  position: absolute;
-  bottom: 30%;
-  right: 15%;
-  width: 60px;
-  height: 60px;
-  background-color: var(--color-tertiary-fixed);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: 50%;
-  box-shadow: var(--shadow-hard);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  z-index: 1;
+  display: none;
 }
 
 .formCard {
   width: 100%;
-  max-width: 450px;
+  max-width: 440px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 40px 32px;
+  box-shadow: var(--shadow-card);
   position: relative;
   z-index: 2;
 }
 
 .formHeader {
   text-align: center;
-  margin-bottom: var(--space-md);
+  margin-bottom: 28px;
 }
 
 .formTitle {
   font-family: var(--font-heading);
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--color-on-surface);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 .formSubtitle {
   color: var(--color-on-surface-variant);
-  font-size: 16px;
-  margin-top: var(--space-unit);
+  font-size: 14px;
+  margin-top: 8px;
+  line-height: 1.5;
 }
 
 .socialButtons {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .btnSocialOutline {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  background-color: transparent;
+  gap: 10px;
+  background-color: var(--color-surface);
   color: var(--color-on-surface);
-  border: var(--border-width) solid var(--border-color);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 12px;
-  font-weight: 600;
+  padding: 11px 16px;
+  font-weight: 500;
+  font-size: 14px;
   font-family: var(--font-body);
-  transition: all 0.2s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
 }
 
 .btnSocialOutline:hover {
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface-container);
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 .btnSocialSolid {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  background-color: #1A1A1A;
-  color: #FFFFFF;
-  border: var(--border-width) solid var(--border-color);
+  gap: 10px;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-md);
-  padding: 12px;
-  font-weight: 600;
+  padding: 11px 16px;
+  font-weight: 500;
+  font-size: 14px;
   font-family: var(--font-body);
-  transition: all 0.2s ease;
+  transition: opacity 0.15s ease;
+  cursor: pointer;
 }
 
 .btnSocialSolid:hover {
-  background-color: #333333;
+  opacity: 0.92;
 }
 
 .divider {
   display: flex;
   align-items: center;
   text-align: center;
-  margin-bottom: var(--space-md);
+  margin-bottom: 24px;
 }
 
 .divider::before,
 .divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid var(--color-outline-variant);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .divider span {
-  padding: 0 16px;
-  color: var(--color-outline);
-  font-size: 14px;
+  padding: 0 14px;
+  color: var(--color-on-surface-variant);
+  font-size: 12px;
+  letter-spacing: 0.02em;
 }
 
 .authForm {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 18px;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
 .passwordHeader {
@@ -172,35 +146,43 @@
 }
 
 .forgotLink {
-  font-size: 14px;
-  color: var(--color-primary);
-  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+  font-weight: 500;
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 
 .forgotLink:hover {
-  text-decoration: underline;
+  color: var(--color-on-surface);
 }
 
 .submitBtn {
   width: 100%;
-  margin-top: var(--space-sm);
+  margin-top: 4px;
 }
 
 .authSwitchText {
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--color-on-surface-variant);
-  margin-top: var(--space-sm);
+  margin-top: 16px;
 }
 
 .authSwitchLink {
-  color: var(--color-primary);
+  color: var(--color-on-surface);
   font-weight: 600;
   text-decoration: none;
+  transition: opacity 0.15s ease;
 }
 
 .authSwitchLink:hover {
-  text-decoration: underline;
+  opacity: 0.7;
 }
 
+@media (max-width: 640px) {
+  .formCard {
+    padding: 28px 20px;
+    border-radius: var(--radius-lg);
+  }
+}

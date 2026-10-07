@@ -10,7 +10,7 @@ export default function QuickCheckInMoodScreen() {
 
   const handleSave = () => {
     // In a real app, save checkin to backend
-    router.replace('/patient/dashboard');
+    router.replace('/(tabs)');
   };
 
   return (
@@ -106,3 +106,4 @@ export default function QuickCheckInMoodScreen() {
     </View>
   );
 }
+

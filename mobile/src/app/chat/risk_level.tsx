@@ -60,7 +60,7 @@ export default function AIRiskLevelIndicatorScreen() {
           <View className="flex-col md:flex-row gap-6">
             
             <TouchableOpacity 
-              onPress={() => router.push('/crisis/resources')}
+              onPress={() => router.push('/emergency/hub' as any)}
               className="flex-1 bg-accent-pink border-[1.5px] border-ink-black rounded-[24px] p-6 shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
             >
               <View className="w-12 h-12 rounded-full bg-white border-[1.5px] border-ink-black items-center justify-center mb-4">
@@ -71,7 +71,7 @@ export default function AIRiskLevelIndicatorScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity 
-              onPress={() => router.push('/crisis/emergency_contact')}
+              onPress={() => router.push('/emergency/contact' as any)}
               className="flex-1 bg-secondary-container border-[1.5px] border-ink-black rounded-[24px] p-6 shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
             >
               <View className="w-12 h-12 rounded-full bg-white border-[1.5px] border-ink-black items-center justify-center mb-4">

@@ -25,31 +25,11 @@ const TriggerStressFactors = () => {
   };
 
   return (
-    <div className="bg-cream-bg min-h-screen flex flex-col font-body-md text-on-surface">
-      <style>{`
-        .neo-shadow {
-            box-shadow: 4px 4px 0px 0px #1A1A1A;
-        }
-        .neo-shadow:active {
-            box-shadow: 0px 0px 0px 0px #1A1A1A;
-            transform: translate(2px, 2px);
-        }
-        .neo-border {
-            border: 1.5px solid #1A1A1A;
-        }
-        
-        .trigger-card.selected {
-            background-color: #ffe082; /* secondary-fixed */
-            box-shadow: 4px 4px 0px 0px #1A1A1A;
-            transform: translate(-2px, -2px);
-        }
-        .trigger-card.selected .material-symbols-outlined {
-            font-variation-settings: 'FILL' 1;
-        }
-      `}</style>
+    <div className="bg-background min-h-screen flex flex-col font-body-md text-on-surface">
+      
 
       {/* TopAppBar */}
-      <header className="bg-cream-bg w-full top-0 sticky border-b-[1.5px] border-ink-black flex justify-between items-center px-6 md:px-10 py-4 z-50">
+      <header className="bg-background w-full top-0 sticky border-b border-outline flex justify-between items-center px-6 md:px-10 py-4 z-50">
         <div 
           onClick={() => navigate(-1)}
           className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity active:translate-x-[2px] active:translate-y-[2px]"
@@ -71,7 +51,7 @@ const TriggerStressFactors = () => {
             <span>Triggers</span>
           </div>
           <div className="h-3 w-full bg-surface-container neo-border rounded-full overflow-hidden">
-            <div className="h-full bg-accent-orange border-r-[1.5px] border-ink-black transition-all duration-500" style={{width: '75%'}}></div>
+            <div className="h-full bg-surface border-r-[1.5px] border-outline transition-all duration-500" style={{width: '75%'}}></div>
           </div>
         </div>
 
@@ -87,7 +67,7 @@ const TriggerStressFactors = () => {
             <button 
               key={trigger.id}
               onClick={() => toggleTrigger(trigger.id)}
-              className={`trigger-card bg-surface-container-lowest neo-border rounded-[24px] p-6 md:p-8 flex flex-col items-center justify-center gap-3 aspect-square transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#1A1A1A] ${selectedTriggers.includes(trigger.id) ? 'selected' : ''}`}
+              className={`trigger-card bg-surface-container-lowest neo-border rounded-xl p-6 md:p-8 flex flex-col items-center justify-center gap-3 aspect-square transition-all duration-200  hover:shadow-subtle ${selectedTriggers.includes(trigger.id) ? 'selected' : ''}`}
             >
               <span className="material-symbols-outlined text-[40px] md:text-[48px] text-primary">{trigger.icon}</span>
               <span className="font-headline-sm text-lg md:text-xl">{trigger.label}</span>
@@ -99,14 +79,14 @@ const TriggerStressFactors = () => {
         <div className="flex justify-between w-full max-w-4xl mt-auto pt-6">
           <button 
             onClick={() => navigate(-1)}
-            className="bg-surface-container-lowest text-ink-black neo-border px-6 md:px-8 py-3 rounded-lg font-label-bold text-label-bold neo-shadow transition-all duration-100 flex items-center gap-2"
+            className="bg-surface-container-lowest text-ink-black neo-border px-6 md:px-8 py-3 rounded-lg font-label-bold text-label-bold shadow-subtle transition-all duration-100 flex items-center gap-2"
           >
             <span className="material-symbols-outlined">arrow_back</span>
             Previous
           </button>
           <button 
             onClick={() => navigate('/dashboard')}
-            className="bg-primary text-on-primary neo-border px-6 md:px-8 py-3 rounded-lg font-label-bold text-label-bold neo-shadow transition-all duration-100 flex items-center gap-2"
+            className="bg-primary text-on-primary neo-border px-6 md:px-8 py-3 rounded-lg font-label-bold text-label-bold shadow-subtle transition-all duration-100 flex items-center gap-2"
           >
             Next
             <span className="material-symbols-outlined">arrow_forward</span>

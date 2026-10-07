@@ -1,101 +1,114 @@
-/* src/components/normal_users/ExploreCounsellors.module.css */
+/* src/components/normal_users/ExploreCounsellors.module.css — Minimalist System */
 
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
-  padding-bottom: var(--space-lg);
+  gap: 20px;
+  padding-bottom: 32px;
 }
 
 .title {
   font-family: var(--font-heading);
-  font-size: 32px;
-  margin-bottom: 8px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: -0.03em;
 }
 
 .subtitle {
   color: var(--color-on-surface-variant);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* Search Bar */
 .searchBar {
   display: flex;
-  gap: var(--space-md);
+  gap: 16px;
   flex-wrap: wrap;
-  background-color: var(--color-surface-container-low);
-  padding: 24px;
+  background-color: var(--color-surface);
+  padding: 18px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-subtle);
 }
 
 .inputGroup {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex: 1;
-  min-width: 250px;
+  min-width: 220px;
 }
 
 .icon {
-  color: var(--color-outline);
-  font-size: 20px;
+  color: var(--color-on-surface-variant);
+  font-size: 18px;
 }
 
 /* Grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-md);
+  gap: 16px;
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background-color: var(--color-surface-container-lowest);
-  transition: transform 0.2s ease;
+  gap: 14px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .avatar {
-  width: 56px;
-  height: 56px;
-  background-color: var(--color-primary-container);
-  color: var(--color-on-primary-container);
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  font-weight: bold;
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: 2px 2px 0px var(--border-color);
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
 }
 
 .counsellorName {
-  font-size: 20px;
-  margin-bottom: 4px;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  letter-spacing: -0.01em;
 }
 
 .specialization {
-  color: var(--color-primary);
-  font-size: 14px;
-  font-weight: 600;
+  color: var(--color-on-surface-variant);
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .cardBody {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
 .infoRow {
@@ -103,7 +116,7 @@
   align-items: center;
   gap: 8px;
   color: var(--color-on-surface-variant);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 /* Modal */
@@ -113,7 +126,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,32 +136,37 @@
 
 .modalContent {
   width: 100%;
-  max-width: 500px;
-  background-color: var(--color-surface-container-lowest);
+  max-width: 460px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-hover);
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 20px;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .priceTag {
-  background-color: var(--color-secondary-container);
-  color: var(--color-on-secondary-container);
-  padding: 16px;
-  border: var(--border-width) solid var(--border-color);
+  background-color: var(--color-sage-bg);
+  color: var(--color-sage-text);
+  padding: 14px;
+  border: 1px solid rgba(36, 75, 54, 0.12);
   border-radius: var(--radius-md);
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .modalActions {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
-  margin-top: 16px;
+  gap: 10px;
+  margin-top: 8px;
 }

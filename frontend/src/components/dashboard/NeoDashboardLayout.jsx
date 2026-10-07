@@ -60,7 +60,8 @@ const NeoDashboardLayout = ({ children, username = "User", profilePic = null, si
             <FaBars />
           </button>
           <NavLink to="/" className={styles.logo}>
-            Sarvuday.
+            <img src="/images/sarvuday_logo.png" alt="SarvUday" className="w-6 h-6 rounded-md object-contain inline-block align-middle mr-2" />
+            <span>SarvUday</span>
           </NavLink>
         </div>
 

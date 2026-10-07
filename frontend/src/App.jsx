@@ -116,11 +116,13 @@ const App = () => {
           <Route path="/onboarding/preferences" element={<PreferencesSetup />} />
           <Route path="/disorders" element={<Disorders />} />
           <Route path="/approved-counsellors" element={<ApprovedCounsellors />} />
+          <Route path="/counsellors" element={<ApprovedCounsellors />} />
           <Route path="counsellors/:id/book" element={<BookingSlot />} />
           <Route path="counsellors/:counsellorId/reviews" element={<TherapistReviews />} />
           <Route path="appointments" element={<AppointmentsList />} />
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/contact" element={<ContactUs />} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />
@@ -141,14 +143,6 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Chat />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ai-chat"
-            element={
-              <ProtectedRoute>
-                <AIChat />
               </ProtectedRoute>
             }
           />

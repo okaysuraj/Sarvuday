@@ -83,7 +83,7 @@ export default function LanguageSettingsScreen() {
         {/* Action Button */}
         <View className="mt-10 flex-row justify-center">
           <TouchableOpacity 
-            onPress={() => router.push('/patient/dashboard')}
+            onPress={() => router.push('/(tabs)')}
             className="bg-primary px-12 py-4 rounded-full border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
           >
             <Text className="text-white font-label-bold font-bold text-lg">Save Selection</Text>
@@ -94,7 +94,7 @@ export default function LanguageSettingsScreen() {
 
       {/* BottomNavBar */}
       <View className="absolute bottom-0 w-full z-50 flex-row justify-around items-center px-4 py-2 bg-cream-bg border-t-[1.5px] border-ink-black pb-8">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center p-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center p-2">
           <Ionicons name="home" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant mt-1">Home</Text>
         </TouchableOpacity>
@@ -114,3 +114,4 @@ export default function LanguageSettingsScreen() {
     </View>
   );
 }
+

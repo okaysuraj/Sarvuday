@@ -1,13 +1,15 @@
+/* ApprovedCounsellors.module.css — Minimalist System */
+
 .pageContainer {
-  background-color: var(--color-surface);
+  background-color: var(--color-background);
   min-height: calc(100vh - 80px);
-  padding: var(--space-md);
+  padding: 32px 24px;
   font-family: var(--font-body);
 }
 
 .dashboardLayout {
   display: flex;
-  gap: var(--space-lg);
+  gap: 32px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -16,7 +18,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: 28px;
 }
 
 .headerArea {
@@ -24,13 +26,14 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--space-md);
+  gap: 16px;
 }
 
 .pageTitle {
   font-family: var(--font-heading);
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
   color: var(--color-on-surface);
   margin: 0;
 }
@@ -38,17 +41,24 @@
 .searchBar {
   display: flex;
   align-items: center;
-  background-color: var(--color-surface-container-lowest);
-  border: var(--border-width) solid var(--border-color);
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
   padding: 8px 16px;
-  width: 300px;
-  box-shadow: 2px 2px 0px var(--border-color);
+  width: 280px;
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.searchBar:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.06);
 }
 
 .searchIcon {
-  color: var(--color-outline);
+  color: var(--color-on-surface-variant);
   margin-right: 8px;
+  font-size: 14px;
 }
 
 .searchBar input {
@@ -56,7 +66,8 @@
   background: transparent;
   width: 100%;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 0.875rem;
+  color: var(--color-on-surface);
 }
 
 .searchBar input:focus {
@@ -69,15 +80,17 @@
 }
 
 .sectionTitle {
-  font-size: 18px;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
   font-weight: 600;
-  margin-bottom: var(--space-md);
+  margin-bottom: 14px;
   color: var(--color-on-surface);
+  letter-spacing: -0.01em;
 }
 
 .typeButtons {
   display: flex;
-  gap: var(--space-sm);
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -85,38 +98,54 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
-  background-color: var(--color-surface-container-lowest);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  color: var(--color-on-surface);
+  padding: 8px 16px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--color-on-surface-variant);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+}
+
+.typeBtn:hover {
+  background-color: var(--color-surface-container);
+  color: var(--color-on-surface);
 }
 
 .activeTypeBtn {
-  background-color: var(--color-secondary-container);
-  box-shadow: 2px 2px 0px var(--border-color);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+}
+
+.activeTypeBtn:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 .counsellorList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 16px;
 }
 
 .monthSelector {
+  font-family: var(--font-heading);
   font-weight: 600;
+  font-size: 0.95rem;
   color: var(--color-on-surface);
+  margin-bottom: 8px;
 }
 
 .dateSelector {
   display: flex;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
+  gap: 8px;
+  margin-bottom: 16px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding-bottom: 6px;
 }
 
 .dateBox {
@@ -124,88 +153,111 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 70px;
-  background-color: var(--color-surface-container-lowest);
-  border: var(--border-width) solid var(--border-color);
+  width: 54px;
+  height: 64px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   cursor: pointer;
   flex-shrink: 0;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.dateBox:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  background-color: var(--color-surface-container);
 }
 
 .activeDateBox {
-  background-color: var(--color-primary-fixed);
-  color: var(--color-primary);
-  box-shadow: 2px 2px 0px var(--border-color);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+}
+
+.activeDateBox:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 .dayName {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 
 .dayNumber {
-  font-size: 18px;
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
 }
 
 .timeSelector {
   display: flex;
-  gap: var(--space-sm);
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .timeBox {
-  padding: 8px 16px;
-  background-color: var(--color-surface-container-lowest);
-  border: var(--border-width) solid var(--border-color);
+  padding: 6px 14px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
+  color: var(--color-on-surface-variant);
+  transition: all 0.15s ease;
+}
+
+.timeBox:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  color: var(--color-on-surface);
 }
 
 .activeTimeBox {
-  background-color: var(--color-secondary-container);
-  box-shadow: 2px 2px 0px var(--border-color);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
 }
 
 .sidebar {
-  width: 320px;
+  width: 300px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: 20px;
 }
 
 .widgetYellow {
-  background-color: var(--color-secondary-container);
-  border: var(--border-width) solid var(--border-color);
+  background-color: var(--color-sand-bg);
+  border: 1px solid rgba(138, 92, 43, 0.12);
   border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  box-shadow: var(--shadow-hard);
+  padding: 20px;
+  box-shadow: var(--shadow-subtle);
 }
 
 .widgetBlue {
-  background-color: var(--color-primary-fixed);
-  border: var(--border-width) solid var(--border-color);
+  background-color: var(--color-sky-bg);
+  border: 1px solid rgba(33, 68, 103, 0.12);
   border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  box-shadow: var(--shadow-hard);
-  color: var(--color-primary);
+  padding: 20px;
+  box-shadow: var(--shadow-subtle);
+  color: var(--color-sky-text);
   text-align: center;
 }
 
 .widgetTitle {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: var(--space-md);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--color-on-surface);
 }
 
 .sessionDetails {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .sessionDoc {
@@ -215,20 +267,23 @@
 }
 
 .docAvatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: var(--border-width) solid var(--border-color);
-  background-color: var(--color-surface-container-lowest);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background-color: var(--color-surface);
+  object-fit: cover;
 }
 
 .docName {
-  font-weight: 700;
-  font-size: 16px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-on-surface);
 }
 
 .docSpec {
-  font-size: 14px;
+  font-size: 0.8rem;
   color: var(--color-on-surface-variant);
 }
 
@@ -236,59 +291,76 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  background-color: rgba(255,255,255,0.5);
-  padding: 8px;
-  border-radius: 8px;
+  font-size: 0.825rem;
+  font-weight: 500;
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  color: var(--color-sand-text);
 }
 
 .widgetButtons {
   display: flex;
   gap: 8px;
-  margin-bottom: var(--space-md);
+  margin-bottom: 12px;
 }
 
 .btnSolid {
   flex: 1;
-  background-color: #000;
-  color: #fff;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
   border: none;
-  padding: 8px;
+  padding: 8px 14px;
   border-radius: var(--radius-md);
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.825rem;
   cursor: pointer;
+  transition: opacity 0.15s ease;
+  font-family: var(--font-body);
+}
+
+.btnSolid:hover {
+  opacity: 0.9;
 }
 
 .btnOutline {
   flex: 1;
   background-color: transparent;
-  color: #000;
-  border: 1.5px solid #000;
-  padding: 8px;
+  color: var(--color-on-surface);
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
   border-radius: var(--radius-md);
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.825rem;
   cursor: pointer;
+  transition: background-color 0.15s ease;
+  font-family: var(--font-body);
+}
+
+.btnOutline:hover {
+  background-color: var(--color-surface);
 }
 
 .tipBox {
-  background-color: rgba(255,255,255,0.6);
+  background-color: rgba(255, 255, 255, 0.6);
   padding: 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  line-height: 1.4;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--color-sand-text);
 }
 
 .helpIcon {
-  font-size: 32px;
+  font-size: 28px;
   margin-bottom: 8px;
 }
 
 .helpLink {
   display: inline-block;
-  margin-top: var(--space-sm);
-  font-weight: 700;
-  color: var(--color-primary);
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 0.825rem;
+  color: var(--color-sky-text);
   text-decoration: underline;
 }
 

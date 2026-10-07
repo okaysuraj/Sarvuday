@@ -151,7 +151,7 @@ export default function WeeklyMentalHealthReportScreen() {
 
       {/* BottomNavBar */}
       <View className="md:hidden absolute bottom-0 w-full bg-surface-container-lowest border-t-[1.5px] border-ink-black h-20 px-4 pb-4 flex-row justify-around items-center z-50 shadow-[4px_4px_0px_0px_#1A1A1A] rounded-t-xl">
-        <TouchableOpacity onPress={() => router.push('/patient/dashboard')} className="flex-col items-center justify-center px-2">
+        <TouchableOpacity onPress={() => router.push('/(tabs)')} className="flex-col items-center justify-center px-2">
           <Ionicons name="home" size={24} color="#747687" />
           <Text className="font-label-bold text-outline text-[10px] mt-1 font-bold">Home</Text>
         </TouchableOpacity>
@@ -171,3 +171,4 @@ export default function WeeklyMentalHealthReportScreen() {
     </View>
   );
 }
+

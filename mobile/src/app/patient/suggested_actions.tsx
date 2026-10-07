@@ -137,7 +137,7 @@ export default function SuggestedActionsScreen() {
 
       {/* BottomNavBar (Mobile Only) */}
       <View className="md:hidden absolute bottom-0 w-full bg-surface border-t-[1.5px] border-ink-black h-20 px-4 pb-4 flex-row justify-around items-center z-50">
-        <TouchableOpacity className="flex-col items-center justify-center bg-secondary-container rounded-xl px-4 py-1 border-[1.5px] border-ink-black shadow-[2px_2px_0px_0px_#1A1A1A]" onPress={() => router.push('/patient/dashboard')}>
+        <TouchableOpacity className="flex-col items-center justify-center bg-secondary-container rounded-xl px-4 py-1 border-[1.5px] border-ink-black shadow-[2px_2px_0px_0px_#1A1A1A]" onPress={() => router.push('/(tabs)')}>
           <Ionicons name="home" size={24} color="#002da5" />
           <Text className="font-label-bold text-ink-black font-bold text-[10px] mt-1">Home</Text>
         </TouchableOpacity>
@@ -157,3 +157,4 @@ export default function SuggestedActionsScreen() {
     </View>
   );
 }
+

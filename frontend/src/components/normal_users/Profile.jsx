@@ -540,7 +540,7 @@ const Profile = () => {
           </div>
 
           <div className={styles.historySection}>
-            <div className={`sticker-container ${styles.profileCard}`} style={{marginTop: '2rem', width: '100%'}}>
+            <div className={`bg-surface border-outline rounded-xl ${styles.profileCard}`} style={{marginTop: '2rem', width: '100%'}}>
               <h4>Booking History & Reviews</h4>
               <div className={styles.bookingList}>
                 {bookings.map(booking => (
@@ -573,7 +573,7 @@ const Profile = () => {
       {/* Review Modal */}
       {reviewingBooking && (
         <div className={styles.modalOverlay}>
-          <div className={`sticker-container ${styles.modalContent}`}>
+          <div className={`bg-surface border-outline rounded-xl ${styles.modalContent}`}>
             <h3>Leave a Review for {reviewingBooking.counsellor}</h3>
             <div className={styles.fieldGroup}>
               <label>Rating (1-5)</label>

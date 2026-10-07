@@ -14,7 +14,8 @@ export default function PatientDetailScreen() {
     const fetchPatientData = async () => {
       try {
         const token = await AsyncStorage.getItem('access_token');
-        const res = await fetch('http://10.0.2.2:8000/counsellor/appointments', {
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+        const res = await fetch(`${apiUrl}/counsellor/appointments`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -164,7 +165,7 @@ export default function PatientDetailScreen() {
           <View className="mt-8 pt-6 border-t-[1.5px] border-ink-black/10">
             <Text className="text-xs font-bold text-on-surface-variant uppercase mb-4 tracking-tighter">Current Plan</Text>
             <View className="flex-row flex-wrap gap-2">
-              {patient.plan.map((item, idx) => (
+              {patient.plan.map((item: any, idx: number) => (
                 <View key={idx} className="bg-surface-container-high px-3 py-1 rounded-full border-[1px] border-ink-black">
                   <Text className="text-xs text-ink-black">{item}</Text>
                 </View>

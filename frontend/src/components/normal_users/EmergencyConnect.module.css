@@ -1,38 +1,39 @@
-/* src/components/normal_users/EmergencyConnect.module.css */
+/* src/components/normal_users/EmergencyConnect.module.css — Minimalist System */
 
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
-  padding-bottom: var(--space-lg);
+  gap: 24px;
+  padding-bottom: 32px;
 }
 
 .header {
-  background-color: var(--color-error-container);
-  color: var(--color-on-error-container);
-  padding: var(--space-lg);
-  border: var(--border-width) solid var(--border-color);
+  background-color: var(--color-rose-bg);
+  color: var(--color-rose-text);
+  padding: 32px;
+  border: 1px solid rgba(143, 43, 38, 0.12);
   border-radius: var(--radius-lg);
   text-align: center;
-  box-shadow: 4px 4px 0px var(--border-color);
 }
 
 .header h1 {
   font-family: var(--font-heading);
-  font-size: 32px;
-  margin-bottom: var(--space-sm);
-  color: var(--color-error);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--color-rose-text);
+  letter-spacing: -0.025em;
 }
 
 .header p {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
 }
 
 .helplineCard {
@@ -40,39 +41,52 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 16px;
-  background-color: var(--color-surface-container-lowest);
-  border: var(--border-width) solid var(--border-color);
+  gap: 14px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.helplineCard:hover {
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-card);
 }
 
 .iconWrapper {
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-full);
-  border: var(--border-width) solid var(--border-color);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-surface-container-low);
-  box-shadow: 2px 2px 0px var(--border-color);
+  background-color: var(--color-rose-bg);
 }
 
 .cardContent h3 {
-  font-size: 20px;
-  margin-bottom: 8px;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
 }
 
 .number {
   font-family: var(--font-heading);
-  font-size: 28px;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-error);
-  margin-bottom: 8px;
+  color: var(--color-rose-text);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
 }
 
 .description {
   color: var(--color-on-surface-variant);
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .callBtn {
@@ -81,6 +95,22 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: var(--color-error);
+  background-color: var(--color-rose-text);
   color: var(--color-on-error);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  font-family: var(--font-body);
+}
+
+.callBtn:hover {
+  opacity: 0.9;
+}
+
+.callBtn:active {
+  transform: scale(0.98);
 }

@@ -1,12 +1,8 @@
-/* Profile.module.css */
+/* Profile.module.css — Minimalist System */
 
 .container {
-  max-width: 1000px;
+  max-width: 960px;
   margin: 0 auto;
-  background-color: var(--color-surface-container-lowest);
-  border-radius: var(--radius-lg);
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
   font-family: var(--font-body);
   color: var(--color-on-surface);
   overflow: hidden;
@@ -16,77 +12,96 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2.5rem;
-  border-bottom: var(--border-width) solid var(--border-color);
-  background-color: var(--color-surface-container-low);
+  padding: 20px 0;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .heading {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 .actions {
   display: flex;
-  gap: 15px;
+  gap: 8px;
 }
 
 .actionButton {
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: var(--radius-md);
   font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 500;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.2s ease;
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  border: 1px solid transparent;
 }
 
-.actionButton:hover {
-  transform: translate(2px, 2px);
-  box-shadow: none;
+.actionButton:active {
+  transform: scale(0.98);
 }
 
 .editButton {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
+  border-color: var(--color-primary);
+}
+
+.editButton:hover {
+  opacity: 0.92;
 }
 
 .deleteButton {
-  background-color: var(--color-error);
-  color: var(--color-on-error);
+  background-color: var(--color-rose-bg);
+  color: var(--color-rose-text);
+  border-color: rgba(143, 43, 38, 0.12);
+}
+
+.deleteButton:hover {
+  opacity: 0.85;
 }
 
 .saveButton {
-  background-color: var(--color-secondary);
-  color: var(--color-on-secondary);
+  background-color: var(--color-sage-bg);
+  color: var(--color-sage-text);
+  border-color: rgba(36, 75, 54, 0.12);
+}
+
+.saveButton:hover {
+  opacity: 0.85;
 }
 
 .cancelButton {
-  background-color: var(--color-surface);
-  color: var(--color-on-surface);
+  background-color: var(--color-surface-container);
+  color: var(--color-on-surface-variant);
+  border-color: var(--border-color);
+}
+
+.cancelButton:hover {
+  background-color: var(--color-surface-container-high);
 }
 
 .profileContent {
-  padding: 2.5rem;
+  padding: 0;
 }
 
 .profileHeader {
   display: flex;
   align-items: center;
-  margin-bottom: 2.5rem;
-  gap: 2.5rem;
+  margin-bottom: 32px;
+  gap: 24px;
 }
 
 .profileImageContainer {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
 }
 
 .profilePic {
@@ -94,24 +109,21 @@
   height: 100%;
   border-radius: var(--radius-full);
   object-fit: cover;
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
+  border: 1px solid var(--border-color);
 }
 
 .profileInitial {
   width: 100%;
   height: 100%;
   border-radius: var(--radius-full);
-  background-color: var(--color-primary-container);
-  color: var(--color-on-primary-container);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-heading);
-  font-size: 4rem;
-  font-weight: 700;
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 .uploadOverlay {
@@ -119,20 +131,20 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   text-align: center;
-  padding: 8px 0;
-  border-bottom-left-radius: 140px;
-  border-bottom-right-radius: 140px;
+  padding: 5px 0;
+  border-bottom-left-radius: 44px;
+  border-bottom-right-radius: 44px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
 }
 
 .uploadOverlay:hover {
-  background-color: var(--color-primary);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .profileHeaderInfo {
@@ -141,63 +153,66 @@
 
 .userName {
   font-family: var(--font-heading);
-  font-size: 2rem;
-  margin: 0 0 10px 0;
+  font-size: 1.35rem;
+  margin: 0 0 4px 0;
   color: var(--color-on-surface);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .userEmail {
-  font-size: 1.1rem;
-  margin: 0 0 5px 0;
+  font-size: 0.85rem;
+  margin: 0 0 4px 0;
   color: var(--color-on-surface-variant);
 }
 
 .userLocation {
-  font-size: 1rem;
+  font-size: 0.85rem;
   color: var(--color-on-surface-variant);
   margin: 0;
 }
 
 .profileGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
 }
 
 .profileCard {
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
-  border: var(--border-width) solid var(--border-color);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-hard);
+  border: 1px solid var(--border-color);
+  padding: 24px;
+  box-shadow: var(--shadow-subtle);
 }
 
 .profileCard h4 {
-  margin: 0 0 1.5rem 0;
-  color: var(--color-primary);
+  margin: 0 0 16px 0;
+  color: var(--color-on-surface);
   font-family: var(--font-heading);
-  font-size: 1.5rem;
-  border-bottom: var(--border-width) solid var(--border-color);
-  padding-bottom: 0.5rem;
-  display: inline-block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+  letter-spacing: -0.01em;
 }
 
 .cardContent {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 14px;
 }
 
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 2px;
 }
 
 .fieldRow {
   display: flex;
-  gap: 1.5rem;
+  gap: 16px;
 }
 
 .fieldRow .fieldGroup {
@@ -205,90 +220,101 @@
 }
 
 .fieldGroup label {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   color: var(--color-on-surface-variant);
-  font-weight: 600;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .fieldGroup p {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: var(--color-on-surface);
   font-weight: 500;
 }
 
 .editInput {
-  padding: 12px 15px;
-  border: var(--border-width) solid var(--border-color);
+  padding: 9px 14px;
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
-  background-color: var(--color-surface-container-lowest);
-  box-shadow: 2px 2px 0px rgba(0,0,0,0.1) inset;
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .editInput:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 2px 2px 0px var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.06);
 }
 
 .verified {
-  color: var(--color-secondary);
-  font-weight: 700;
+  color: var(--color-sage-text) !important;
+  font-weight: 500;
 }
 
 .notVerified {
-  color: var(--color-error);
-  font-weight: 700;
+  color: var(--color-rose-text) !important;
+  font-weight: 500;
 }
 
 .deleteConfirmation {
-  padding: 3rem;
+  padding: 40px 24px;
   text-align: center;
 }
 
 .deleteConfirmation h3 {
-  color: var(--color-error);
+  color: var(--color-rose-text);
   font-family: var(--font-heading);
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
 }
 
 .deleteConfirmation p {
-  margin-bottom: 1.5rem;
-  color: var(--color-on-surface);
-  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: var(--color-on-surface-variant);
+  font-size: 0.9rem;
 }
 
 .confirmationInput {
   width: 100%;
-  max-width: 400px;
-  padding: 15px;
-  margin: 2rem auto;
+  max-width: 380px;
+  padding: 10px 14px;
+  margin: 12px auto;
   display: block;
-  border: var(--border-width) solid var(--border-color);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-family: var(--font-body);
+  color: var(--color-on-surface);
+  transition: border-color 0.15s ease;
+}
+
+.confirmationInput:focus {
+  outline: none;
+  border-color: var(--color-rose-text);
+  box-shadow: 0 0 0 3px rgba(143, 43, 38, 0.08);
 }
 
 .deleteActions {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 2rem;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .deleteConfirmButton {
-  background-color: var(--color-error);
-  color: var(--color-on-error);
+  background-color: var(--color-rose-bg);
+  color: var(--color-rose-text);
+  border-color: rgba(143, 43, 38, 0.12);
 }
 
 .deleteConfirmButton:hover {
-  transform: translate(2px, 2px);
-  box-shadow: none;
+  opacity: 0.85;
 }
 
 .loadingContainer {
@@ -300,23 +326,22 @@
 
 .loading {
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 0.9rem;
   color: var(--color-on-surface-variant);
   display: flex;
   align-items: center;
-  gap: 15px;
-  font-style: italic;
+  gap: 10px;
 }
 
 .loading::before {
   content: "";
   display: inline-block;
-  width: 24px;
-  height: 24px;
-  border: 4px solid var(--color-primary);
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-primary);
   border-radius: 50%;
   border-top-color: transparent;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
@@ -327,39 +352,42 @@
 
 .error {
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 0.9rem;
   color: var(--color-error);
-  padding: 3rem;
-  font-weight: 600;
+  padding: 32px;
 }
 
 .noData {
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 0.9rem;
   color: var(--color-on-surface-variant);
-  padding: 3rem;
-  font-style: italic;
+  padding: 32px;
 }
 
 /* History and Reviews */
 .historySection {
-  margin-top: 2rem;
+  margin-top: 24px;
 }
 
 .bookingList {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 8px;
 }
 
 .bookingItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  background-color: var(--color-surface-container-lowest);
-  border: var(--border-width) solid var(--border-color);
+  padding: 14px 16px;
+  background-color: var(--color-surface-container);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
+  transition: border-color 0.15s ease;
+}
+
+.bookingItem:hover {
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 .modalOverlay {
@@ -368,7 +396,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -377,10 +406,35 @@
 
 .modalContent {
   width: 100%;
-  max-width: 500px;
-  background-color: var(--color-surface-container-lowest);
+  max-width: 460px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-hover);
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  gap: 20px;
 }
 
+@media (max-width: 640px) {
+  .profileHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .profileGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fieldRow {
+    flex-direction: column;
+    gap: 14px;
+  }
+}

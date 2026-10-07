@@ -1,102 +1,104 @@
-/* src/components/normal_users/Appointments.module.css */
+/* src/components/normal_users/Appointments.module.css — Minimalist System */
 
 .container {
-  padding: 2.5rem;
-  max-width: 1000px;
+  max-width: 960px;
   margin: 0 auto;
-  background: var(--color-surface-container-lowest);
-  border-radius: var(--radius-lg);
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
   font-family: var(--font-body);
   color: var(--color-on-surface);
 }
 
 .heading {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: var(--color-primary);
+  font-size: 1.75rem;
+  margin-bottom: 24px;
+  color: var(--color-on-surface);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .buttonGroup {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
 .button,
 .buttonOutline {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 500;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.2s ease;
-  border: var(--border-width) solid var(--border-color);
+  transition: opacity 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+}
+
+.button:active,
+.buttonOutline:active {
+  transform: scale(0.98);
 }
 
 .button {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
-  box-shadow: var(--shadow-hard);
+  border-color: var(--color-primary);
 }
 
 .button:hover {
-  transform: translate(2px, 2px);
-  box-shadow: none;
+  opacity: 0.92;
 }
 
 .buttonOutline {
   background-color: var(--color-surface);
   color: var(--color-on-surface);
-  box-shadow: var(--shadow-hard);
+  border-color: var(--border-color);
 }
 
 .buttonOutline:hover {
-  background-color: var(--color-secondary-container);
-  transform: translate(2px, 2px);
-  box-shadow: none;
+  background-color: var(--color-surface-container);
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 .cardGrid {
   display: grid;
-  gap: 1.5rem;
+  gap: 14px;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 .card {
   background-color: var(--color-surface);
-  padding: 1.5rem;
-  border-radius: var(--radius-md);
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
-  transition: transform 0.2s ease;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-  transform: translate(-2px, -2px);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-card);
 }
 
 .card h4 {
   font-family: var(--font-heading);
-  font-size: 1.3rem;
-  margin-bottom: 0.75rem;
-  color: var(--color-primary);
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--color-on-surface);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .card p {
-  font-size: 1rem;
-  color: var(--color-on-surface);
-  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 4px;
+  line-height: 1.5;
 }
 
 .placeholderText {
-  margin-top: 2rem;
-  font-size: 1.2rem;
+  margin-top: 32px;
+  font-size: 0.9rem;
   color: var(--color-on-surface-variant);
   text-align: center;
-  font-style: italic;
 }

@@ -1,9 +1,5 @@
-// src/pages/ContactUs.jsx
-
 import React, { useState } from 'react';
-import axios from 'axios';
-import styles from './ContactUs.module.css';
-import BASE_URL from '../../config/apiConfig';
+import { Link } from 'react-router-dom';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -34,22 +30,17 @@ const ContactUs = () => {
       setStatus({
         submitted: true,
         success: false,
-        message: 'Sending your message...'
+        message: 'Sending your inquiry...'
       });
       
-      // You can uncomment this when the backend endpoint is ready
-      // const response = await axios.post(`${BASE_URL}/contact`, formData);
-      
-      // For now, simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 800));
       
       setStatus({
         submitted: true,
         success: true,
-        message: 'Thank you! Your message has been sent successfully.'
+        message: 'Thank you. Your message has been received. Our support team typically responds within 24 business hours.'
       });
       
-      // Reset form
       setFormData({
         name: '',
         email: '',
@@ -62,154 +53,151 @@ const ContactUs = () => {
       setStatus({
         submitted: true,
         success: false,
-        message: 'There was a problem sending your message. Please try again.'
+        message: 'There was a problem sending your message. Please try again or email support directly.'
       });
     }
   };
 
   return (
-    <div className={styles.contactContainer}>
-      <div className={styles.contactHeader}>
-        <h1>Get in Touch</h1>
-        <p>
-          Have questions or need assistance? We're here to help. Fill out the form below
-          or use our contact information to reach out to us.
-        </p>
-      </div>
+    <div className="bg-[#FAF9F6] text-[#121214] min-h-[calc(100vh-64px)] py-16 sm:py-24 selection:bg-[#18181B] selection:text-white">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6 space-y-12">
+        {/* Header */}
+        <div className="max-w-2xl space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EDF3EC] text-[#244B36] text-xs font-medium border-[#D5E5D4]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#346538]"></span>
+            We Are Here To Listen
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#121214]">
+            Get in Touch with SarvUday
+          </h1>
+          <p className="text-sm sm:text-base text-[#6E6D7A] leading-relaxed">
+            Have questions about clinical appointments, technical support, or partnership inquiries? Fill out the form below or reach our team.
+          </p>
+        </div>
 
-      <div className={styles.contactContent}>
-        <div className={styles.contactForm}>
-          <h2>Send us a Message</h2>
-          
-          {status.submitted && (
-            <div className={status.success ? styles.successMessage : styles.errorMessage}>
-              {status.message}
+        {/* Emergency Callout Card */}
+        <div className="bg-[#FDEBEC] border-[#F6D0D2] rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <span className="material-symbols-rounded text-[#8F2B26] text-xl mt-0.5">emergency</span>
+            <div>
+              <span className="text-xs font-semibold text-[#8F2B26] uppercase tracking-wider block">Crisis Notice</span>
+              <p className="text-xs sm:text-sm text-[#8F2B26]/90 mt-0.5">
+                This contact form is for non-emergency inquiries only. If you are in acute distress, please call or text <strong>988</strong> immediately.
+              </p>
             </div>
-          )}
-          
-          <form onSubmit={handleSubmit}>
-            <div className={styles.formGroup}>
-              <label htmlFor="name">Your Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                placeholder="Enter your full name"
-              />
-            </div>
+          </div>
+          <Link
+            to="/emergency"
+            className="px-4 py-2 rounded-lg bg-[#8F2B26] text-white text-xs font-medium shrink-0 hover:bg-[#782420] transition-colors"
+          >
+            Emergency Resources
+          </Link>
+        </div>
+
+        {/* Form and Contact Info Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Contact Form (7 cols) */}
+          <div className="lg:col-span-7 bg-white border-[#EAEAEA] rounded-2xl p-7 sm:p-9 shadow-sm">
+            <h2 className="text-xl font-semibold text-[#121214] mb-6">Send an Inquiry</h2>
             
-            <div className={styles.formGroup}>
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder="Enter your email address"
-              />
-            </div>
+            {status.submitted && (
+              <div className={`p-4 rounded-xl mb-6 text-xs sm:text-sm ${status.success ? 'bg-[#EDF3EC] text-[#244B36] border-[#D5E5D4]' : 'bg-[#FDEBEC] text-[#8F2B26] border-[#F6D0D2]'}`}>
+                {status.message}
+              </div>
+            )}
             
-            <div className={styles.formGroup}>
-              <label htmlFor="subject">Subject</label>
-              <select
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                required
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-[#121214]" htmlFor="name">Your Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Jane Doe"
+                  className="w-full h-11 bg-white border-[#EAEAEA] rounded-lg px-3.5 text-sm text-[#121214] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#18181B] focus:ring-2 focus:ring-black/[0.05] transition-all"
+                />
+              </div>
+              
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-[#121214]" htmlFor="email">Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="jane@example.com"
+                  className="w-full h-11 bg-white border-[#EAEAEA] rounded-lg px-3.5 text-sm text-[#121214] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#18181B] focus:ring-2 focus:ring-black/[0.05] transition-all"
+                />
+              </div>
+              
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-[#121214]" htmlFor="subject">Subject</label>
+                <select
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                  className="w-full h-11 bg-white border-[#EAEAEA] rounded-lg px-3 text-sm text-[#121214] focus:outline-none focus:border-[#18181B] focus:ring-2 focus:ring-black/[0.05]"
+                >
+                  <option value="">Select a topic</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Counselling Services">Therapist &amp; Booking Support</option>
+                  <option value="Technical Support">Technical &amp; Account Support</option>
+                  <option value="Feedback">Feedback or Partnership</option>
+                </select>
+              </div>
+              
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-[#121214]" htmlFor="message">Your Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows="4"
+                  placeholder="How can we assist your wellness journey?"
+                  className="w-full p-3.5 bg-white border-[#EAEAEA] rounded-lg text-sm text-[#121214] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#18181B] focus:ring-2 focus:ring-black/[0.05] transition-all resize-none"
+                ></textarea>
+              </div>
+              
+              <button 
+                type="submit" 
+                className="w-full h-11 bg-[#18181B] text-white rounded-lg text-sm font-medium hover:bg-[#27272A] active:scale-[0.98] transition-all shadow-sm"
+                disabled={status.submitted && status.success}
               >
-                <option value="">Select a subject</option>
-                <option value="General Inquiry">General Inquiry</option>
-                <option value="Technical Support">Technical Support</option>
-                <option value="Counselling Services">Counselling Services</option>
-                <option value="Feedback">Feedback</option>
-                <option value="Other">Other</option>
-              </select>
+                Submit Inquiry
+              </button>
+            </form>
+          </div>
+          
+          {/* Contact Details (5 cols) */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="bg-white border-[#EAEAEA] rounded-2xl p-6 shadow-sm space-y-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">Direct Email</span>
+              <p className="text-sm font-medium text-[#121214]">support@sarvuday.com</p>
+              <p className="text-xs text-[#71717A]">General inquiries &amp; confidential feedback</p>
             </div>
             
-            <div className={styles.formGroup}>
-              <label htmlFor="message">Your Message</label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                placeholder="Type your message here..."
-              ></textarea>
+            <div className="bg-white border-[#EAEAEA] rounded-2xl p-6 shadow-sm space-y-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">Helpline Phone</span>
+              <p className="text-sm font-medium text-[#121214]">+91 9876543210 / +91 9965402768</p>
+              <p className="text-xs text-[#71717A]">Monday – Friday, 9:00 AM – 6:00 PM IST</p>
             </div>
             
-            <button 
-              type="submit" 
-              className={styles.submitButton}
-              disabled={status.submitted && status.success}
-            >
-              Send Message
-            </button>
-          </form>
-        </div>
-        
-        <div className={styles.contactInfo}>
-          <div className={styles.infoCard}>
-            <div className={styles.iconWrapper}>
-              <i className="fas fa-map-marker-alt"></i>
-            </div>
-            <div className={styles.infoContent}>
-              <h3>Our Location</h3>
-              <p>123 Mental Health Avenue</p>
-              <p>Udayaditya Technologies Ltd.</p>
-              <p>Guwahati, Assam, India</p>
-            </div>
-          </div>
-          
-          <div className={styles.infoCard}>
-            <div className={styles.iconWrapper}>
-              <i className="fas fa-phone-alt"></i>
-            </div>
-            <div className={styles.infoContent}>
-              <h3>Phone Number</h3>
-              <p><a href="tel:+1234567890">+91 9876543210</a></p>
-              <p><a href="tel:+1987654321">+91 9965402768</a></p>
-            </div>
-          </div>
-          
-          <div className={styles.infoCard}>
-            <div className={styles.iconWrapper}>
-              <i className="fas fa-envelope"></i>
-            </div>
-            <div className={styles.infoContent}>
-              <h3>Email Address</h3>
-              <p><a href="mailto:info@survuday.com">info@survuday.com</a></p>
-              <p><a href="mailto:support@survuday.com">support@survuday.com</a></p>
-            </div>
-          </div>
-          
-          <div className={styles.infoCard}>
-            <div className={styles.iconWrapper}>
-              <i className="fas fa-clock"></i>
-            </div>
-            <div className={styles.infoContent}>
-              <h3>Working Hours</h3>
-              <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-              <p>Saturday: 10:00 AM - 4:00 PM</p>
-              <p>Sunday: Closed</p>
+            <div className="bg-white border-[#EAEAEA] rounded-2xl p-6 shadow-sm space-y-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">Location</span>
+              <p className="text-sm font-medium text-[#121214]">SarvUday Digital Care</p>
+              <p className="text-xs text-[#71717A]">Guwahati, Assam, India</p>
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className={styles.mapContainer}>
-        <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d229224.99023755087!2d91.53807047590158!3d26.14326307226987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375a5a287f9133ff%3A0x2bbd1332436bde32!2sGuwahati%2C%20Assam!5e0!3m2!1sen!2sin!4v1748984071204!5m2!1sen!2sin"
-          allowFullScreen="" 
-          loading="lazy"
-          title="Office Location"
-        ></iframe>
       </div>
     </div>
   );

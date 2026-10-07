@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from typing import List, Dict, Any
 
-router = APIRouter(prefix="/exercises", tags=["Exercises"])
+router = APIRouter(tags=["Exercises"])
 
 # Real content catalog
 EXERCISES_DB = [

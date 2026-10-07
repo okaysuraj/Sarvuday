@@ -34,33 +34,13 @@ const EmergencyContact = () => {
   };
 
   return (
-    <div className="bg-cream-bg min-h-screen font-body-md text-on-surface flex flex-col">
-      <style>{`
-        .neo-shadow {
-            box-shadow: 4px 4px 0px 0px #1A1A1A;
-        }
-        .neo-shadow-active:active {
-            box-shadow: 0px 0px 0px 0px #1A1A1A;
-            transform: translate(4px, 4px);
-        }
-        .neo-border {
-            border: 1.5px solid #1A1A1A;
-        }
-        .progress-bar-fill {
-            background-image: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(26, 26, 26, 0.1) 10px,
-                rgba(26, 26, 26, 0.1) 20px
-            );
-        }
-      `}</style>
+    <div className="bg-background min-h-screen font-body-md text-on-surface flex flex-col">
+      
 
       {/* TopAppBar */}
-      <header className="bg-cream-bg w-full top-0 sticky border-b-[1.5px] border-ink-black z-50">
+      <header className="bg-background w-full top-0 sticky border-b border-outline z-50">
         <div className="flex justify-between items-center w-full px-margin-desktop py-4 max-w-7xl mx-auto">
-          <button onClick={handlePrevious} className="flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors neo-shadow-active">
+          <button onClick={handlePrevious} className="flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors shadow-subtle-active">
             <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_back</span>
           </button>
           <div className="font-headline-md text-headline-md text-primary font-bold">
@@ -85,9 +65,9 @@ const EmergencyContact = () => {
           </div>
 
           {/* Form Card */}
-          <div className="bg-surface-container-lowest rounded-3xl neo-border p-container-padding relative">
+          <div className="bg-surface-container-lowest rounded-xl neo-border p-container-padding relative">
             {/* Decorative Elements */}
-            <div className="absolute -top-6 -right-6 w-16 h-16 bg-accent-pink rounded-full neo-border neo-shadow z-[-1] hidden md:block"></div>
+            <div className="absolute -top-6 -right-6 w-16 h-16 bg-surface rounded-full neo-border shadow-subtle z-[-1] hidden md:block"></div>
             <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-accent-sage rounded-full neo-border z-[-1] hidden md:block" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%' }}></div>
             
             <div className="mb-stack-md text-center">
@@ -96,7 +76,7 @@ const EmergencyContact = () => {
             </div>
 
             {/* Safety Info Box */}
-            <div className="bg-accent-orange bg-opacity-30 rounded-xl neo-border p-stack-sm mb-stack-md flex items-start gap-3">
+            <div className="bg-surface bg-opacity-30 rounded-xl neo-border p-stack-sm mb-stack-md flex items-start gap-3">
               <span className="material-symbols-outlined text-tertiary-container mt-1" style={{ fontVariationSettings: "'FILL' 1" }}>security</span>
               <div>
                 <h3 className="font-label-bold text-label-bold text-ink-black mb-1">Your privacy is paramount</h3>
@@ -109,7 +89,7 @@ const EmergencyContact = () => {
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-black mb-base" htmlFor="contact-name">Contact Full Name</label>
                 <input 
-                  className="w-full bg-[#f9f8f3] border-[1.5px] border-ink-black rounded-xl p-3 font-body-md text-on-surface focus:outline-none focus:border-primary focus:shadow-[2px_2px_0px_0px_#1A1A1A] transition-all" 
+                  className="w-full bg-[#f9f8f3] border-outline rounded-xl p-3 font-body-md text-on-surface focus:outline-none focus:border-primary focus:shadow-subtle transition-all" 
                   id="contact-name" 
                   name="name"
                   value={formData.name}
@@ -125,7 +105,7 @@ const EmergencyContact = () => {
                 <label className="block font-label-bold text-label-bold text-ink-black mb-base" htmlFor="relationship">Relationship</label>
                 <div className="relative">
                   <select 
-                    className="w-full bg-[#f9f8f3] border-[1.5px] border-ink-black rounded-xl p-3 pr-10 font-body-md text-on-surface appearance-none focus:outline-none focus:border-primary focus:shadow-[2px_2px_0px_0px_#1A1A1A] transition-all" 
+                    className="w-full bg-[#f9f8f3] border-outline rounded-xl p-3 pr-10 font-body-md text-on-surface appearance-none focus:outline-none focus:border-primary focus:shadow-subtle transition-all" 
                     id="relationship"
                     name="relationship"
                     value={formData.relationship}
@@ -150,7 +130,7 @@ const EmergencyContact = () => {
                 <label className="block font-label-bold text-label-bold text-ink-black mb-base" htmlFor="phone-number">Phone Number</label>
                 <div className="flex gap-2">
                   <select 
-                    className="w-24 bg-[#f9f8f3] border-[1.5px] border-ink-black rounded-xl p-3 font-body-md text-on-surface focus:outline-none focus:border-primary focus:shadow-[2px_2px_0px_0px_#1A1A1A] transition-all"
+                    className="w-24 bg-[#f9f8f3] border-outline rounded-xl p-3 font-body-md text-on-surface focus:outline-none focus:border-primary focus:shadow-subtle transition-all"
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleChange}
@@ -160,7 +140,7 @@ const EmergencyContact = () => {
                     <option value="+91">IN (+91)</option>
                   </select>
                   <input 
-                    className="flex-1 bg-[#f9f8f3] border-[1.5px] border-ink-black rounded-xl p-3 font-body-md text-on-surface focus:outline-none focus:border-primary focus:shadow-[2px_2px_0px_0px_#1A1A1A] transition-all" 
+                    className="flex-1 bg-[#f9f8f3] border-outline rounded-xl p-3 font-body-md text-on-surface focus:outline-none focus:border-primary focus:shadow-subtle transition-all" 
                     id="phone-number" 
                     name="phone"
                     value={formData.phone}
@@ -173,11 +153,11 @@ const EmergencyContact = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col-reverse sm:flex-row gap-stack-sm pt-stack-sm mt-stack-lg border-t-[1.5px] border-ink-black border-dashed">
-                <button onClick={handleSkip} className="flex-1 py-3 px-6 bg-surface-container-highest neo-border rounded-lg font-label-bold text-label-bold text-ink-black neo-shadow hover:bg-surface-dim neo-shadow-active transition-all" type="button">
+              <div className="flex flex-col-reverse sm:flex-row gap-stack-sm pt-stack-sm mt-stack-lg border-t-[1.5px] border-outline border-dashed">
+                <button onClick={handleSkip} className="flex-1 py-3 px-6 bg-surface-container-highest neo-border rounded-lg font-label-bold text-label-bold text-ink-black shadow-subtle hover:bg-surface-dim shadow-subtle-active transition-all" type="button">
                   Skip for Now
                 </button>
-                <button type="submit" className="flex-1 py-3 px-6 bg-primary neo-border rounded-lg font-label-bold text-label-bold text-white neo-shadow hover:bg-primary-fixed-variant neo-shadow-active transition-all flex justify-center items-center gap-2">
+                <button type="submit" className="flex-1 py-3 px-6 bg-primary neo-border rounded-lg font-label-bold text-label-bold text-white shadow-subtle hover:bg-primary-fixed-variant shadow-subtle-active transition-all flex justify-center items-center gap-2">
                   Continue <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </button>
               </div>

@@ -12,7 +12,8 @@ export default function BiofeedbackDashboardScreen() {
   const fetchBiofeedback = async () => {
     try {
       const token = await AsyncStorage.getItem('access_token');
-      const response = await fetch('http://10.0.2.2:8000/normal_user/tracking/biofeedback', {
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+      const response = await fetch(`${apiUrl}/normal_user/tracking/biofeedback`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

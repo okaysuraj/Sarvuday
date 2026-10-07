@@ -1,6 +1,6 @@
 # app/routes/counsellor/prescriptions.py
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Path, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models import Counsellor
@@ -25,7 +25,7 @@ async def create_prescription(
 
 @router.get("/{user_id}", response_model=PrescriptionListResponse, status_code=status.HTTP_200_OK, summary="Get user's prescriptions. Counsellor Authentication required")
 async def get_prescriptions(
-    user_id: str = Query,
+    user_id: str = Path(..., description="Target patient user ID"),
     current_user: Counsellor = Depends(ensure_counsellor_user),
     db: AsyncSession = Depends(get_db)
 ):

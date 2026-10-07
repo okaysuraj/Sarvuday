@@ -11,19 +11,21 @@ const RoleSelection = () => {
 
   return (
     <div className="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
-      <style>{`
-        .neo-shadow { box-shadow: 4px 4px 0px 0px rgba(26,26,26,1); }
-        .neo-shadow-hover:hover { box-shadow: 0px 0px 0px 0px rgba(26,26,26,1); transform: translate(4px, 4px); transition: all 0.2s ease-in-out; }
-      `}</style>
+      
 
       {/* TopAppBar */}
-      <header className="bg-surface dark:bg-surface-container-low docked full-width top-0 border-b-[1.5px] border-ink-black flex justify-between items-center w-full px-margin-desktop py-4 z-50">
+      <header className="bg-surface dark:bg-surface-container-low docked full-width top-0 border-b border-outline flex justify-between items-center w-full px-margin-desktop py-4 z-50">
         <div className="flex items-center gap-4">
           <button onClick={() => navigate(-1)} className="material-symbols-outlined text-primary dark:text-primary-fixed-dim text-2xl cursor-pointer hover:bg-surface-variant/20 rounded-full p-2 transition-all">
             arrow_back
           </button>
         </div>
-        <h1 className="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">SarvUday</h1>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-surface border border-outline/30 p-0.5 flex items-center justify-center overflow-hidden">
+            <img src="/images/sarvuday_logo.png" alt="SarvUday" className="w-full h-full object-contain rounded-md" />
+          </div>
+          <h1 className="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">SarvUday</h1>
+        </div>
         <div className="flex items-center gap-4">
           <span className="material-symbols-outlined text-primary dark:text-primary-fixed-dim text-2xl cursor-pointer hover:bg-surface-variant/20 rounded-full p-2 transition-all">account_circle</span>
         </div>
@@ -38,8 +40,8 @@ const RoleSelection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter max-w-6xl w-full">
           {/* Patient Card */}
-          <button onClick={() => handleRoleSelect('patient')} className="bg-surface-container-highest border-[1.5px] border-ink-black rounded-xl p-container-padding text-left neo-shadow neo-shadow-hover flex flex-col gap-stack-md group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary transition-all">
-            <div className="w-16 h-16 rounded-full bg-accent-pink border-[1.5px] border-ink-black flex items-center justify-center neo-shadow">
+          <button onClick={() => handleRoleSelect('patient')} className="bg-surface-container-highest border-outline rounded-xl p-container-padding text-left shadow-subtle shadow-subtle-hover flex flex-col gap-stack-md group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+            <div className="w-16 h-16 rounded-full bg-surface border-outline flex items-center justify-center shadow-subtle">
               <span className="material-symbols-outlined text-on-surface text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>psychiatry</span>
             </div>
             <div>
@@ -53,8 +55,8 @@ const RoleSelection = () => {
           </button>
 
           {/* Therapist Card */}
-          <button onClick={() => handleRoleSelect('therapist')} className="bg-surface-container-highest border-[1.5px] border-ink-black rounded-xl p-container-padding text-left neo-shadow neo-shadow-hover flex flex-col gap-stack-md group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary transition-all">
-            <div className="w-16 h-16 rounded-full bg-secondary-container border-[1.5px] border-ink-black flex items-center justify-center neo-shadow">
+          <button onClick={() => handleRoleSelect('therapist')} className="bg-surface-container-highest border-outline rounded-xl p-container-padding text-left shadow-subtle shadow-subtle-hover flex flex-col gap-stack-md group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+            <div className="w-16 h-16 rounded-full bg-secondary-container border-outline flex items-center justify-center shadow-subtle">
               <span className="material-symbols-outlined text-on-secondary-container text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
             </div>
             <div>
@@ -68,8 +70,8 @@ const RoleSelection = () => {
           </button>
 
           {/* Psychiatrist Card */}
-          <button onClick={() => handleRoleSelect('psychiatrist')} className="bg-surface-container-highest border-[1.5px] border-ink-black rounded-xl p-container-padding text-left neo-shadow neo-shadow-hover flex flex-col gap-stack-md group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary transition-all">
-            <div className="w-16 h-16 rounded-full bg-accent-sage border-[1.5px] border-ink-black flex items-center justify-center neo-shadow">
+          <button onClick={() => handleRoleSelect('psychiatrist')} className="bg-surface-container-highest border-outline rounded-xl p-container-padding text-left shadow-subtle shadow-subtle-hover flex flex-col gap-stack-md group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+            <div className="w-16 h-16 rounded-full bg-accent-sage border-outline flex items-center justify-center shadow-subtle">
               <span className="material-symbols-outlined text-on-surface text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_hospital</span>
             </div>
             <div>

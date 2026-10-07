@@ -31,8 +31,8 @@ const Notifications = () => {
     switch (type) {
       case 'appointment': return { icon: 'calendar_month', bg: 'bg-secondary-container', color: 'text-on-secondary-container' };
       case 'message': return { icon: 'chat', bg: 'bg-accent-sage', color: 'text-primary' };
-      case 'system': return { icon: 'lock', bg: 'bg-accent-orange', color: 'text-on-error-container' };
-      default: return { icon: 'star', bg: 'bg-accent-pink', color: 'text-primary' };
+      case 'system': return { icon: 'lock', bg: 'bg-surface', color: 'text-on-error-container' };
+      default: return { icon: 'star', bg: 'bg-surface', color: 'text-primary' };
     }
   };
 
@@ -45,12 +45,8 @@ const Notifications = () => {
   const earlier = notifications.slice(2);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-stack-lg p-margin-mobile md:p-margin-desktop bg-cream-bg flex-grow">
-      <style>{`
-        .sticker-container {
-            border: 1.5px solid #1A1A1A;
-        }
-      `}</style>
+    <div className="max-w-4xl mx-auto space-y-stack-lg p-margin-mobile md:p-margin-desktop bg-background flex-grow">
+      
       
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -58,7 +54,7 @@ const Notifications = () => {
           <h1 className="font-display-lg text-display-lg text-primary">Notifications</h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant">Stay updated on your mental wellness journey.</p>
         </div>
-        <button onClick={markAllAsRead} className="flex items-center gap-2 px-6 py-2 border-[1.5px] border-ink-black rounded-full font-label-bold text-label-bold hover:bg-surface-container transition-colors">
+        <button onClick={markAllAsRead} className="flex items-center gap-2 px-6 py-2 border-outline rounded-full font-label-bold text-label-bold hover:bg-surface-container transition-colors">
           Mark all as read
         </button>
       </div>
@@ -77,8 +73,8 @@ const Notifications = () => {
                 {today.map((notif, idx) => {
                   const style = getIconForType(notif.type);
                   return (
-                    <div key={idx} className="sticker-container bg-white rounded-[32px] p-container-padding flex items-start gap-6 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] transition-all cursor-pointer group">
-                      <div className={`w-14 h-14 shrink-0 rounded-2xl ${style.bg} border-[1.5px] border-ink-black flex items-center justify-center`}>
+                    <div key={idx} className="bg-surface border-outline rounded-xl bg-white rounded-xl p-container-padding flex items-start gap-6 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-subtle transition-all cursor-pointer group">
+                      <div className={`w-14 h-14 shrink-0 rounded-2xl ${style.bg} border-outline flex items-center justify-center`}>
                         <span className={`material-symbols-outlined ${style.color} text-3xl`}>{style.icon}</span>
                       </div>
                       <div className="flex-1">
@@ -106,8 +102,8 @@ const Notifications = () => {
                 {earlier.map((notif, idx) => {
                   const style = getIconForType(notif.type);
                   return (
-                    <div key={idx} className="sticker-container bg-surface-container-low rounded-[32px] p-container-padding flex items-start gap-6 hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all cursor-pointer group">
-                      <div className={`w-14 h-14 shrink-0 rounded-2xl ${style.bg} border-[1.5px] border-ink-black flex items-center justify-center`}>
+                    <div key={idx} className="bg-surface border-outline rounded-xl bg-surface-container-low rounded-xl p-container-padding flex items-start gap-6 hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all cursor-pointer group">
+                      <div className={`w-14 h-14 shrink-0 rounded-2xl ${style.bg} border-outline flex items-center justify-center`}>
                         <span className={`material-symbols-outlined ${style.color} text-3xl`}>{style.icon}</span>
                       </div>
                       <div className="flex-1">
@@ -129,12 +125,12 @@ const Notifications = () => {
       )}
 
       {/* Notification Preferences CTA */}
-      <div className="sticker-container bg-accent-pink rounded-[40px] p-10 flex flex-col md:flex-row items-center justify-between gap-gutter shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
+      <div className="bg-surface border-outline rounded-xl bg-surface rounded-xl p-10 flex flex-col md:flex-row items-center justify-between gap-gutter shadow-subtle">
         <div className="space-y-2 text-center md:text-left">
           <h2 className="font-headline-md text-headline-md text-ink-black">Notification Settings</h2>
           <p className="font-body-lg text-body-lg text-on-surface-variant">Tailor your experience. Choose what matters most to you.</p>
         </div>
-        <button className="px-8 py-4 bg-primary text-on-primary border-[1.5px] border-ink-black rounded-2xl font-label-bold text-label-bold shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all">
+        <button className="px-8 py-4 bg-primary text-on-primary border-outline rounded-2xl font-label-bold text-label-bold shadow-subtle active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all">
           Manage Preferences
         </button>
       </div>

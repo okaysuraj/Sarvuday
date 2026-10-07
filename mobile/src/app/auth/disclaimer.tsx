@@ -60,7 +60,7 @@ export default function MentalHealthDisclaimerScreen() {
 
         {/* Subtle help link below card */}
         <View className="mt-6 items-center">
-          <TouchableOpacity onPress={() => router.push('/crisis/chat')}>
+          <TouchableOpacity onPress={() => router.push('/emergency/hub' as any)}>
             <Text className="font-label-md text-outline font-bold text-sm hover:text-primary transition-colors underline">
               View Crisis Resources
             </Text>

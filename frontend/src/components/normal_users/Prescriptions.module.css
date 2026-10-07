@@ -1,80 +1,81 @@
-/* Prescriptions.module.css */
+/* Prescriptions.module.css — Minimalist System */
 
 .container {
-  padding: 2.5rem;
-  max-width: 1000px;
+  max-width: 960px;
   margin: 0 auto;
-  background: var(--color-surface-container-lowest);
-  border-radius: var(--radius-lg);
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
   font-family: var(--font-body);
   color: var(--color-on-surface);
 }
 
 .heading {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: var(--color-primary);
+  font-size: 1.75rem;
+  margin-bottom: 24px;
+  color: var(--color-on-surface);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 14px;
 }
 
 .card {
   background-color: var(--color-surface);
-  padding: 1.5rem;
-  border-radius: var(--radius-md);
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: var(--shadow-hard);
-  transition: transform 0.2s ease;
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-  transform: translate(-2px, -2px);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-card);
 }
 
 .diagnosis {
   font-family: var(--font-heading);
-  font-size: 1.5rem;
-  color: var(--color-primary);
-  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
 }
 
 .date {
-  font-size: 0.95rem;
+  font-size: 13px;
   color: var(--color-on-surface-variant);
-  margin-bottom: 1.5rem;
+  margin-bottom: 18px;
 }
 
 .sectionTitle {
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
   color: var(--color-on-surface);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .bulletList {
-  padding-left: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding-left: 20px;
+  margin-bottom: 16px;
   color: var(--color-on-surface);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .bulletList li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 4px;
 }
 
 .loading,
 .noData {
   text-align: center;
-  font-size: 1.25rem;
-  margin-top: 3rem;
+  font-size: 0.9rem;
+  margin-top: 40px;
   color: var(--color-on-surface-variant);
-  font-style: italic;
 }

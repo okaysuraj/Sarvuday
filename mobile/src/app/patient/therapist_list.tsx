@@ -113,7 +113,7 @@ export default function TherapistListScreen() {
 
       {/* BottomNavBar */}
       <View className="absolute bottom-0 w-full bg-[#fbf8ff] border-t-[1.5px] border-ink-black flex-row justify-around items-center h-20 px-4 z-50">
-        <TouchableOpacity className="flex-col items-center justify-center active:scale-95 transition-transform" onPress={() => router.push('/patient/dashboard')}>
+        <TouchableOpacity className="flex-col items-center justify-center active:scale-95 transition-transform" onPress={() => router.push('/(tabs)')}>
           <Ionicons name="home" size={24} color="#434655" className="mb-1" />
           <Text className="font-label-bold text-on-surface-variant font-bold text-xs">Home</Text>
         </TouchableOpacity>
@@ -133,3 +133,4 @@ export default function TherapistListScreen() {
     </View>
   );
 }
+

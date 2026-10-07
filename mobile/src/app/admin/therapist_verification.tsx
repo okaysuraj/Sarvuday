@@ -14,7 +14,8 @@ export default function TherapistVerificationScreen() {
     const fetchCounsellor = async () => {
       try {
         const token = await AsyncStorage.getItem('access_token');
-        const res = await fetch(`http://10.0.2.2:8000/content/counsellors/${id}`, {
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+        const res = await fetch(`${apiUrl}/content/counsellors/${id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -37,7 +38,8 @@ export default function TherapistVerificationScreen() {
   const handleAction = async (action: 'approve' | 'disapprove') => {
     try {
       const token = await AsyncStorage.getItem('access_token');
-      const res = await fetch(`http://10.0.2.2:8000/admin/counsellors/${action}/${id}`, {
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.37:8000';
+      const res = await fetch(`${apiUrl}/admin/counsellors/${action}/${id}`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

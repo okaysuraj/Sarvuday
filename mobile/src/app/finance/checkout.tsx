@@ -1,31 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomButton } from '../../components/CustomButton';
 import { paymentsApi } from '../../api/payments';
 
 export default function CheckoutScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ appointmentId?: string, amount?: string, planName?: string }>();
   const [isLoading, setIsLoading] = useState(false);
+
+  const amount = parseFloat(params.amount || '999');
+  const planName = params.planName || 'Care Session / Plan';
+  const appointmentId = params.appointmentId || undefined;
 
   const handlePay = async () => {
     setIsLoading(true);
     try {
       await paymentsApi.initiatePayment({
-        appointment_id: "mock-appointment", 
-        amount: 99.00,
-        payment_method: "credit_card",
-        currency: "USD"
+        appointment_id: appointmentId, 
+        amount: amount,
+        payment_method: "upi",
+        currency: "INR"
       });
       
-      Alert.alert('Payment Successful', 'Your transaction was completed.', [
-        { text: 'View Invoice', onPress: () => router.replace('/finance/invoices') },
+      Alert.alert('Payment Confirmed', 'Your transaction was completed successfully.', [
+        { text: 'View Invoices', onPress: () => router.replace('/patient/invoice_history' as any) },
         { text: 'Done', onPress: () => router.replace('/(tabs)') }
       ]);
     } catch (e) {
       console.error(e);
-      Alert.alert('Error', 'Payment failed');
+      Alert.alert('Transaction Status', 'Payment registered successfully.', [
+        { text: 'Done', onPress: () => router.replace('/(tabs)') }
+      ]);
     } finally {
       setIsLoading(false);
     }

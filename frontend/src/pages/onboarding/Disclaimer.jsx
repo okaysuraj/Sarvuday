@@ -1,101 +1,122 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Disclaimer = () => {
   const navigate = useNavigate();
+  const [showCrisisModal, setShowCrisisModal] = useState(false);
 
   const handleUnderstand = (e) => {
     e.preventDefault();
     navigate('/onboarding/emergency-contact');
   };
 
-  const handleCrisisResources = (e) => {
-    e.preventDefault();
-    // In a real app, this might open a modal or navigate to a crisis resources page
-    alert('Crisis resources would be displayed here.');
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center p-margin-desktop font-body-lg text-on-surface" style={{
-      backgroundColor: '#fbf8ff',
-      backgroundImage: `
-        radial-gradient(circle at 20% 30%, rgba(217, 217, 230, 0.4) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255, 218, 214, 0.4) 0%, transparent 40%)
-      `,
-      backgroundAttachment: 'fixed'
-    }}>
-      <style>{`
-        .btn-primary {
-            transition: all 0.2s ease;
-            box-shadow: 4px 4px 0px 0px rgba(26,26,26,1);
-        }
-        .btn-primary:hover, .btn-primary:active {
-            box-shadow: 0px 0px 0px 0px rgba(26,26,26,1);
-            transform: translate(2px, 2px);
-        }
-        
-        .btn-secondary {
-            transition: all 0.2s ease;
-            box-shadow: 4px 4px 0px 0px rgba(26,26,26,1);
-        }
-        .btn-secondary:hover, .btn-secondary:active {
-            box-shadow: 0px 0px 0px 0px rgba(26,26,26,1);
-            transform: translate(2px, 2px);
-        }
-
-        .card-shadow {
-            box-shadow: 8px 8px 0px 0px rgba(26,26,26,1);
-        }
-      `}</style>
-
-      <main className="w-full max-w-4xl relative z-10">
-        {/* Decorative Memphis Elements */}
-        <div className="absolute -top-12 -left-12 w-24 h-24 bg-accent-pink rounded-full border-[1.5px] border-ink-black z-0 opacity-80 mix-blend-multiply hidden md:block"></div>
-        <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-accent-sage rounded-[24px] border-[1.5px] border-ink-black z-0 rotate-12 opacity-80 mix-blend-multiply hidden md:block"></div>
-        
+    <div className="min-h-screen flex items-center justify-center p-margin-desktop font-body-lg text-on-surface bg-[#FAF9F6]">
+      <main className="w-full max-w-3xl relative z-10">
         {/* Main Card */}
-        <div className="bg-surface-container-lowest rounded-[32px] border-[1.5px] border-ink-black p-12 md:p-16 card-shadow relative z-10 flex flex-col items-center text-center">
-          
+        <div className="bg-white rounded-2xl border border-stone-200 p-8 md:p-14 shadow-subtle flex flex-col items-center text-center">
           {/* Icon */}
-          <div className="w-20 h-20 bg-accent-orange rounded-full border-[1.5px] border-ink-black flex items-center justify-center mb-8 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-            <span className="material-symbols-outlined text-error text-[48px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-              priority_high
+          <div className="w-16 h-16 bg-rose-50 rounded-full border border-rose-200 flex items-center justify-center mb-6">
+            <span className="material-symbols-outlined text-rose-600 text-3xl">
+              health_and_safety
             </span>
           </div>
 
           {/* Heading */}
-          <h1 className="font-display-lg text-display-lg text-on-surface mb-6">Important Disclaimer</h1>
+          <h1 className="font-display-lg text-3xl md:text-4xl text-on-surface font-bold mb-4">Clinical Safety Notice</h1>
           
           {/* Warning Box */}
-          <div className="w-full bg-error-container border-[1.5px] border-error rounded-xl p-6 mb-8 shadow-[4px_4px_0px_0px_rgba(186,26,26,0.2)]">
-            <p className="font-body-lg text-on-error-container font-bold">
-              SarvUday is an AI-powered supportive tool, NOT a replacement for professional mental health care or medical advice.
+          <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+            <p className="text-xs md:text-sm text-amber-900 font-semibold leading-relaxed">
+              SarvUday is a supportive tele-counselling &amp; mental well-being platform, NOT a replacement for emergency psychiatric interventions or acute crisis stabilization.
             </p>
           </div>
 
           {/* Explanation Text */}
-          <div className="max-w-2xl space-y-4 mb-12 text-on-surface-variant font-body-lg">
+          <div className="max-w-xl space-y-3 mb-10 text-on-surface-variant text-sm leading-relaxed">
             <p>
-              The insights, mood tracking, and conversations provided by this platform are designed to promote general well-being and self-awareness. 
+              The personalized reflections, mood analytics, and companion dialogues are created to foster emotional insight and self-care.
             </p>
             <p>
-              If you are experiencing a mental health crisis, severe distress, or having thoughts of self-harm, please seek immediate professional assistance or contact emergency services in your area.
+              If you or someone you know is experiencing acute emotional crisis, severe panic, or thoughts of self-harm, please reach out directly to emergency responders or 24/7 crisis helplines.
             </p>
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col md:flex-row gap-6 w-full max-w-lg justify-center items-center">
-            <button onClick={handleUnderstand} className="w-full md:w-auto px-8 py-4 bg-primary text-on-primary font-label-bold text-label-bold rounded-xl border-[1.5px] border-ink-black btn-primary flex items-center justify-center gap-2">
-              I Understand
-              <span className="material-symbols-outlined text-[20px]">check_circle</span>
+          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md justify-center items-center">
+            <button
+              onClick={handleUnderstand}
+              className="w-full sm:w-auto px-8 py-3.5 bg-primary text-on-primary font-bold text-sm rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-all"
+            >
+              <span>I Understand &amp; Agree</span>
+              <span className="material-symbols-outlined text-base">check_circle</span>
             </button>
-            <button onClick={handleCrisisResources} className="w-full md:w-auto px-8 py-4 bg-secondary-container text-on-secondary-container font-label-bold text-label-bold rounded-xl border-[1.5px] border-ink-black btn-secondary flex items-center justify-center gap-2">
-              View Crisis Resources
-              <span className="material-symbols-outlined text-[20px]">local_hospital</span>
+            <button
+              onClick={() => setShowCrisisModal(true)}
+              className="w-full sm:w-auto px-6 py-3.5 bg-stone-100 text-stone-800 border border-stone-300 font-bold text-sm rounded-xl flex items-center justify-center gap-2 hover:bg-stone-200 transition-all"
+            >
+              <span className="material-symbols-outlined text-base text-rose-600">call</span>
+              <span>Crisis Helplines</span>
             </button>
           </div>
         </div>
       </main>
+
+      {/* Crisis Helplines Modal */}
+      {showCrisisModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-lg w-full border border-stone-300 shadow-dialog">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center">
+                <span className="material-symbols-outlined">support_agent</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg text-ink-black">24/7 Emergency Helplines</h3>
+                <p className="text-xs text-on-surface-variant">Confidential, toll-free, immediate human support.</p>
+              </div>
+            </div>
+
+            <div className="space-y-3 my-4 text-xs">
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 flex justify-between items-center">
+                <div>
+                  <p className="font-bold text-stone-900 text-sm">Tele-MANAS (Govt of India)</p>
+                  <p className="text-stone-500">National Tele Mental Health Programme</p>
+                </div>
+                <a href="tel:14416" className="px-3 py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-xs">
+                  Call 14416
+                </a>
+              </div>
+
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 flex justify-between items-center">
+                <div>
+                  <p className="font-bold text-stone-900 text-sm">Vandrevala Foundation</p>
+                  <p className="text-stone-500">24/7 Multilingual Crisis Helpline</p>
+                </div>
+                <a href="tel:+919999666555" className="px-3 py-1.5 bg-primary text-white font-bold rounded-lg text-xs">
+                  +91 9999 666 555
+                </a>
+              </div>
+
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 flex justify-between items-center">
+                <div>
+                  <p className="font-bold text-stone-900 text-sm">International Crisis Lifeline</p>
+                  <p className="text-stone-500">USA &amp; Global Routing</p>
+                </div>
+                <a href="tel:988" className="px-3 py-1.5 bg-rose-600 text-white font-bold rounded-lg text-xs">
+                  Call 988
+                </a>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowCrisisModal(false)}
+              className="w-full mt-2 py-2.5 rounded-xl border border-stone-300 font-bold text-xs hover:bg-stone-50"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

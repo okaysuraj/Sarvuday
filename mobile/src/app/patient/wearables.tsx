@@ -27,7 +27,7 @@ export default function WearablesScreen() {
         </View>
 
         <View className="flex-1 flex-col gap-2">
-          <TouchableOpacity className="flex-row items-center gap-3 p-3 rounded-lg hover:bg-surface-variant transition-colors" onPress={() => router.push('/patient/dashboard')}>
+          <TouchableOpacity className="flex-row items-center gap-3 p-3 rounded-lg hover:bg-surface-variant transition-colors" onPress={() => router.push('/(tabs)')}>
             <Ionicons name="happy-outline" size={24} color="#1A1A1A" />
             <Text className="text-ink-black font-body-md">Mood Tracker</Text>
           </TouchableOpacity>
@@ -279,7 +279,7 @@ export default function WearablesScreen() {
 
       {/* Bottom Navigation Bar */}
       <View className="md:hidden absolute bottom-0 w-full z-50 bg-[#fbf8ff] border-t-[1.5px] border-ink-black h-20 px-4 flex-row justify-around items-center">
-        <TouchableOpacity className="flex-col items-center justify-center" onPress={() => router.push('/patient/dashboard')}>
+        <TouchableOpacity className="flex-col items-center justify-center" onPress={() => router.push('/(tabs)')}>
           <Ionicons name="home-outline" size={24} color="#434655" />
           <Text className="font-label-md text-on-surface-variant text-xs">Home</Text>
         </TouchableOpacity>
@@ -300,3 +300,4 @@ export default function WearablesScreen() {
     </View>
   );
 }
+

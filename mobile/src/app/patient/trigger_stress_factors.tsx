@@ -16,7 +16,7 @@ export default function TriggerStressFactorsScreen() {
 
   const handleNext = () => {
     // Save selections and go next
-    router.replace('/patient/dashboard');
+    router.replace('/(tabs)');
   };
 
   const StressorItem = ({ value, label, iconName, bgColor }: { value: string, label: string, iconName: keyof typeof Ionicons.glyphMap, bgColor: string }) => {
@@ -130,3 +130,4 @@ export default function TriggerStressFactorsScreen() {
     </View>
   );
 }
+

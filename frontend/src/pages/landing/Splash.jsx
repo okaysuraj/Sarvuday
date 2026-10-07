@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import sarvudayLogo from '../../assets/sarvuday_logo.png';
 
 const Splash = () => {
   const navigate = useNavigate();
@@ -41,17 +42,15 @@ const Splash = () => {
         {/* Sticker Graphic Centerpiece */}
         <div className={`relative group cursor-pointer transition-transform duration-200 ${scale ? 'scale-[1.02]' : ''}`}>
           {/* Background Accent Sticker */}
-          <div className="absolute inset-0 bg-secondary-container rounded-full transform translate-x-4 translate-y-4 border-[1.5px] border-ink-black transition-transform duration-300 group-hover:translate-x-2 group-hover:translate-y-2"></div>
+          <div className="absolute inset-0 bg-secondary-container rounded-full transform translate-x-4 translate-y-4 border-outline transition-transform duration-300 group-hover:translate-x-2 group-hover:translate-y-2"></div>
           
           {/* Main Content Sticker */}
-          <div className="relative bg-surface rounded-full w-[400px] h-[400px] flex flex-col items-center justify-center border-[2px] border-ink-black shadow-[8px_8px_0px_0px_#1A1A1A] transition-all duration-300 group-hover:shadow-[4px_4px_0px_0px_#1A1A1A] group-hover:translate-x-[4px] group-hover:translate-y-[4px]">
+          <div className="relative bg-surface rounded-full w-[400px] h-[400px] flex flex-col items-center justify-center border-outline shadow-subtle transition-all duration-300 group-hover:shadow-subtle group-hover:translate-x-[4px] group-hover:translate-y-[4px]">
             {/* Logo Icon */}
             <div className="mb-stack-md relative">
-              <div className="absolute -inset-4 bg-accent-pink rounded-full opacity-50 blur-xl animate-pulse"></div>
-              <div className="w-32 h-32 bg-primary-container rounded-3xl flex items-center justify-center border-[1.5px] border-ink-black transform rotate-12 transition-transform duration-500 group-hover:rotate-0">
-                <span className="material-symbols-outlined text-7xl text-on-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  psychology_alt
-                </span>
+              <div className="absolute -inset-4 bg-amber-400/25 rounded-full opacity-60 blur-xl animate-pulse"></div>
+              <div className="w-32 h-32 rounded-3xl overflow-hidden border-[1.5px] border-[#18181B]/15 shadow-md bg-white p-2 flex items-center justify-center transform transition-transform duration-500 group-hover:scale-105">
+                <img src={sarvudayLogo} alt="SarvUday Logo" className="w-full h-full object-contain" />
               </div>
             </div>
             

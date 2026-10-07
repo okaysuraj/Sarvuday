@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Image, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../store/authStore';
 import { useRouter } from 'expo-router';
@@ -15,11 +15,10 @@ export const TherapistDashboard = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mock pending tasks state
   const [tasks, setTasks] = useState([
-    { id: 1, text: 'Complete 3 session notes', due: 'Due by EOD today', checked: false },
-    { id: 2, text: 'Update treatment plan: Priya', due: 'Next session tomorrow', checked: false },
-    { id: 3, text: "Review Marcus's intake form", due: 'New Patient', checked: false },
+    { id: 1, text: 'Complete session notes', due: 'Due today', checked: false },
+    { id: 2, text: 'Review intake assessments', due: 'Priya S.', checked: false },
+    { id: 3, text: 'Prepare follow-up materials', due: 'Marcus T.', checked: false },
   ]);
 
   useEffect(() => {
@@ -48,144 +47,136 @@ export const TherapistDashboard = () => {
   if (isLoading) {
     return (
       <View className="flex-1 bg-background justify-center items-center">
-        <ActivityIndicator size="large" color="#002da5" />
+        <ActivityIndicator size="small" color="#18181B" />
       </View>
     );
   }
 
   return (
-    <ScrollView className="flex-1 bg-background" contentContainerStyle={{ padding: 24, paddingBottom: 100 }}>
+    <ScrollView className="flex-1 bg-background" contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 24, paddingBottom: 100 }}>
       {/* Header Section */}
       <View className="flex-row items-center justify-between mb-8">
-        <View className="flex-row items-center gap-4">
-          <View className="w-12 h-12 rounded-full border-[1.5px] border-ink-black overflow-hidden bg-accent-sage">
+        <View className="flex-row items-center gap-3">
+          <View className="w-11 h-11 rounded-full border border-outline overflow-hidden bg-surface-container">
             <Image 
               source={{ uri: 'https://api.dicebear.com/7.x/notionists/png?seed=DrRivera' }}
               className="w-full h-full object-cover"
             />
           </View>
           <View>
-            <Text className="font-headline-sm text-on-background font-bold text-xl">Good Morning, Dr. {user?.name || dashboardData?.name || 'Therapist'}</Text>
-            <Text className="font-label-md text-on-surface-variant opacity-70">{format(new Date(), 'eeee, MMM dd')}</Text>
+            <Text className="text-on-surface text-lg font-bold tracking-tight">Dr. {user?.name || dashboardData?.name || 'Therapist'}</Text>
+            <Text className="text-on-surface-variant text-xs">{format(new Date(), 'eeee, MMM dd')}</Text>
           </View>
         </View>
-        <TouchableOpacity className="w-10 h-10 flex items-center justify-center rounded-xl border-[1.5px] border-ink-black bg-surface shadow-[2px_2px_0px_0px_#1A1A1A]">
-          <Ionicons name="notifications" size={20} color="#1b1b20" />
+        <TouchableOpacity className="w-10 h-10 flex items-center justify-center rounded-full border border-outline bg-surface">
+          <Ionicons name="notifications-outline" size={18} color="#18181B" />
         </TouchableOpacity>
       </View>
 
       {/* Today's Sessions Section */}
-      <View className="mb-8">
-        <View className="flex-row justify-between items-end mb-4">
-          <Text className="font-headline-md text-on-background font-bold text-2xl">Today's Sessions</Text>
-          <TouchableOpacity>
-            <Text className="font-label-bold text-primary underline underline-offset-4">View Full Calendar</Text>
+      <View className="mb-6">
+        <View className="flex-row justify-between items-center mb-3.5">
+          <Text className="text-on-surface font-semibold text-base">Today's Schedule</Text>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/appointments')}>
+            <Text className="text-on-surface-variant text-xs font-medium">Calendar</Text>
           </TouchableOpacity>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="pb-4 -mx-6 px-6">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="pb-2 -mx-5 px-5">
           {appointments.length > 0 ? appointments.map((appt, idx) => (
-            <View key={appt.appointment_id || idx} className={`mr-4 w-[280px] bg-surface rounded-[32px] border-[1.5px] border-ink-black p-6 shadow-[4px_4px_0px_0px_#1A1A1A] flex-col gap-4 ${idx > 0 ? 'opacity-90 bg-accent-pink' : ''}`}>
-              <View className="flex-row justify-between items-start">
-                <View className="w-14 h-14 rounded-full border-[1.5px] border-ink-black overflow-hidden bg-accent-sage">
+            <View key={appt.appointment_id || idx} className="mr-3 w-[260px] bg-surface rounded-2xl border border-outline p-5 flex-col justify-between">
+              <View className="flex-row justify-between items-start mb-3">
+                <View className="w-10 h-10 rounded-full border border-outline overflow-hidden bg-surface-container">
                   <Image source={{ uri: `https://api.dicebear.com/7.x/notionists/png?seed=${appt.user_id}` }} className="w-full h-full object-cover" />
                 </View>
-                <View className="px-3 py-1 bg-secondary-container border-[1.5px] border-ink-black rounded-full">
-                  <Text className="text-on-secondary-container font-label-bold text-[10px] uppercase">
-                    {idx === 0 ? 'IN 15 MIN' : 'UPCOMING'}
+                <View className="px-2.5 py-0.5 bg-secondary-container rounded-full">
+                  <Text className="text-on-secondary-container text-[10px] font-semibold uppercase">
+                    {idx === 0 ? 'Next Up' : 'Upcoming'}
                   </Text>
                 </View>
               </View>
-              <View>
-                <Text className="font-headline-sm text-ink-black font-bold text-lg">Patient ID: {appt.user_id}</Text>
-                <View className="flex-row items-center gap-2 mt-1">
-                  <Ionicons name="time-outline" size={14} color="#434655" />
-                  <Text className="font-body-md text-on-surface-variant text-sm">
-                    {format(new Date(appt.scheduled_time), 'hh:mm a')}
-                  </Text>
-                </View>
+
+              <View className="mb-4">
+                <Text className="text-on-surface font-semibold text-sm">Consultation</Text>
+                <Text className="text-on-surface-variant text-xs mt-0.5">
+                  {format(new Date(appt.scheduled_time), 'hh:mm a')} • {appt.session_type || 'Video'}
+                </Text>
               </View>
-              <View className="flex-row items-center gap-2">
-                <View className="px-3 py-1 bg-surface-variant border-[1.5px] border-ink-black rounded-lg">
-                  <Text className="font-label-md text-xs">{appt.session_type || 'Session'}</Text>
-                </View>
-                <View className="px-3 py-1 bg-accent-sage border-[1.5px] border-ink-black rounded-lg">
-                  <Text className="font-label-md text-xs">Video</Text>
-                </View>
-              </View>
+
               {idx === 0 ? (
-                <TouchableOpacity onPress={() => router.push(`/session/${appt.appointment_id}` as any)} className="mt-2 w-full py-3 bg-primary border-[1.5px] border-ink-black rounded-2xl items-center shadow-[4px_4px_0px_0px_#1A1A1A]">
-                  <Text className="text-on-primary font-label-bold">Join Call</Text>
+                <TouchableOpacity 
+                  onPress={() => router.push(`/session/${appt.appointment_id}` as any)} 
+                  className="w-full py-2.5 bg-primary rounded-xl items-center"
+                >
+                  <Text className="text-white text-xs font-medium">Join Call</Text>
                 </TouchableOpacity>
               ) : (
-                <TouchableOpacity className="mt-2 w-full py-3 bg-surface border-[1.5px] border-ink-black rounded-2xl items-center shadow-[2px_2px_0px_0px_#1A1A1A]">
-                  <Text className="text-ink-black font-label-bold">Prepare Notes</Text>
+                <TouchableOpacity className="w-full py-2.5 bg-surface-container border border-outline rounded-xl items-center">
+                  <Text className="text-on-surface text-xs font-medium">Session Notes</Text>
                 </TouchableOpacity>
               )}
             </View>
           )) : (
-            <View className="w-[300px] bg-surface rounded-[32px] border-[1.5px] border-ink-black p-6 shadow-[4px_4px_0px_0px_#1A1A1A] items-center justify-center">
-               <Text className="font-body-md text-on-surface-variant">No appointments scheduled today.</Text>
+            <View className="w-[280px] bg-surface rounded-2xl border border-outline p-6 items-center justify-center">
+               <Text className="text-on-surface-variant text-xs">No sessions scheduled for today.</Text>
             </View>
           )}
         </ScrollView>
       </View>
 
-      {/* Patient Highlights */}
-      <View className="mb-8">
-        <View className="flex-row items-center gap-3 mb-4">
-          <Text className="font-headline-md text-on-background font-bold text-2xl">Patient Highlights</Text>
-          <View className="px-2 py-0.5 bg-primary-container border-[1.5px] border-ink-black rounded-md">
-            <Text className="text-on-primary-container text-[10px] font-bold">AI POWERED</Text>
+      {/* Patient Insights / Alerts */}
+      <View className="mb-6">
+        <View className="flex-row items-center justify-between mb-3.5">
+          <Text className="text-on-surface font-semibold text-base">Clinical Alerts</Text>
+          <View className="px-2 py-0.5 bg-surface-container rounded-md border border-outline">
+            <Text className="text-on-surface-variant text-[10px] font-medium uppercase tracking-wider">AI Monitored</Text>
           </View>
         </View>
 
-        <View className="bg-accent-pink border-[1.5px] border-ink-black rounded-[24px] p-6 shadow-[4px_4px_0px_0px_#1A1A1A] flex-row gap-4">
-          <View className="w-12 h-12 bg-surface border-[1.5px] border-ink-black rounded-2xl flex items-center justify-center shadow-[2px_2px_0px_0px_#1A1A1A]">
-            <Ionicons name="trending-down" size={24} color="#ba1a1a" />
+        <View className="bg-surface border border-outline rounded-2xl p-5 flex-row gap-3.5">
+          <View className="w-9 h-9 bg-accent-pink rounded-lg flex items-center justify-center shrink-0">
+            <Ionicons name="alert-circle-outline" size={18} color="#932924" />
           </View>
           <View className="flex-1">
-            <Text className="font-label-bold text-lg text-ink-black font-bold">Aarav's mood dipped 20%</Text>
-            <Text className="font-body-md text-sm text-ink-black opacity-80 mt-1">Significant decline in journal sentiment scores over the last 48 hours.</Text>
-            <TouchableOpacity className="mt-2 flex-row items-center gap-1">
-              <Text className="text-primary font-label-bold">Review Journal</Text>
-              <Ionicons name="arrow-forward" size={14} color="#002da5" />
+            <Text className="text-sm font-semibold text-on-surface">Sentiment dip observed</Text>
+            <Text className="text-xs text-on-surface-variant mt-0.5 leading-relaxed">Recent journal reflection indicates elevated stress markers for patient session.</Text>
+            <TouchableOpacity className="mt-2.5">
+              <Text className="text-xs font-semibold text-primary">View Clinical Timeline →</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
 
       {/* Pending Tasks */}
-      <View className="mb-8">
-        <Text className="font-headline-md text-on-background font-bold text-2xl mb-4">Pending Tasks</Text>
-        <View className="bg-surface border-[1.5px] border-ink-black rounded-[32px] p-6 shadow-[4px_4px_0px_0px_#1A1A1A] flex-col gap-4">
+      <View className="mb-6">
+        <Text className="text-on-surface font-semibold text-base mb-3.5">Tasks & Notes</Text>
+        <View className="bg-surface border border-outline rounded-2xl p-4 flex-col gap-2">
           {tasks.map(task => (
             <TouchableOpacity 
               key={task.id} 
               onPress={() => toggleTask(task.id)}
-              className="flex-row items-center gap-4 p-3 bg-surface-container rounded-2xl border-[1.5px] border-transparent active:border-ink-black"
+              className="flex-row items-center gap-3 p-2.5 rounded-xl bg-surface-container-low"
             >
-              <View className={`w-6 h-6 rounded border-2 border-ink-black items-center justify-center ${task.checked ? 'bg-primary' : 'bg-surface'}`}>
-                {task.checked && <Ionicons name="checkmark" size={16} color="#ffffff" />}
+              <View className={`w-5 h-5 rounded border border-outline items-center justify-center ${task.checked ? 'bg-primary' : 'bg-surface'}`}>
+                {task.checked && <Ionicons name="checkmark" size={13} color="#FFFFFF" />}
               </View>
               <View className="flex-1">
-                <Text className={`font-label-bold ${task.checked ? 'opacity-50 line-through' : 'text-ink-black'}`}>{task.text}</Text>
-                <Text className="text-xs text-on-surface-variant mt-1">{task.due}</Text>
+                <Text className={`text-xs font-medium ${task.checked ? 'line-through text-on-surface-variant' : 'text-on-surface'}`}>{task.text}</Text>
+                <Text className="text-[10px] text-on-surface-variant mt-0.5">{task.due}</Text>
               </View>
             </TouchableOpacity>
           ))}
-          <TouchableOpacity className="mt-4 w-full py-4 border-[1.5px] border-dashed border-ink-black rounded-2xl items-center justify-center">
-            <Text className="font-label-bold text-on-surface-variant">+ Add Custom Task</Text>
-          </TouchableOpacity>
         </View>
       </View>
 
-      {/* Weekly Summary Banner */}
-      <View className="bg-secondary-container border-[1.5px] border-ink-black rounded-[32px] p-8 shadow-[4px_4px_0px_0px_#1A1A1A] flex-row items-center justify-between">
-        <View className="flex-col gap-2">
-          <Text className="font-headline-sm text-ink-black font-bold">Earnings This Week</Text>
-          <Text className="font-display-lg text-ink-black text-4xl font-bold">${dashboardData?.revenue?.toFixed(2) || '0.00'}</Text>
-          <Text className="font-label-md text-on-secondary-fixed-variant opacity-80">+12% from last week</Text>
+      {/* Weekly Summary Bento */}
+      <View className="bg-surface border border-outline rounded-2xl p-5 flex-row items-center justify-between">
+        <View>
+          <Text className="text-xs font-medium text-on-surface-variant">Weekly Earnings</Text>
+          <Text className="text-2xl font-bold text-on-surface tracking-tight mt-1">${dashboardData?.revenue?.toFixed(2) || '0.00'}</Text>
+        </View>
+        <View className="px-3 py-1 rounded-full bg-secondary-container">
+          <Text className="text-on-secondary-container text-xs font-medium">On Track</Text>
         </View>
       </View>
     </ScrollView>

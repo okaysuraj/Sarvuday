@@ -68,7 +68,7 @@ export default function LoginScreen() {
           {/* Login Button */}
           <TouchableOpacity 
             className="mt-4 w-full bg-primary rounded-xl border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] active:translate-y-[2px] active:translate-x-[2px] active:shadow-none transition-transform flex-row justify-center items-center gap-2 py-3"
-            onPress={() => router.push('/patient/dashboard')}
+            onPress={() => router.push('/(tabs)')}
           >
             <Text className="text-white font-label-bold font-bold">Log In</Text>
             <Ionicons name="arrow-forward" size={20} color="#ffffff" />
@@ -104,3 +104,4 @@ export default function LoginScreen() {
     </View>
   );
 }
+

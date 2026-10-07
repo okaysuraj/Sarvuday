@@ -146,7 +146,7 @@ export default function TherapistsTabScreen() {
                     </View>
                   </View>
                   <TouchableOpacity 
-                    onPress={() => router.push(`/therapist/${therapist.user_id}`)}
+                    onPress={() => router.push('/patient/therapist_reviews' as any)}
                     className="bg-primary border-[1.5px] border-ink-black rounded-xl py-3 items-center shadow-[4px_4px_0px_0px_#1A1A1A] mt-2"
                   >
                     <Text className="text-white font-label-bold font-bold">View Profile</Text>
