@@ -32,7 +32,7 @@ const RoleSelection = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center justify-center p-margin-desktop">
+      <div className="flex-grow flex flex-col items-center justify-center p-margin-desktop">
         <div className="text-center mb-stack-lg max-w-2xl">
           <h2 className="font-display-lg text-display-lg text-on-surface mb-stack-sm">How would you like to use SarvUday?</h2>
           <p className="font-body-lg text-body-lg text-on-surface-variant">Select your role to personalize your experience and access the right tools for your journey.</p>
@@ -84,7 +84,7 @@ const RoleSelection = () => {
             </div>
           </button>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../utils/axiosInstance';
+import { toast } from 'react-toastify';
 
 const TriggerStressFactors = () => {
   const navigate = useNavigate();
   const [selectedTriggers, setSelectedTriggers] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const save = async () => {
+    if (!selectedTriggers.length || saving) return;
+    setSaving(true);
+    try {
+      await axiosInstance.post('/user/tracking/journal', { text: `Recorded stress triggers: ${selectedTriggers.join(', ')}`, triggers: selectedTriggers });
+      navigate('/stress/analysis');
+    } catch { toast.error('Your triggers could not be saved. Please try again.'); }
+    finally { setSaving(false); }
+  };
 
   const triggers = [
     { id: 'work', icon: 'work', label: 'Work' },
@@ -85,10 +97,11 @@ const TriggerStressFactors = () => {
             Previous
           </button>
           <button 
-            onClick={() => navigate('/dashboard')}
+            onClick={save}
+            disabled={!selectedTriggers.length || saving}
             className="bg-primary text-on-primary neo-border px-6 md:px-8 py-3 rounded-lg font-label-bold text-label-bold shadow-subtle transition-all duration-100 flex items-center gap-2"
           >
-            Next
+            {saving ? 'Saving…' : 'Save triggers'}
             <span className="material-symbols-outlined">arrow_forward</span>
           </button>
         </div>

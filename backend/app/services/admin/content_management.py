@@ -1,7 +1,7 @@
 # app/services/admin/content_management.py
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import disorders_collection
+from app.database import sync_disorders_collection as disorders_collection
 from fastapi import HTTPException, status, UploadFile
 from app.utils.unique_id_generation import get_next_disorder_id
 import json

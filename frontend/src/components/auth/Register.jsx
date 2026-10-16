@@ -143,7 +143,7 @@ const Register = () => {
         const result = await confirmationResult.confirm(otpCode);
         const idToken = await result.user.getIdToken();
         await handleBackendRegister(idToken);
-      } catch (error) {
+      } catch {
         toast.error('Invalid OTP.');
       }
     } else if (registerMethod === 'phone' && !otpSent) {
@@ -153,7 +153,7 @@ const Register = () => {
 
   return (
     <div className="bg-[#FAF9F6] min-h-[calc(100vh-64px)] flex items-center justify-center p-4 sm:p-6 md:p-10 font-body-md text-[#121214] selection:bg-[#18181B] selection:text-white">
-      <main className="w-full max-w-4xl flex flex-col lg:flex-row rounded-2xl overflow-hidden border-[#EAEAEA] shadow-sm bg-white my-8">
+      <div className="w-full max-w-4xl flex flex-col lg:flex-row rounded-2xl overflow-hidden border-[#EAEAEA] shadow-sm bg-white my-8">
         {/* Left Side: Clinical Mission & Peace */}
         <div className="hidden lg:flex lg:w-5/12 bg-[#F5F4F0] border-r border-[#EAEAEA] flex-col justify-between p-10">
           <div className="space-y-6">
@@ -311,7 +311,7 @@ const Register = () => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

@@ -23,35 +23,43 @@ const MedicationPlan = () => {
     fetchMedications();
   }, []);
 
-  const handleToggleTaken = (medId) => {
-    setMedications(prev => prev.map(m => {
-      if (m.id === medId) {
-        const nextState = !m.is_taken;
-        toast.success(`${m.name} marked as ${nextState ? 'taken' : 'not taken'}.`);
-        return { ...m, is_taken: nextState };
-      }
-      return m;
-    }));
+  const handleToggleTaken = async (medId) => {
+    try {
+      const response = await axiosInstance.patch(`/user/tracking/medications/${medId}/toggle`);
+      setMedications(previous => previous.map(medication => medication.id === medId ? { ...medication, is_taken: response.data.is_taken } : medication));
+      toast.success('Medication record updated.');
+    } catch (err) {
+      console.error('Failed to sync medication toggle', err);
+    }
   };
 
-  const handleAddMedication = (e) => {
+  const handleAddMedication = async (e) => {
     e.preventDefault();
     if (!newMed.name.trim()) return;
 
-    const created = {
-      id: Date.now().toString(),
+    const payload = {
       name: newMed.name,
-      dosage: newMed.dosage || '1 Tablet',
+      dosage: newMed.dosage,
       schedule: newMed.schedule,
-      refill_days: parseInt(newMed.refill_days) || 30,
-      is_taken: false,
-      type: 'Prescription'
+      refill_days: newMed.refill_days === '' ? null : Number(newMed.refill_days),
+      type: 'Self-reported'
     };
 
-    setMedications(prev => [...prev, created]);
-    toast.success(`${newMed.name} added to your daily schedule!`);
-    setShowAddModal(false);
-    setNewMed({ name: '', dosage: '', schedule: 'Morning (08:00 AM)', refill_days: 30 });
+    try {
+      const res = await axiosInstance.post('/user/tracking/medications', payload);
+      const created = {
+        id: res.data.id,
+        ...payload,
+        is_taken: false,
+      };
+      setMedications(prev => [...prev, created]);
+      toast.success(`${newMed.name} added to your daily schedule!`);
+      setShowAddModal(false);
+      setNewMed({ name: '', dosage: '', schedule: 'Morning (08:00 AM)', refill_days: 30 });
+    } catch (err) {
+      console.error('Failed to add medication', err);
+      toast.error('Failed to add medication to schedule.');
+    }
   };
 
   if (loading) {
@@ -134,7 +142,7 @@ const MedicationPlan = () => {
                 <div className="pt-3 border-t border-outline flex justify-between items-center text-xs">
                   <span className="text-on-surface-variant">Status:</span>
                   <span className={`font-semibold ${med.refill_days < 10 ? 'text-error' : 'text-secondary'}`}>
-                    {med.refill_days < 10 ? 'Refill Needed' : 'Adequate Supply'}
+                    {med.refill_days == null ? 'Supply not recorded' : `${med.refill_days} days recorded`}
                   </span>
                 </div>
               </div>
@@ -142,27 +150,7 @@ const MedicationPlan = () => {
           </section>
         </div>
 
-        {/* Right Column: Provider & Pharmacy */}
-        <div className="xl:col-span-4 flex flex-col gap-6">
-          <section className="bg-surface border border-outline rounded-2xl p-6">
-            <h3 className="font-semibold text-base mb-3 text-on-background">Clinical Provider</h3>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-secondary-container border border-outline flex items-center justify-center">
-                <span className="material-symbols-outlined text-secondary">medical_services</span>
-              </div>
-              <div>
-                <h4 className="font-semibold text-sm text-on-background">Dr. Aisha Sharma</h4>
-                <p className="text-xs text-on-surface-variant">Psychiatry & Behavioral Health</p>
-              </div>
-            </div>
-            <p className="text-xs text-on-surface-variant leading-relaxed mb-4">
-              Prescriptions are monitored periodically during scheduled consultations. For emergency changes, contact clinic triage.
-            </p>
-            <button className="w-full py-2.5 rounded-xl border border-outline bg-surface-container text-xs font-semibold text-on-surface">
-              Message Clinician
-            </button>
-          </section>
-        </div>
+        <aside className="xl:col-span-4 bg-white border border-outline rounded-2xl p-6 h-fit"><h3 className="font-semibold mb-3">Your personal medication record</h3><p className="text-sm text-on-surface-variant">These are the medications you record in your account. A clinician has not been assigned to monitor this list through this screen.</p></aside>
       </div>
 
       {/* Add Medication Modal */}

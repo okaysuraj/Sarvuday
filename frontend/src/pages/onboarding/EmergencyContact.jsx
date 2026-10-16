@@ -51,7 +51,7 @@ const EmergencyContact = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center p-margin-desktop">
+      <div className="flex-grow flex items-center justify-center p-margin-desktop">
         <div className="w-full max-w-2xl">
           {/* Progress Indicator */}
           <div className="mb-stack-lg text-center">
@@ -164,7 +164,7 @@ const EmergencyContact = () => {
             </form>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

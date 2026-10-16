@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { trackingApi } from '../../api/tracking';
 import { format } from 'date-fns';
 
@@ -23,8 +23,13 @@ export default function MedicationScreen() {
     }
   };
 
-  const toggleMedication = (id: string) => {
+  const toggleMedication = async (id: string) => {
     setMedications(prev => prev.map(m => m.id === id ? { ...m, is_taken: !m.is_taken } : m));
+    try {
+      await trackingApi.toggleMedication(id);
+    } catch (err) {
+      console.warn('Failed to sync medication toggle:', err);
+    }
   };
 
   if (isLoading) {

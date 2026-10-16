@@ -1,72 +1,8 @@
-// src/components/normal_users/Prescriptions.jsx
+﻿import useApiData from '../../hooks/useApiData';
+import { DataState, PageHeading } from '../common/DataState';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import BASE_URL from '../../config/apiConfig';
-import { toast } from 'react-toastify';
-import styles from './Prescriptions.module.css';
-
-const Prescriptions = () => {
-  const [prescriptions, setPrescriptions] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const token = localStorage.getItem('accessToken');
-
-  useEffect(() => {
-    fetchPrescriptions();
-  }, []);
-
-  const fetchPrescriptions = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${BASE_URL}/user/prescriptions`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setPrescriptions(res.data.prescriptions || []);
-    } catch (err) {
-      console.error('Error fetching prescriptions:', err);
-      toast.error('Failed to fetch prescriptions');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className={styles.container}>
-      <h2 className={styles.heading}>Your Prescriptions</h2>
-
-      {loading && <p className={styles.loading}>Loading prescriptions...</p>}
-
-      {!loading && prescriptions.length > 0 ? (
-        <div className={styles.list}>
-          {prescriptions.map((script) => (
-            <div key={script.prescription_id} className={styles.card}>
-              <h4 className={styles.diagnosis}>Diagnosis: {script.diagnosis}</h4>
-              <p className={styles.date}>Date: {new Date(script.created_at).toLocaleDateString()}</p>
-              
-              <h5 className={styles.sectionTitle}>Medications:</h5>
-              <ul className={styles.bulletList}>
-                {script.medications.map((med, idx) => (
-                  <li key={idx}>
-                    {med.name} - {med.dosage} ({med.frequency})
-                  </li>
-                ))}
-              </ul>
-
-              <h5 className={styles.sectionTitle}>Recommendations:</h5>
-              <ul className={styles.bulletList}>
-                {script.recommendations.map((rec, idx) => (
-                  <li key={idx}>{rec}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      ) : (
-        !loading && <p className={styles.noData}>No prescriptions found.</p>
-      )}
-    </div>
-  );
-};
-
-export default Prescriptions;
+export default function Prescriptions() {
+  const state = useApiData('/user/prescriptions?limit=100');
+  const records = state.data?.prescriptions || [];
+  return <div className="max-w-5xl mx-auto p-4 md:p-8"><PageHeading title="Your prescriptions">Records issued by your care provider.</PageHeading><DataState {...state}>{records.length === 0 ? <p>No prescriptions have been recorded.</p> : <div className="space-y-4">{records.map(record => <article key={record.prescription_id} className="rounded-xl border border-stone-200 bg-white p-6"><h2 className="font-semibold">{record.diagnosis || 'Prescription'}</h2><p className="text-sm my-2">{record.created_at ? new Date(record.created_at).toLocaleString() : 'Date not recorded'}</p><h3 className="font-semibold mt-4">Medications</h3><ul>{(record.medications || []).map((medication, index) => <li key={index}>{medication.name} · {medication.dosage} · {medication.frequency}</li>)}</ul><h3 className="font-semibold mt-4">Recommendations</h3><ul>{(record.recommendations || []).map((recommendation, index) => <li key={index}>{recommendation}</li>)}</ul></article>)}</div>}</DataState></div>;
+}

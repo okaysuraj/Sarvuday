@@ -1,55 +1,36 @@
-from fastapi import APIRouter
-from typing import List, Dict, Any
+"""The exercise catalog is clinical content curated in MongoDB, without seed rows."""
+from fastapi import APIRouter, Depends, HTTPException, Query
+from bson import ObjectId
+from pymongo.errors import PyMongoError
+from app.database import get_mongo_db
 
 router = APIRouter(tags=["Exercises"])
 
-# Real content catalog
-EXERCISES_DB = [
-    {
-        "id": "ex_1",
-        "title": "Thought Reframing",
-        "category": "CBT",
-        "duration_min": 15,
-        "description": "Challenge your cognitive distortions and replace them with balanced perspectives.",
-        "difficulty": 2,
-        "status": "Pending"
-    },
-    {
-        "id": "ex_2",
-        "title": "Box Breathing",
-        "category": "Breathing",
-        "duration_min": 5,
-        "description": "A simple yet powerful technique to reset your nervous system in stressful moments.",
-        "difficulty": 1,
-        "status": "Completed"
-    },
-    {
-        "id": "ex_3",
-        "title": "Body Scan",
-        "category": "Meditation",
-        "duration_min": 10,
-        "description": "Release physical tension by bringing mindful awareness to each part of your body.",
-        "difficulty": 3,
-        "status": "Pending"
-    },
-    {
-        "id": "ex_4",
-        "title": "4-7-8 Technique",
-        "category": "Breathing",
-        "duration_min": 8,
-        "description": "The natural tranquilizer for the nervous system. Best for evening winding down.",
-        "difficulty": 1,
-        "status": "Pending"
-    }
-]
+
+def present(record):
+    return {**{key: value for key, value in record.items() if key not in {"_id", "status"}},
+            "id": record.get("id") or str(record["_id"])}
+
 
 @router.get("/")
-async def get_exercises() -> List[Dict[str, Any]]:
-    return EXERCISES_DB
+async def get_exercises(limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0),
+                        mongo_db=Depends(get_mongo_db)):
+    try:
+        records = await mongo_db.exercises.find({"published": True}).sort("title", 1).skip(offset).limit(limit).to_list(length=limit)
+        return [present(record) for record in records]
+    except PyMongoError as exc:
+        raise HTTPException(status_code=503, detail="Exercise catalog is unavailable") from exc
+
 
 @router.get("/{exercise_id}")
-async def get_exercise_by_id(exercise_id: str) -> Dict[str, Any]:
-    for ex in EXERCISES_DB:
-        if ex["id"] == exercise_id:
-            return ex
-    return {"error": "Exercise not found"}
+async def get_exercise_by_id(exercise_id: str, mongo_db=Depends(get_mongo_db)):
+    identifiers = [{"id": exercise_id}]
+    if ObjectId.is_valid(exercise_id):
+        identifiers.append({"_id": ObjectId(exercise_id)})
+    try:
+        record = await mongo_db.exercises.find_one({"published": True, "$or": identifiers})
+        if record is None:
+            raise HTTPException(status_code=404, detail="Exercise not found")
+        return present(record)
+    except PyMongoError as exc:
+        raise HTTPException(status_code=503, detail="Exercise catalog is unavailable") from exc

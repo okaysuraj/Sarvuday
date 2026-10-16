@@ -37,7 +37,7 @@ const ForgotPassword = () => {
       backgroundColor: 'var(--color-background)',
       padding: '24px',
     }}>
-      <main style={{ width: '100%', maxWidth: '420px' }}>
+      <div style={{ width: '100%', maxWidth: '420px' }}>
         <div style={{
           backgroundColor: 'var(--color-surface)',
           border: '1px solid var(--border-color)',
@@ -140,7 +140,7 @@ const ForgotPassword = () => {
             </Link>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

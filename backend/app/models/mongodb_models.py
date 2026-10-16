@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 from datetime import datetime, timezone
 from bson import ObjectId
 from app.utils.constants import AssessmentTypeEnum
@@ -11,7 +11,7 @@ class PyObjectId(ObjectId):
         yield cls.validate
 
     @classmethod
-    def validate(cls, v):
+    def validate(cls, v, _info=None):
         if not ObjectId.is_valid(v):
             raise ValueError("Invalid objectid")
         return ObjectId(v)
@@ -27,7 +27,7 @@ class Message(BaseModel):
     role: str  # "user" or "assistant"
     content: str
     sentiment_score: float = 0.0  # AI-driven mood analysis
-    embedding: List[float] = []  # Vector representation for context
+    embedding: List[float] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
@@ -100,9 +100,10 @@ class MoodTracking(BaseModel):
     mongo_id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     user_id: str
     mood: str
-    energy_level: int
-    anxiety_level: int
-    sleep_quality: str
+    energy_level: Optional[int] = None
+    anxiety_level: Optional[int] = None
+    sleep_quality: Optional[str] = None
+    emotions: List[str] = Field(default_factory=list)
     notes: str = ""
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -117,7 +118,8 @@ class JournalEntry(BaseModel):
     user_id: str
     content: str
     entry_type: str = "text"  # "text" or "voice"
-    ai_sentiment_score: float = 0.0
+    ai_sentiment_score: Optional[float] = None
+    triggers: List[str] = Field(default_factory=list)
     shared_with_therapist: bool = False
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

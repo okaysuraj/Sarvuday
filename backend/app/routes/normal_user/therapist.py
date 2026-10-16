@@ -1,6 +1,6 @@
 # app/routes/normal_user/therapist.py
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from typing import List, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -14,22 +14,23 @@ router = APIRouter(prefix="/therapists", tags=["Therapists"])
 @router.get("/")
 async def get_therapists(
     current_user: NormalUser = Depends(ensure_normal_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0)
 ):
     try:
-        query = select(Counsellor).where(Counsellor.is_approved == True)
+        query = select(Counsellor).where(Counsellor.is_approved == True).order_by(Counsellor.user_id).limit(limit).offset(offset)
         result = await db.execute(query)
         counsellors = result.scalars().all()
 
         therapists_data = []
         for c in counsellors:
-            specialties = [s.strip() for s in c.specializations.split(",")] if c.specializations else []
+            specialties = c.specializations or []
             therapists_data.append({
                 "id": c.user_id,
                 "name": c.name,
                 "specialties": specialties,
-                "rating": float(c.average_rating) if c.average_rating else 5.0,
-                "accepts_insurance": True,
+                "rating": float(c.average_rating) if c.total_reviews and c.average_rating is not None else None,
+                "accepts_insurance": None,
                 "virtual": True,
                 "bio": c.bio or "",
                 "experience_years": c.experience_years or 0,
@@ -39,4 +40,4 @@ async def get_therapists(
         return therapists_data
     except Exception as e:
         print(f"Error fetching therapists: {e}")
-        return []
+        raise HTTPException(status_code=503, detail="Therapist directory is unavailable") from e

@@ -1,6 +1,6 @@
 # app/models/users/normal_user.py
 
-from sqlalchemy import Column, String, Boolean, Enum as SqlEnum, Text, Integer, TIMESTAMP, DateTime, Index
+from sqlalchemy import Column, String, Boolean, Enum as SqlEnum, Text, Integer, TIMESTAMP, DateTime, Index, JSON
 from sqlalchemy.orm import relationship
 from app.database.postgres import Base
 from app.models.base import BaseMixin
@@ -16,7 +16,7 @@ class NormalUser(Base, BaseMixin):
     )
 
     user_id = Column(String(20), primary_key=True, index=True, unique=True, nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
+    email = Column(String(255), unique=True, nullable=True)
     phone_number = Column(String(15), unique=True)
     hashed_password = Column(String(255))
     firebase_uid = Column(String(255), unique=True)
@@ -30,8 +30,8 @@ class NormalUser(Base, BaseMixin):
     is_phone_verified = Column(Boolean, default=False)
     last_verification_sent_at = Column(DateTime)
 
-    preferred_languages = Column(Text)
-    primary_concerns = Column(Text)
+    preferred_languages = Column(JSON)
+    primary_concerns = Column(JSON)
     country = Column(String(100))
     state = Column(String(100))
     city = Column(String(100))

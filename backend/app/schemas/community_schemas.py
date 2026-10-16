@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, Field
+from typing import List, Optional, Literal
 from datetime import datetime
 
 class SupportGroupCreate(BaseModel):
@@ -14,18 +14,17 @@ class SupportGroupResponse(BaseModel):
     created_at: datetime
 
 class PostCreate(BaseModel):
-    content: str
-    is_anonymous: Optional[bool] = False
-    has_trigger_warning: Optional[bool] = False
-    group_id: Optional[str] = ""
+    content: str = Field(min_length=1, max_length=10000)
+    is_anonymous: bool = False
+    has_trigger_warning: bool = False
+    group_id: str = Field(default="", max_length=24)
 
 class PostInteract(BaseModel):
-    action: str  # "hug", "relate", "like"
+    action: Literal["hug", "relate", "like"]
 
 class PostResponse(BaseModel):
     id: str
     group_id: str
-    user_id: str
     content: str
     is_anonymous: bool
     has_trigger_warning: bool

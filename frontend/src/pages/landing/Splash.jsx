@@ -38,7 +38,7 @@ const Splash = () => {
       </div>
 
       {/* Main Splash Canvas */}
-      <main className="relative z-10 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-margin-desktop py-stack-lg">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-margin-desktop py-stack-lg">
         {/* Sticker Graphic Centerpiece */}
         <div className={`relative group cursor-pointer transition-transform duration-200 ${scale ? 'scale-[1.02]' : ''}`}>
           {/* Background Accent Sticker */}
@@ -72,7 +72,7 @@ const Splash = () => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
       
       {/* Optional Footer Attribution */}
       <footer className="absolute bottom-margin-desktop w-full text-center z-10 opacity-60">

@@ -1,13 +1,13 @@
 import React from 'react';
 import styles from './CounsellorCard.module.css';
 import BookAppointmentButton from '../booking/BookAppointmentButton';
-import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const CounsellorCard = ({ counsellor }) => {
   return (
     <div className={styles.card}>
       <img
-        src={counsellor.profile_pic || '/default-avatar.png'}
+        src={counsellor.profile_pic || undefined}
         alt={counsellor.name || 'Counsellor'}
         className={styles.avatar}
       />
@@ -18,23 +18,22 @@ const CounsellorCard = ({ counsellor }) => {
           <span className={styles.specTitle}>{counsellor.specializations?.[0] || 'Therapist'}</span>
         </div>
         
-        <p className={styles.bio}>{counsellor.bio || 'Experienced mental health professional dedicated to helping you find your peace of mind.'}</p>
+        <p className={styles.bio}>{counsellor.bio}</p>
         
         <div className={styles.tags}>
-          {(counsellor.specializations || ['Stress', 'Anxiety', 'Sleep']).slice(0, 4).map((s, i) => (
+          {(counsellor.specializations || []).slice(0, 4).map((s, i) => (
             <span key={i} className={styles.tag}>{s}</span>
           ))}
         </div>
       </div>
 
       <div className={styles.actions}>
-        <a 
-          href="#" 
+        <Link
+          to={`/therapists/${counsellor.user_id}`}
           className={styles.viewProfile}
-          onClick={(e) => { e.preventDefault(); toast.info('Public profiles coming soon!'); }}
         >
           View Profile
-        </a>
+        </Link>
         <BookAppointmentButton counsellorId={counsellor.user_id} />
       </div>
     </div>

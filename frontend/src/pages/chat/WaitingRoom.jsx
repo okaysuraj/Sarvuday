@@ -19,7 +19,7 @@ const WaitingRoom = () => {
     internet: true
   });
 
-  const [timeLeft, setTimeLeft] = useState(300); // 5 mins dummy for now
+  const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
     if (!appointmentId) {
@@ -56,7 +56,7 @@ const WaitingRoom = () => {
   }, [appointmentId, navigate]);
 
   useEffect(() => {
-    if (timeLeft <= 0) return;
+    if (timeLeft == null || timeLeft <= 0) return;
     const interval = setInterval(() => {
       setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
     }, 1000);
@@ -64,12 +64,12 @@ const WaitingRoom = () => {
   }, [timeLeft]);
 
   const handleJoin = () => {
-    navigate(`/session/${appointment?.session?.session_id || appointmentId}`);
+    if (appointment?.session?.session_id) navigate(`/counselling-session/${appointment.session.session_id}`);
   };
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
-  const isReady = timeLeft <= 0;
+  const isReady = timeLeft != null && timeLeft <= 0 && !!appointment?.session?.session_id;
 
   if (loading) {
     return (

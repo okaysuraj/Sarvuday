@@ -1,188 +1,138 @@
-# app/routes/general/payments.py
-#
-# Top-level payments route for Stripe PaymentIntent creation, wallet operations, and transaction history.
+"""Payment APIs. Only provider-confirmed payments can settle appointments."""
 
-from fastapi import APIRouter, Depends, status, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from pydantic import BaseModel
-from typing import Optional, List, Dict, Any
 from datetime import datetime, timezone
-import uuid
+from decimal import Decimal
 
-from app.database import get_db, get_mongo_db
-from app.utils.oauth import get_current_user
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from pydantic import BaseModel, Field
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.concurrency import run_in_threadpool
+
 from app.config import settings
-from app.models.payments.user_payment import UserPayment
-from app.utils.constants import PaymentStatusEnum, PaymentMethodEnum
+from app.database import get_db, get_mongo_db
+from app.models import Counsellor, CounsellorAvailability, UserPayment
+from app.services.payments.stripe_service import require_stripe, reconcile_intent
+from app.utils.constants import CounsellorAvailabilityStatusEnum, PaymentMethodEnum, PaymentStatusEnum
+from app.utils.oauth import ensure_normal_user
 from app.utils.unique_id_generation import generate_user_payment_id
 
 router = APIRouter()
 
+
 class CreatePaymentIntentRequest(BaseModel):
-    amount: float
-    currency: str = "inr"
-    appointment_id: Optional[str] = None
+    availability_slot_id: str = Field(min_length=1, max_length=20)
+
 
 class CreatePaymentIntentResponse(BaseModel):
     clientSecret: str
     publishableKey: str
+    payment_id: str
+
 
 class TopupWalletRequest(BaseModel):
-    amount: float
+    amount: Decimal = Field(gt=0, le=100000, max_digits=10, decimal_places=2)
 
-@router.post(
-    "/create-intent",
-    response_model=CreatePaymentIntentResponse,
-    status_code=status.HTTP_201_CREATED,
-    summary="Create a Stripe PaymentIntent for appointment booking",
-)
+
+@router.post("/create-intent", response_model=CreatePaymentIntentResponse, status_code=status.HTTP_201_CREATED)
 async def create_payment_intent(
     payload: CreatePaymentIntentRequest,
-    current_user=Depends(get_current_user),
+    current_user=Depends(ensure_normal_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Create a Stripe PaymentIntent and return the client secret."""
-    if not settings.stripe_secret_key:
-        # Fallback to simulated client secret for test mode
-        return CreatePaymentIntentResponse(
-            clientSecret="pi_mock_secret_" + uuid.uuid4().hex,
-            publishableKey="pk_test_sample",
-        )
-
+    stripe = require_stripe()
+    if not settings.stripe_publishable_key:
+        raise HTTPException(status_code=503, detail="Payment service is not configured.")
+    result = await db.execute(
+        select(CounsellorAvailability, Counsellor)
+        .join(Counsellor, Counsellor.user_id == CounsellorAvailability.counsellor_id)
+        .where(CounsellorAvailability.availability_slot_id == payload.availability_slot_id)
+    )
+    row = result.first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Time slot not found.")
+    slot, counsellor = row
+    if not counsellor.is_approved or slot.status != CounsellorAvailabilityStatusEnum.available:
+        raise HTTPException(status_code=409, detail="Time slot is unavailable.")
+    now = datetime.now(timezone.utc)
+    start_time = slot.start_time.replace(tzinfo=timezone.utc) if slot.start_time.tzinfo is None else slot.start_time
+    if start_time <= now:
+        raise HTTPException(status_code=409, detail="Time slot has already started.")
+    fee = Decimal(str(counsellor.session_fee or 0)).quantize(Decimal("0.01"))
+    if fee <= 0:
+        raise HTTPException(status_code=400, detail="This session does not require payment.")
+    payment_id = generate_user_payment_id()
     try:
-        import stripe
-        stripe.api_key = settings.stripe_secret_key
-
-        amount_in_paise = int(payload.amount * 100)
-
-        intent = stripe.PaymentIntent.create(
-            amount=amount_in_paise,
-            currency=payload.currency,
-            metadata={
-                "user_id": current_user.user_id,
-                "appointment_id": payload.appointment_id or "",
-            },
+        intent = await run_in_threadpool(
+            stripe.PaymentIntent.create,
+            api_key=settings.stripe_secret_key,
+            amount=int(fee * 100),
+            currency="inr",
+            automatic_payment_methods={"enabled": True},
+            metadata={"payment_id": payment_id, "user_id": current_user.user_id,
+                      "availability_slot_id": slot.availability_slot_id, "counsellor_id": counsellor.user_id},
+            idempotency_key=payment_id,
         )
+    except stripe.StripeError:
+        raise HTTPException(status_code=502, detail="Payment provider is temporarily unavailable.")
+    db.add(UserPayment(
+        payment_id=payment_id, user_id=current_user.user_id, amount=fee,
+        status=PaymentStatusEnum.pending, payment_method=PaymentMethodEnum.credit_card,
+        currency="INR", transaction_id=intent.id, transaction_date=now,
+        payment_gateway="STRIPE", payment_receipt_url="",
+        payment_response={"availability_slot_id": slot.availability_slot_id,
+                          "counsellor_id": counsellor.user_id, "provider_status": intent.status},
+    ))
+    await db.commit()
+    return CreatePaymentIntentResponse(clientSecret=intent.client_secret,
+                                       publishableKey=settings.stripe_publishable_key, payment_id=payment_id)
 
-        return CreatePaymentIntentResponse(
-            clientSecret=intent.client_secret,
-            publishableKey=settings.stripe_publishable_key or "",
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to create payment intent: {str(e)}",
-        )
 
-@router.get("/wallet", summary="Get user wallet balance, vault, and rewards points")
-async def get_wallet(
-    current_user=Depends(get_current_user),
-    mongo_db=Depends(get_mongo_db)
-):
-    """Fetch real user wallet balances from database."""
+@router.post("/webhook", include_in_schema=False)
+async def stripe_webhook(request: Request, db: AsyncSession = Depends(get_db)):
+    stripe = require_stripe()
+    if not settings.stripe_webhook_secret:
+        raise HTTPException(status_code=503, detail="Payment webhook is not configured.")
+    body = await request.body()
+    if len(body) > 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Webhook payload is too large.")
     try:
-        wallet = await mongo_db.user_wallets.find_one({"user_id": current_user.user_id})
-        if not wallet:
-            # Initialize wallet for new user
-            new_wallet = {
-                "user_id": current_user.user_id,
-                "balance": 1500.00,
-                "vault_savings": 500.00,
-                "vault_goal": 2000.00,
-                "reward_points": 1250,
-                "created_at": datetime.utcnow()
-            }
-            await mongo_db.user_wallets.insert_one(new_wallet)
-            wallet = new_wallet
-
-        return {
-            "status": "success",
-            "balance": float(wallet.get("balance", 0.0)),
-            "vault_savings": float(wallet.get("vault_savings", 0.0)),
-            "vault_goal": float(wallet.get("vault_goal", 2000.0)),
-            "reward_points": int(wallet.get("reward_points", 0))
-        }
-    except Exception as e:
-        print(f"Error fetching wallet: {e}")
-        return {
-            "status": "success",
-            "balance": 0.0,
-            "vault_savings": 0.0,
-            "vault_goal": 2000.0,
-            "reward_points": 0
-        }
-
-@router.post("/wallet/topup", status_code=status.HTTP_200_OK, summary="Top up user wallet balance")
-async def topup_wallet(
-    payload: TopupWalletRequest,
-    current_user=Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-    mongo_db=Depends(get_mongo_db)
-):
-    """Add funds to user wallet and record in payment history."""
-    if payload.amount <= 0:
-        raise HTTPException(status_code=400, detail="Amount must be greater than zero")
-
-    try:
-        # Update MongoDB wallet balance
-        await mongo_db.user_wallets.update_one(
-            {"user_id": current_user.user_id},
-            {"$inc": {"balance": payload.amount, "reward_points": int(payload.amount * 0.1)}},
-            upsert=True
-        )
-
-        # Record UserPayment in PostgreSQL
-        payment_id = generate_user_payment_id()
-        payment_entry = UserPayment(
-            payment_id=payment_id,
-            user_id=current_user.user_id,
-            amount=payload.amount,
-            status=PaymentStatusEnum.completed,
-            payment_method=PaymentMethodEnum.upi,
-            currency="INR",
-            transaction_id=f"TOPUP_{uuid.uuid4().hex[:10].upper()}",
-            transaction_date=datetime.now(timezone.utc),
-            payment_gateway="SARVUDAY_WALLET",
-            payment_receipt_url=f"/payments/receipt/{payment_id}"
-        )
-        db.add(payment_entry)
+        event = stripe.Webhook.construct_event(body, request.headers.get("stripe-signature", ""),
+                                               settings.stripe_webhook_secret)
+    except (ValueError, stripe.SignatureVerificationError):
+        raise HTTPException(status_code=400, detail="Invalid payment webhook signature.")
+    if event["type"] == "payment_intent.succeeded":
+        intent = event["data"]["object"]
+        result = await db.execute(select(UserPayment).where(UserPayment.transaction_id == intent["id"]).with_for_update())
+        payment = result.scalar_one_or_none()
+        if payment is None:
+            raise HTTPException(status_code=503, detail="Payment record is not available yet.")
+        reconcile_intent(payment, intent)
         await db.commit()
+    return {"received": True}
 
-        wallet = await mongo_db.user_wallets.find_one({"user_id": current_user.user_id})
-        return {
-            "status": "success",
-            "message": f"Successfully added ₹{payload.amount} to your wallet.",
-            "new_balance": float(wallet.get("balance", 0.0))
-        }
-    except Exception as e:
-        print(f"Error topping up wallet: {e}")
-        raise HTTPException(status_code=500, detail="Failed to process topup")
 
-@router.get("/history", summary="Get user transaction history")
-async def get_payment_history(
-    current_user=Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    """Retrieve actual user transaction payments from database."""
-    try:
-        stmt = select(UserPayment).where(UserPayment.user_id == current_user.user_id).order_by(UserPayment.transaction_date.desc()).limit(50)
-        res = await db.execute(stmt)
-        payments = res.scalars().all()
+@router.get("/wallet")
+async def get_wallet(current_user=Depends(ensure_normal_user), mongo_db=Depends(get_mongo_db)):
+    wallet = await mongo_db.user_wallets.find_one({"user_id": current_user.user_id}) or {}
+    return {"status": "success", "balance": float(wallet.get("balance", 0)),
+            "vault_savings": float(wallet.get("vault_savings", 0)),
+            "vault_goal": float(wallet.get("vault_goal", 0)),
+            "reward_points": int(wallet.get("reward_points", 0)), "topup_available": False}
 
-        return [
-            {
-                "payment_id": p.payment_id,
-                "amount": float(p.amount),
-                "status": p.status.value if hasattr(p.status, "value") else str(p.status),
-                "payment_method": p.payment_method.value if hasattr(p.payment_method, "value") else str(p.payment_method),
-                "currency": p.currency,
-                "transaction_id": p.transaction_id,
-                "transaction_date": p.transaction_date.isoformat() if p.transaction_date else None,
-                "receipt_url": p.payment_receipt_url
-            }
-            for p in payments
-        ]
-    except Exception as e:
-        print(f"Error getting payment history: {e}")
-        return []
+
+@router.post("/wallet/topup")
+async def topup_wallet(payload: TopupWalletRequest, current_user=Depends(ensure_normal_user)):
+    raise HTTPException(status_code=503, detail="Wallet top-ups are unavailable until verified payment settlement is configured.")
+
+
+@router.get("/history")
+async def get_payment_history(current_user=Depends(ensure_normal_user), db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(UserPayment).where(UserPayment.user_id == current_user.user_id)
+                              .order_by(UserPayment.transaction_date.desc()).limit(50))
+    return [{"payment_id": p.payment_id, "amount": float(p.amount), "status": p.status.value,
+             "payment_method": p.payment_method.value, "currency": p.currency,
+             "transaction_id": p.transaction_id,
+             "transaction_date": p.transaction_date.isoformat() if p.transaction_date else None,
+             "receipt_url": p.payment_receipt_url} for p in result.scalars().all()]
+

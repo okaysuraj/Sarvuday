@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axiosInstance from '../../utils/axiosInstance';
 
 const SessionNotes = () => {
   const navigate = useNavigate();
   
-  const [takeaways, setTakeaways] = useState([
-    "Practice deep breathing when work anxiety spikes.",
-    "Journal for 10 minutes before bed to declutter the mind."
-  ]);
+  const [takeaways, setTakeaways] = useState([]);
   const [newTakeaway, setNewTakeaway] = useState('');
   
   const [mood, setMood] = useState(null);
@@ -26,9 +25,20 @@ const SessionNotes = () => {
     }
   };
 
+  const [saving, setSaving] = useState(false);
+  const handleSaveNotes = async () => {
+    if ((!notes.trim() && !takeaways.length) || saving) return;
+    setSaving(true);
+    try {
+      await axiosInstance.post('/user/tracking/journal', { text: [notes.trim(), mood ? `Self-reported mood: ${mood}` : '', ...takeaways].filter(Boolean).join('\n') });
+      toast.success('Reflection saved to your journal.');
+      navigate('/journal');
+    } catch { toast.error('Your reflection could not be saved. Please try again.'); }
+    finally { setSaving(false); }
+  };
+
   return (
     <div className="max-w-7xl mx-auto py-8 font-body-md text-on-surface">
-      
       
       <div className="flex justify-between items-center mb-8 border-b border-outline pb-6">
         <div className="flex items-center gap-4">
@@ -39,13 +49,16 @@ const SessionNotes = () => {
             P
           </div>
           <div>
-            <h2 className="font-headline-sm text-headline-sm text-ink-black font-bold">In-Session Notes</h2>
-            <p className="font-label-md text-label-md text-on-surface-variant">Session with Patient • Today</p>
+            <h2 className="font-headline-sm text-headline-sm text-ink-black font-bold">Personal session reflection</h2>
+            <p className="font-label-md text-label-md text-on-surface-variant">Save your own notes to your journal</p>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
-          <button className="px-6 py-3 bg-primary text-white font-label-bold text-label-md rounded-xl neo-border shadow-subtle active:scale-[0.98] hover:bg-primary-container transition-all">
+          <button 
+            onClick={handleSaveNotes}
+            className="px-6 py-3 bg-primary text-white font-label-bold text-label-md rounded-xl neo-border shadow-subtle active:scale-[0.98] hover:bg-primary-container transition-all"
+          >
             Save Notes
           </button>
         </div>

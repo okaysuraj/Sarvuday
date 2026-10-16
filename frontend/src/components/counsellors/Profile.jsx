@@ -132,7 +132,7 @@ const Profile = () => {
       
       // Log what we're sending for debugging
       console.log('Sending form data with fields:', 
-        Array.from(formData.entries()).map(([key, value]) => key)
+        Array.from(formData.entries()).map(([key]) => key)
       );
       
       // Use PATCH method with FormData

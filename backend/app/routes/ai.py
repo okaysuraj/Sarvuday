@@ -1,149 +1,65 @@
-# app/routes/ai.py
-
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import Dict, Any, Optional
-from datetime import datetime
+"""Account-scoped summaries. Unsupported analysis never returns invented results."""
+from datetime import datetime, timezone
+from typing import Any
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, Field
+from pymongo.errors import PyMongoError
 from app.database import get_mongo_db
-from app.models.mongodb_models import CrisisLog
-from bson import ObjectId
+from app.utils.oauth import ensure_normal_user
 
 router = APIRouter(tags=["AI & Insights"])
 
+class TextInput(BaseModel):
+    text: str = Field(min_length=1, max_length=50000)
+
+class VoiceInput(BaseModel):
+    audio_url: str = Field(min_length=1, max_length=2048)
+
+class CrisisInput(BaseModel):
+    risk_level: str = Field(default="manual", pattern="^(manual|low|medium|high|critical)$")
+    source: str = Field(default="manual", min_length=1, max_length=100)
+    notes: str = Field(default="", max_length=10000)
+
 @router.post("/sentiment-analysis")
-async def analyze_sentiment(payload: Dict[str, str]) -> Dict[str, Any]:
-    """
-    Analyzes the sentiment of a given text (e.g. journal entry or chat message).
-    """
-    text = payload.get("text", "")
-    if not text:
-        raise HTTPException(status_code=400, detail="Text is required")
-    
-    content_lower = text.lower()
-    positive_words = {"happy", "great", "joy", "peace", "calm", "grateful", "hopeful", "better", "love", "good", "relieved", "excited", "content", "safe"}
-    critical_words = {"suicide", "kill myself", "end it all", "don't want to live", "no reason to live", "harm myself", "overdose"}
-    distress_words = {"sad", "depressed", "anxious", "overwhelmed", "hopeless", "angry", "tired", "stressed", "pain", "panic", "scared", "worthless"}
-    
-    is_critical = any(phrase in content_lower for phrase in critical_words)
-    if is_critical:
-        return {
-            "sentiment_score": -0.95,
-            "risk_level": "critical",
-            "requires_intervention": True,
-            "immediate_action": "Crisis hotline 988 dispatched and emergency assistance available."
-        }
-    
-    pos_count = sum(1 for w in positive_words if w in content_lower)
-    distress_count = sum(1 for w in distress_words if w in content_lower)
-    
-    total = max(pos_count + distress_count, 1)
-    raw_score = (pos_count - distress_count) / total
-    score = round(max(-1.0, min(1.0, raw_score)), 2)
-    
-    if score < -0.4 or distress_count >= 3:
-        risk_level = "high"
-    elif score < 0:
-        risk_level = "medium"
-    else:
-        risk_level = "low"
-    
-    return {
-        "sentiment_score": score,
-        "risk_level": risk_level,
-        "requires_intervention": risk_level in ["high", "critical"]
-    }
+async def analyze_sentiment(payload: TextInput, current_user=Depends(ensure_normal_user)):
+    # Keyword screening is not a validated clinical risk prediction model.
+    text = payload.text.lower()
+    flagged = any(phrase in text for phrase in ("suicide", "kill myself", "harm myself", "end it all", "overdose"))
+    return {"method": "keyword_screening", "sentiment_score": None,
+            "risk_level": "requires_review" if flagged else "not_assessed",
+            "requires_intervention": flagged, "emergency_services_contacted": False,
+            "immediate_action": "Seek urgent local help if you are in immediate danger. This app has not contacted emergency services." if flagged else None}
 
 @router.get("/summary")
-async def get_ai_summary(user_id: Optional[str] = None, mongo_db = Depends(get_mongo_db)) -> Dict[str, Any]:
-    """
-    Returns AI generated insights and summary for the user based on real journal and mood trends.
-    """
+async def get_ai_summary(current_user=Depends(ensure_normal_user), mongo_db=Depends(get_mongo_db)):
     try:
-        themes = ["Mindful reflection", "Consistent sleep", "Emotional resilience"]
-        mood_status = "Balanced & Grounded"
-        
-        if user_id:
-            # Query user's real recent mood logs
-            recent_moods = await mongo_db.mood_tracking.find({"user_id": user_id}).sort("created_at", -1).to_list(length=5)
-            if recent_moods:
-                avg_anxiety = sum(m.get("anxiety_level", 5) for m in recent_moods) / len(recent_moods)
-                if avg_anxiety <= 3:
-                    mood_status = "Steadily Improving"
-                    themes = ["High emotional calmness", "Positive self-regulation", "Restorative sleep"]
-                elif avg_anxiety <= 6:
-                    mood_status = "Balanced"
-                    themes = ["Everyday routines", "Balanced energy", "Active coping"]
-                else:
-                    mood_status = "Heightened Sensitivity"
-                    themes = ["Stress decompression", "Grounding exercises", "Therapist check-in"]
-
-        return {
-            "overall_mood": mood_status,
-            "key_themes": themes,
-            "recommendations": [
-                "Engage in 5 minutes of 4-7-8 relaxing breathwork to calm autonomic arousal.",
-                "Review your weekly wins in the personal reflection journal.",
-                "Schedule a follow-up 1-on-1 session if stress persistence continues."
-            ]
-        }
-    except Exception as e:
-        print(f"Error generating AI summary: {e}")
-        return {
-            "overall_mood": "Balanced",
-            "key_themes": ["Mindfulness", "Emotional tracking", "Restful sleep"],
-            "recommendations": [
-                "Practice regular breathing exercises before sleep.",
-                "Log daily reflections to understand your personal triggers."
-            ]
-        }
+        moods = await mongo_db.mood_tracking.find({"user_id": current_user.user_id}).sort("created_at", -1).limit(30).to_list(length=30)
+    except PyMongoError as exc:
+        raise HTTPException(status_code=503, detail="Your records are temporarily unavailable") from exc
+    values = []
+    for record in moods:
+        try:
+            value = int(record["mood"])
+            if 0 <= value <= 4: values.append(value)
+        except (KeyError, TypeError, ValueError):
+            continue
+    average = round(sum(values) / len(values), 2) if values else None
+    return {"method": "record_summary", "record_count": len(values), "average_recorded_mood": average,
+            "overall_mood": f"Average self-reported mood: {average} out of 4 across {len(values)} check-ins." if values else None,
+            "key_themes": [], "recommendations": [], "mood_scale": {"min": 0, "max": 4}}
 
 @router.post("/voice-analysis")
-async def analyze_voice_tone(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Analyzes voice tone from a provided audio snippet/URL to detect stress or anxiety.
-    """
-    audio_url = payload.get("audio_url")
-    if not audio_url:
-        raise HTTPException(status_code=400, detail="Audio URL is required")
-
-    return {
-        "status": "success",
-        "stress_index": 0.28,
-        "anxiety_score": 0.22,
-        "dominant_emotion": "calm",
-        "audio_url": audio_url,
-        "analysis_timestamp": datetime.utcnow().isoformat()
-    }
+async def analyze_voice_tone(payload: VoiceInput, current_user=Depends(ensure_normal_user)):
+    raise HTTPException(status_code=503, detail="Voice analysis is unavailable until an analysis provider is configured.")
 
 @router.post("/crisis-alert")
-async def trigger_crisis_alert(payload: Dict[str, Any], mongo_db = Depends(get_mongo_db)) -> Dict[str, Any]:
-    """
-    Evaluates thresholds for sudden emotional deterioration and records emergency log in MongoDB.
-    """
-    user_id = payload.get("user_id")
-    risk_level = payload.get("risk_level", "medium")
-    source = payload.get("source", "manual")
-    notes = payload.get("notes", "")
-    
-    if not user_id:
-        raise HTTPException(status_code=400, detail="User ID is required")
-
-    # Insert CrisisLog into MongoDB
-    crisis_record = {
-        "user_id": user_id,
-        "risk_level": risk_level,
-        "source": source,
-        "notes": notes,
-        "is_resolved": False,
-        "created_at": datetime.utcnow()
-    }
-    res = await mongo_db.crisis_logs.insert_one(crisis_record)
-    
-    alert_triggered = risk_level in ["high", "critical"]
-    
-    return {
-        "status": "success",
-        "crisis_logged": True,
-        "log_id": str(res.inserted_id),
-        "alert_triggered": alert_triggered,
-        "message": "Emergency escalation initiated and logged in clinical safety audit." if alert_triggered else "Risk level logged for review."
-    }
+async def trigger_crisis_alert(payload: CrisisInput, current_user=Depends(ensure_normal_user), mongo_db=Depends(get_mongo_db)) -> dict[str, Any]:
+    record = {**payload.model_dump(), "user_id": current_user.user_id, "is_resolved": False,
+              "created_at": datetime.now(timezone.utc)}
+    try:
+        result = await mongo_db.crisis_logs.insert_one(record)
+    except PyMongoError as exc:
+        raise HTTPException(status_code=503, detail="Your request could not be saved. Seek urgent local help if you are in immediate danger.") from exc
+    return {"status": "success", "crisis_logged": True, "log_id": str(result.inserted_id),
+            "alert_triggered": False, "emergency_services_contacted": False,
+            "message": "Your request was saved. This app has not contacted emergency services or confirmed a clinician response."}

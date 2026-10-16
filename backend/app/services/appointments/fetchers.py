@@ -21,7 +21,7 @@ from app.schemas import (
     CounsellorAppointmentView,
     SessionAppointmentView
 )
-from app.utils.constants import UserTypeEnum, COUNSELLOR_AVAILABILITY_DAYS
+from app.utils.constants import UserTypeEnum
 from fastapi import HTTPException
 
 
@@ -166,13 +166,16 @@ async def fetch_available_slots(
         query = query.where(CounsellorAvailability.counsellor_id == counsellor_id)
 
     if date:
-        target_date = datetime.strptime(date, "%Y-%m-%d").date()
+        # The endpoint supplies a datetime. Dates are selected by their UTC
+        # calendar day; naive values follow the existing UTC scheduling contract.
+        target_date = date.astimezone(timezone.utc).date() if date.tzinfo else date.date()
+        day_start = datetime.combine(target_date, datetime.min.time())
         query = query.where(
-            CounsellorAvailability.start_time >= target_date,
-            CounsellorAvailability.start_time < target_date + timedelta(days=COUNSELLOR_AVAILABILITY_DAYS)
+            CounsellorAvailability.start_time >= day_start,
+            CounsellorAvailability.start_time < day_start + timedelta(days=1)
         )
 
-    result = await db.execute(query)
+    result = await db.execute(query.order_by(CounsellorAvailability.start_time))
     slots = result.scalars().all()
 
     return AvailableSlotsResponse(

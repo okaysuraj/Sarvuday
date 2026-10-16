@@ -12,7 +12,7 @@ const Disclaimer = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-margin-desktop font-body-lg text-on-surface bg-[#FAF9F6]">
-      <main className="w-full max-w-3xl relative z-10">
+      <div className="w-full max-w-3xl relative z-10">
         {/* Main Card */}
         <div className="bg-white rounded-2xl border border-stone-200 p-8 md:p-14 shadow-subtle flex flex-col items-center text-center">
           {/* Icon */}
@@ -60,7 +60,7 @@ const Disclaimer = () => {
             </button>
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Crisis Helplines Modal */}
       {showCrisisModal && (

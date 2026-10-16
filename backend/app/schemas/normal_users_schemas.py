@@ -12,7 +12,7 @@ class NormalUserBase(BaseModel):
     user_type: UserTypeEnum = UserTypeEnum.normal_user
     user_id: str
     name: str
-    email: EmailStr
+    email: Optional[EmailStr] = None
     gender: Optional[GenderEnum]
     phone_number: Optional[str] = Field(default=None, min_length=10, max_length=15)
     profile_pic: Optional[str]
@@ -106,7 +106,7 @@ class UserListResponse(BaseModel):
 class CounsellingSessionResponse(BaseModel):
     session_id: str
     session_scheduled_at: datetime
-    session_expires_at: datetime
+    session_expires_at: Optional[datetime] = None
     counsellor_id: str
     
     model_config = {
@@ -118,7 +118,7 @@ class DashboardOverviewResponse(BaseModel):
     chat_sessions_count: int
     total_sessions: int
     total_messages: int
-    last_active: datetime
+    last_active: Optional[datetime] = None
     upcoming_sessions: List[CounsellingSessionResponse]
 
 

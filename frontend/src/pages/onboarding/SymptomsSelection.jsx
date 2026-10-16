@@ -58,7 +58,7 @@ const SymptomsSelection = () => {
       </header>
 
       {/* Main Content Canvas */}
-      <main className="flex-grow flex flex-col px-margin-desktop py-stack-lg max-w-7xl mx-auto w-full">
+      <div className="flex-grow flex flex-col px-margin-desktop py-stack-lg max-w-7xl mx-auto w-full">
         {/* Header Section */}
         <div className="mb-stack-lg max-w-3xl">
           <h1 className="font-display-lg text-ink-black mb-stack-sm">What are you feeling right now?</h1>
@@ -86,7 +86,7 @@ const SymptomsSelection = () => {
           <button onClick={handleSkip} className="font-label-bold text-on-surface-variant hover:text-ink-black transition-colors underline decoration-2 underline-offset-4">Skip for now</button>
           <button onClick={handleContinue} className="neo-btn bg-primary text-on-primary border-outline rounded-lg px-8 py-3 font-label-bold shadow-subtle transition-all">Continue</button>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

@@ -6,20 +6,29 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models import NormalUser, Counsellor, Admin
 from app.utils.constants import AdminRoleEnum, UserTypeEnum
-from jose import jwt, JWTError
+import jwt
+from jwt.exceptions import InvalidTokenError as JWTError
 from sqlalchemy import select
 from typing import Optional
 from app.config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/firebase-login")
+optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/firebase-login", auto_error=False)
 
 def verify_access_token(token: str) -> dict:
     try:
         payload = jwt.decode(
             token,
             settings.secret_key,
-            algorithms=[settings.algorithm]
+            algorithms=[settings.algorithm],
+            options={"require": ["exp", "sub"]},
         )
+        if not isinstance(payload.get("sub"), str) or not payload["sub"]:
+            raise JWTError("Invalid subject")
+        try:
+            UserTypeEnum(payload.get("user_type"))
+        except (ValueError, TypeError) as exc:
+            raise JWTError("Invalid user type") from exc
         return payload
     except JWTError as e:
         raise JWTError(f"Token validation failed: {str(e)}")
@@ -38,6 +47,7 @@ async def get_current_user(
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
     )
 
     try:
@@ -59,23 +69,18 @@ async def get_current_user(
         user = user.scalar_one_or_none()
 
         if not user:
-            print(f"User not found in {model.__tablename__} table")  # Debug
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found in database"
-            )
+            raise credentials_exception
+
+        if user_type == UserTypeEnum.admin and not user.is_approved:
+            raise HTTPException(status_code=403, detail="Administrator access has not been approved")
 
         return user
 
-    except KeyError as e:
-        print(f"Missing token field: {str(e)}")
-        raise credentials_exception
-    except JWTError as e:
-        print(f"JWT Error: {str(e)}")
+    except (KeyError, ValueError, TypeError, JWTError):
         raise credentials_exception
 
 async def get_current_user_optional(
-    token: Optional[str] = Depends(oauth2_scheme),
+    token: Optional[str] = Depends(optional_oauth2_scheme),
     db: AsyncSession = Depends(get_db)
 ):
     """Returns user object if token is valid, otherwise None."""
@@ -83,15 +88,10 @@ async def get_current_user_optional(
         return None
 
     try:
-        payload = verify_access_token(token)
-        user_id = payload["sub"]
-        user_type = UserTypeEnum(payload["user_type"])
-        model = MODEL_MAP[user_type]
-
-        result = await db.execute(select(model).where(model.user_id == user_id))
-        user = result.scalar_one_or_none()
-        return user
-    except Exception:
+        return await get_current_user(token=token, db=db)
+    except HTTPException as exc:
+        if exc.status_code not in (401, 403):
+            raise
         return None
     
     
@@ -108,6 +108,8 @@ def ensure_admin_user(current_user: Admin = Depends(get_current_user)):
 def ensure_counsellor_user(current_user=Depends(get_current_user)):
     if current_user.user_type != UserTypeEnum.counsellor:
         raise HTTPException(status_code=403, detail="Only counsellors can access this route")
+    if not current_user.is_approved:
+        raise HTTPException(status_code=403, detail="Counsellor approval is required")
     return current_user
 
 def ensure_normal_user(current_user: NormalUser = Depends(get_current_user)):

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  timeout: 20000,
 });
 
 // Request interceptor to add the access token to headers
@@ -15,9 +16,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  error => Promise.reject(error)
 );
 
 // Response interceptor to handle errors globally
@@ -26,21 +25,27 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
+    if (axios.isCancel(error)) return Promise.reject(error);
+    const detail = error.response?.data?.detail;
+    const message = typeof detail === 'string' ? detail : Array.isArray(detail)
+      ? detail.map(item => item.msg).filter(Boolean).join('. ')
+      : typeof error.response?.data?.message === 'string' ? error.response.data.message
+      : error.response ? 'The request could not be completed.' : 'Unable to reach the server. Please try again.';
+    error.userMessage = message;
     if (error.response) {
       // Handle unauthorized errors (e.g., token expiration)
-      if (error.response.status === 401) {
-        toast.error("Session expired. Please log in again.");
+      if (error.response.status === 401 && localStorage.getItem('accessToken') && !error.config?.url?.startsWith('/auth/')) {
+        toast.error("Session expired. Please log in again.", { toastId: 'session-expired' });
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userType');
         localStorage.removeItem('onboardingData');
         window.location.href = '/login';
-      } else {
+      } else if (!error.config?.silent) {
         // Show generic error or specific backend message
-        const message = error.response.data?.detail || error.response.data?.message || "An error occurred";
         toast.error(message);
       }
-    } else {
-      toast.error("Network error. Please try again later.");
+    } else if (!error.config?.silent) {
+      toast.error(message, { toastId: 'network-error' });
     }
     return Promise.reject(error);
   }

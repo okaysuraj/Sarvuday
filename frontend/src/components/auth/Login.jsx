@@ -139,7 +139,7 @@ const Login = () => {
 
         const idToken = await userCredential.user.getIdToken();
         await handleBackendLogin(idToken);
-      } catch (error) {
+      } catch {
         toast.error('Invalid email or password.');
       }
     } else if (loginMethod === 'phone' && otpSent) {
@@ -147,7 +147,7 @@ const Login = () => {
         const result = await confirmationResult.confirm(otpCode);
         const idToken = await result.user.getIdToken();
         await handleBackendLogin(idToken);
-      } catch (error) {
+      } catch {
         toast.error('Invalid OTP.');
       }
     } else if (loginMethod === 'phone' && !otpSent) {
@@ -158,7 +158,7 @@ const Login = () => {
   return (
     <div className="bg-[#FAF9F6] min-h-[calc(100vh-64px)] flex items-center justify-center p-4 sm:p-6 selection:bg-[#18181B] selection:text-white">
       {/* Main Content Container */}
-      <main className="w-full max-w-md my-8">
+      <div className="w-full max-w-md my-8">
         {/* Login Card */}
         <div className="bg-white rounded-2xl border-[#EAEAEA] shadow-sm p-7 sm:p-9">
           <div className="text-center mb-6">
@@ -269,7 +269,7 @@ const Login = () => {
             <Link to="/register" className="font-semibold text-[#121214] hover:underline ml-1">Create free account</Link>
           </p>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

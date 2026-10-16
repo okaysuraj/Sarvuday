@@ -24,11 +24,8 @@ export const appointmentsApi = {
   },
   
   getTherapistProfile: async (id: string) => {
-    const response = await api.get(`/content/counsellors`);
-    const therapists = response.data.counsellors || response.data || [];
-    const profile = therapists.find((t: any) => t.counsellor_id === id || t.id === id);
-    if (!profile) throw new Error('Therapist not found');
-    return profile;
+    const response = await api.get(`/content/counsellors/${encodeURIComponent(id)}`);
+    return response.data;
   },
 
   getTherapistAvailability: async (counsellor_id: string, date: string) => {
@@ -37,7 +34,7 @@ export const appointmentsApi = {
     return response.data;
   },
   
-  bookAppointment: async (data: { counsellor_id: string, availability_slot_id: string, reason?: string }) => {
+  bookAppointment: async (data: { counsellor_id: string, availability_slot_id: string, reason?: string, payment_id?: string }) => {
     // POST /user/appointments
     const response = await api.post(`/user/appointments`, data);
     return response.data;

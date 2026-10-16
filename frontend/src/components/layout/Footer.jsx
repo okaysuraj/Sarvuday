@@ -7,9 +7,9 @@ const Footer = () => {
   return (
     <footer className="w-full bg-[#FAF9F6] border-t border-[#EAEAEA] mt-auto text-[#121214]">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-[#EAEAEA]">
+        <div className="grid grid-cols-12 gap-x-4 gap-y-8 md:gap-10 lg:gap-12 pb-12 border-b border-[#EAEAEA]">
           {/* Brand & Mission */}
-          <div className="md:col-span-4 space-y-4">
+          <div className="col-span-12 md:col-span-4 space-y-4">
             <Link to="/" className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-white border border-[#EAEAEA] p-1 flex items-center justify-center shadow-xs overflow-hidden">
                 <img src={sarvudayLogo} alt="SarvUday" className="w-full h-full object-contain" />
@@ -23,7 +23,7 @@ const Footer = () => {
             </p>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EDF3EC] text-[#244B36] text-xs font-medium border-[#D5E5D4]">
               <span className="w-2 h-2 rounded-full bg-[#346538]"></span>
-              End-to-End Encrypted Telehealth
+              Personal wellbeing and counselling
             </div>
           </div>
 
@@ -105,13 +105,8 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} SarvUday Platform. Dedicated to human psychological peace.
           </p>
 
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              <span>Systems Online</span>
-            </div>
-            <span>•</span>
-            <span>If in crisis, call or text <strong>988</strong></span>
+          <div className="flex flex-wrap justify-center items-center gap-6">
+            <Link to="/emergency">Urgent support</Link>
             <div className="flex items-center gap-3 ml-2">
               <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="hover:text-[#121214] transition-colors">
                 <FaLinkedin size={15} />

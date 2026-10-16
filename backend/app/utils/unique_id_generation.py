@@ -1,7 +1,7 @@
 # app/utils/unique_id_generation.py
 
 import uuid
-from app.database import disorders_collection
+from app.database import sync_disorders_collection as disorders_collection
 
 # -------------------------
 # Generic UUID4 Generator with Prefix

@@ -63,7 +63,7 @@ class CounsellorPaymentListResponse(BaseModel):
 class UserPaymentBase(BaseModel):
     payment_id: str
     user_id: str
-    appointment_id: str
+    appointment_id: Optional[str] = None
     amount: Decimal
     status: PaymentStatusEnum = PaymentStatusEnum.pending
     payment_method: PaymentMethodEnum

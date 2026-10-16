@@ -21,10 +21,10 @@ const Notifications = () => {
   }, []);
 
   const markAllAsRead = async () => {
-    // In a real app we'd have a bulk mark as read API, here we might mock it or loop
-    // For now just clear the local unread status if any (they have is_read in backend)
-    const updated = notifications.map(n => ({ ...n, is_read: true }));
-    setNotifications(updated);
+    const unread = notifications.filter(notification => !notification.is_read);
+    const results = await Promise.allSettled(unread.map(notification => axiosInstance.patch(`/notifications/${notification.notification_id}/read`)));
+    const saved = new Set(unread.filter((_, index) => results[index].status === 'fulfilled').map(notification => notification.notification_id));
+    setNotifications(previous => previous.map(notification => saved.has(notification.notification_id) ? { ...notification, is_read: true } : notification));
   };
 
   const getIconForType = (type) => {
@@ -40,7 +40,7 @@ const Notifications = () => {
     return <div className="flex items-center justify-center min-h-[50vh]"><span className="material-symbols-outlined animate-spin text-4xl text-primary">autorenew</span></div>;
   }
 
-  // Separate today's notifications from earlier ones if we had dates, for now we just show all or mock sections if empty
+  // Keep the API's newest-first ordering.
   const today = notifications.slice(0, 2);
   const earlier = notifications.slice(2);
 

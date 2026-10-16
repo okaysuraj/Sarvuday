@@ -75,7 +75,7 @@ const DashboardLayout = () => {
               </span>
             </div>
           </Link>
-          <div className="w-2 h-2 rounded-full bg-emerald-500" title="Connected"></div>
+          
         </div>
 
         {/* Navigation Items */}
@@ -112,9 +112,9 @@ const DashboardLayout = () => {
           >
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8F2B26] animate-pulse"></span>
-              24/7 Crisis Support
+              Urgent support
             </span>
-            <span className="text-[11px] font-mono">988</span>
+            
           </Link>
 
           <Link
@@ -168,7 +168,7 @@ const DashboardLayout = () => {
               aria-label="Notifications"
             >
               <span className="material-symbols-rounded text-[20px]">notifications</span>
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#8F2B26]"></span>
+              
             </Link>
 
             <Link

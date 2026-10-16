@@ -1,0 +1,465 @@
+platform,file,lines,direct_api_references,shared_implementations,review_signal_lines,verification
+web,frontend/src/App.jsx,385,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/admin/CounsellorApproval.jsx,156,GET ${BASE_URL}/admin/counsellors?is_approved=false&limit=50,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/admin/Profile.jsx,380,GET ${BASE_URL}/admin/dashboard/profile; PATCH ${BASE_URL}/admin/dashboard/profile; DELETE ${BASE_URL}/admin/dashboard/profile,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/auth/ForgotPassword.jsx,148,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/auth/GoogleAuth.jsx,47,POST ${BASE_URL}/auth/google-login,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/auth/Login.jsx,277,POST /auth/firebase-login,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/auth/ProtectedRoute.jsx,25,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/auth/Register.jsx,319,POST /auth/firebase-register,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/auth/ResetPassword.jsx,216,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/booking/BookAppointmentButton.jsx,30,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/booking/BookingModal.jsx,148,GET ${BASE_URL}/user/appointments/slots?counsellor_id=${counsellorId}; POST ${BASE_URL}/user/appointments,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/chat/ChatInput.jsx,48,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/chat/ChatMessage.jsx,21,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/chat/ChatSidebar.jsx,89,GET ${BASE_URL}/chat/rooms?user_id=${userId},,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/chat/ChatWindow.jsx,308,POST ${BASE_URL}/chat/rooms/${room.room_id}/messages?user_id=${currentUserId},,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/common/AnimatedCounter.jsx,46,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/common/DataState.jsx,16,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/common/ErrorBoundary.jsx,10,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/common/PageLoader.jsx,31,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/common/ScrollProgressBar.jsx,25,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/common/TypewriterText.jsx,56,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/counselling/VideoCall.jsx,53,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/counsellor/CounsellorCard.jsx,46,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/counsellors/Appointments.jsx,120,GET ${BASE_URL}/counsellor/appointments; PATCH ${BASE_URL}/counsellor/appointments/cancel/${appointmentId},,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/counsellors/Availability.jsx,187,GET ${BASE_URL}/counsellor/availability; POST ${BASE_URL}/counsellor/availability,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/counsellors/Home.jsx,74,GET ${BASE_URL}/counsellor/dashboard,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/counsellors/Profile.jsx,586,GET ${BASE_URL}/counsellor/dashboard/profile; PATCH ${BASE_URL}/counsellor/dashboard/profile; DELETE ${BASE_URL}/counsellor/dashboard/profile,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/dashboard/NeoDashboardLayout.jsx,128,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/dashboard/RecordedDashboards.jsx,36,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/layout/DashboardLayout.jsx,149,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/layout/Footer.jsx,130,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/layout/Header.jsx,185,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/layout/ParticleBackground.jsx,57,,,9; 10; 11; 12; 13; 42,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/AIChat.jsx,171,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/Appointments.jsx,259,GET ${BASE_URL}/user/appointments; GET ${BASE_URL}/user/appointments/slots; POST ${BASE_URL}/user/appointments; POST ${BASE_URL}/payments/create-intent; PATCH ${BASE_URL}/user/appointments/cancel/${appointmentId},,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/Chat.jsx,203,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/EmergencyConnect.jsx,62,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/ExploreCounsellors.jsx,145,GET ${BASE_URL}/content/counsellors,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/Home.jsx,144,GET ${BASE_URL}/user/dashboard,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/Notifications.jsx,68,GET ${BASE_URL}/notifications; PATCH ${BASE_URL}/notifications/${id}/read,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/Prescriptions.jsx,72,GET ${BASE_URL}/user/prescriptions,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/Profile.jsx,613,GET ${BASE_URL}/user/dashboard/profile; PATCH ${BASE_URL}/user/dashboard/profile; DELETE ${BASE_URL}/user/dashboard/profile,,23,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/SettingsPage.jsx,162,DELETE ${BASE_URL}/user/dashboard/profile,,33,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/normal_users/StripePaymentModal.jsx,93,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/components/tracking/RecordedTracking.jsx,141,GET /user/tracking${path}; POST /user/tracking/sleep,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/config/apiConfig.js,7,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/config/firebase.js,27,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/hooks/useApiData.js,22,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/layouts/DashboardLayout.jsx,280,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/layouts/PublicLayout.jsx,16,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/main.jsx,14,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/admin/AdminDashboard.jsx,1,,../../components/dashboard/RecordedDashboards,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/admin/ContentModeration.jsx,275,GET /admin/moderation/queue; POST /admin/moderation/${itemId}/action,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/booking/AppointmentsList.jsx,157,GET /user/appointments; PATCH /user/appointments/cancel/${appointmentId},,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/booking/BookingPayment.jsx,80,POST /user/payments/verify; POST /user/appointments; POST /payments/create-intent,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/booking/BookingSlot.jsx,292,GET /content/counsellors/${counsellorId}; GET /user/appointments/slots,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/booking/BookingType.jsx,120,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/AIChatHome.jsx,174,GET /ai/sessions,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/AIChatSession.jsx,242,GET /ai/chat/${sessionId}; POST /ai/chat,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/AIMoodAnalysisResult.jsx,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/AIRecommendations.jsx,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/Chat.jsx,68,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/SessionNotes.jsx,191,POST /user/tracking/journal,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/SessionRoom.jsx,1,,./VideoCallPage,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/SessionSummary.jsx,13,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/VideoCallPage.jsx,79,GET ${BASE_URL}/user/sessions/join/${sessionId},,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/chat/WaitingRoom.jsx,236,GET /user/appointments/${appointmentId},,22,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/community/CommunityFeed.jsx,135,GET /community/feed; POST /community/posts/${postId}/interact,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/community/EmergencyHelp.jsx,140,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/community/GroupChat.jsx,247,GET /community/groups/${groupId}/feed; POST /community/posts,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/community/PostCreation.jsx,163,POST /community/posts,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/community/SupportGroups.jsx,101,GET /community/groups,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/counsellor/ApprovedCounsellors.jsx,150,GET ${BASE_URL}/content/counsellors,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/counsellor/CounsellorDashboard.jsx,1,,../../components/dashboard/RecordedDashboards,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/counsellor/PatientList.jsx,133,GET /counsellor/appointments,,46,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/counsellor/TherapistProfile.jsx,207,GET /content/counsellors/${id},,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/counsellor/TherapistReviews.jsx,250,GET /content/counsellors; GET /content/counsellors/${activeId}; GET /content/counsellors/${activeId}/reviews; POST /content/counsellors/${targetId}/reviews; GET /content/counsellors/${targetId}/reviews,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/counsellor/TherapistSearch.jsx,178,GET /content/counsellors,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/dashboard/MyRecords.jsx,252,GET /user/tracking/mood/history; GET /user/tracking/journal; GET /user/appointments; GET /user/tracking/goals,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/dashboard/NormalUserDashboard.jsx,1,,../../components/dashboard/RecordedDashboards,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/dashboard/Notifications.jsx,141,GET /notifications; PATCH /notifications/${notification.notification_id}/read,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/financial/EarningsDashboard.jsx,1,,../../components/dashboard/RecordedDashboards,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/financial/Subscriptions.jsx,6,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/financial/Wallet.jsx,8,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/landing/About.jsx,86,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/landing/ContactUs.jsx,207,POST /contact,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/landing/Home.jsx,380,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/landing/PrivacyPolicy.jsx,68,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/landing/Splash.jsx,87,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/landing/Terms.jsx,63,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/AgeDemographics.jsx,138,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/BasicProfileSetup.jsx,116,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/ConsentAgreement.jsx,136,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/Disclaimer.jsx,124,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/EmergencyContact.jsx,172,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/HistoryIntake.jsx,165,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/PreferencesSetup.jsx,243,PATCH /user/dashboard/profile,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/RoleSelection.jsx,92,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/StressFactors.jsx,104,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/onboarding/SymptomsSelection.jsx,94,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/profile/EditProfile.jsx,170,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/profile/UserProfile.jsx,159,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/settings/AccountData.jsx,26,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/settings/AvailabilityManagement.jsx,184,GET /counsellor/availability,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/settings/PrivacySettings.jsx,6,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/settings/ReminderSettings.jsx,6,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/settings/SettingsLayout.jsx,42,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/Assessments.jsx,219,GET /assessments/${type}; POST /assessments/score/${assessmentType},,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/DailyJournal.jsx,156,GET /user/tracking/journal; POST /user/tracking/journal,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/Disorders.jsx,86,GET ${BASE_URL}/content/disorders,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/GoalTracking.jsx,197,GET /user/tracking/goals; POST /user/tracking/goals,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/GuidedMeditation.jsx,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/MedicationPlan.jsx,244,GET /user/tracking/medications; PATCH /user/tracking/medications/${medId}/toggle; POST /user/tracking/medications,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/MoodCalendar.jsx,220,GET /user/tracking/mood/history,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/MoodCheckIn.jsx,127,POST /user/tracking/mood,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/MoodTracker.jsx,180,GET /user/tracking/mood/history,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/ProgressDashboard.jsx,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/SleepMoodCorrelation.jsx,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/SleepTracking.jsx,1,,../../components/tracking/RecordedTracking,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/StressTriggerAnalysis.jsx,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/TodayMoodSnapshot.jsx,1,,../../components/tracking/RecordedTracking,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/TriggerStressFactors.jsx,100,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/VoiceMoodJournal.jsx,213,POST /user/tracking/journal,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/WearableIntegration.jsx,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/pages/tracking/WeeklyReport.jsx,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/utils/axiosInstance.js,56,,,,source inventory; runtime user journeys require authenticated acceptance tests
+web,frontend/src/utils/healthMetrics.js,31,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/appointments.ts,42,GET /content/counsellors; GET /content/counsellors/${encodeURIComponent(id)}; GET /user/appointments/slots; POST /user/appointments,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/assessments.ts,37,GET /assessments/${type}; POST /assessments/score/${type},,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/auth.ts,47,POST /auth/firebase-login; POST /auth/firebase-register,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/chat.ts,47,GET /chat/rooms; GET /chat/rooms/${roomId}/messages; GET /chat/rooms/${roomId}/messages; POST /chat/rooms/${roomId}/messages; POST /chat/rooms/${roomId}/messages; GET /ai/sessions; GET /ai/sessions/${sessionId}/history; POST /ai/chat,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/client.ts,49,,./config,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/community.ts,32,GET /community/groups; GET /community/groups/${groupId}/feed; GET /community/groups/${groupId}/feed; GET /community/groups; POST /community/posts; POST /community/posts/${postId}/interact,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/config.ts,11,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/crisis.ts,8,POST /ai-insights/ai/crisis-alert,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/exercises.ts,13,GET /exercises/; GET /exercises/${id},,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/firebase.ts,30,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/insights.ts,9,GET /ai-insights/ai/summary,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/notifications.ts,14,GET /notifications/; PUT /notifications/${notificationId}/read,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/payments.ts,32,GET /payments/history; GET /user/payments/${paymentId}; POST /payments/create-intent; POST /payments/wallet/topup; GET /payments/wallet,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/session.ts,13,POST /session/${sessionId}/notes; POST /session/${sessionId}/rate,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/therapist.ts,8,GET /user/therapists,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/tracking.ts,53,POST /user/tracking/mood; GET /user/tracking/mood/history; POST /user/tracking/journal; GET /user/tracking/journal; POST /user/tracking/sleep; GET /user/tracking/sleep; GET /user/tracking/medications; PATCH /user/tracking/medications/${medId}/toggle; POST /user/tracking/medications; GET /user/tracking/goals,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/user.ts,49,GET /user/dashboard/profile; PATCH /user/dashboard/profile; GET /user/dashboard; GET /counsellor/dashboard; GET /admin/dashboard; GET /content/counsellors; GET /content/counsellors/${id},,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/api/wallet.ts,23,GET /user/payments?limit=${limit}&offset=${offset}; GET /user/payments/${paymentId}; POST /user/payments/initiate; POST /user/payments/verify,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(auth)/_layout.tsx,13,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(auth)/forgot-password.tsx,76,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(auth)/login.tsx,114,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(auth)/role-selection.tsx,79,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(auth)/sign-up.tsx,132,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(auth)/welcome.tsx,44,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/_layout.tsx,62,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/ai_chat.tsx,121,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/appointments.tsx,127,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/chat.tsx,93,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/community.tsx,156,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/crisis.tsx,143,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/exercises.tsx,152,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/goals.tsx,115,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/index.tsx,24,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/insights.tsx,131,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/journal.tsx,91,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/journey.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/medication.tsx,134,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/mood.tsx,150,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/notifications.tsx,93,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/profile.tsx,110,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/search.tsx,149,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/sleep.tsx,136,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/status.tsx,83,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/therapist_notes.tsx,188,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/therapists.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/(tabs)/wallet.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/_layout.tsx,58,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/crisis_event_log.tsx,259,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/dashboard.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/moderation.tsx,227,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/payment_revenue_dashboard.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/risk_logs.tsx,240,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/therapist_verification/[id].tsx,178,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/therapist_verification.tsx,372,,,34,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/user_management.tsx,207,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/admin/users.tsx,63,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/ai/customize.tsx,143,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/consent.tsx,112,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/disclaimer.tsx,73,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/forgot_password.tsx,71,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/login.tsx,107,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/otp_verification.tsx,103,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/profile_setup.tsx,99,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/set_new_password.tsx,95,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/sign_up.tsx,94,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/splash.tsx,86,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/auth/welcome.tsx,57,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/call/[id].tsx,1,,../../components/calls/DailySession,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/chat/[id].tsx,1,,../../components/chat/RecordedConversation,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/chat/group/[id].tsx,191,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/chat/insight_summary.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/chat/insights.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/chat/mood_analysis.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/chat/risk_level.tsx,90,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/chat/summary.tsx,140,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/chat/therapy_session.tsx,1,,../../components/calls/DailySession,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/community/create.tsx,112,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/community/create_post.tsx,120,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/community/feed.tsx,144,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/community/groups.tsx,148,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/counsellor/dashboard.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/counsellor/patient/[id].tsx,207,,,48,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/counsellor/patients.tsx,151,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/emergency/contact.tsx,42,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/emergency/hub.tsx,78,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/exercises/[id].tsx,171,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/exercises/assigned.tsx,265,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/exercises/breathing.tsx,129,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/exercises/cbt_mode.tsx,118,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/finance/checkout.tsx,1,,../../components/booking/NativeCheckout,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/finance/invoices.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/finance/payment-method.tsx,1,,../../components/booking/NativeCheckout,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/finance/refund.tsx,77,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/finance/revenue-dashboard.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/finance/subscription.tsx,77,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/finance/wallet.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/index.tsx,8,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/intake.tsx,159,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/journal/new.tsx,109,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/ai_insights.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/ai_personality.tsx,181,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/appointment_alerts.tsx,210,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/appointment_type_selection.tsx,74,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/assessments.tsx,238,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/audio_call.tsx,1,,../../components/calls/DailySession,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/biofeedback.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/book_appointment.tsx,1,,../../components/booking/AppointmentBooking,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/cancel_appointment.tsx,125,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/create_post.tsx,250,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/current_symptoms.tsx,101,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/dashboard.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/data_download.tsx,144,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/delete_account.tsx,189,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/emergency_contacts.tsx,214,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/emotion_wheel.tsx,177,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/emotional_trend_graph.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/escalation.tsx,104,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/filter.tsx,120,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/goal_tracking.tsx,191,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/guided_meditation.tsx,92,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/intake_questionnaire.tsx,115,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/invoice_history.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/journal_entry.tsx,110,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/language_settings.tsx,117,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/mental_health_progress_dashboard.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/moderation_warning.tsx,145,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/mood_calendar_heatmap.tsx,192,,,32,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/mood_check_in.tsx,81,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/mood_reminders.tsx,151,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/pay_per_session.tsx,1,,../../components/booking/NativeCheckout,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/payment.tsx,1,,../../components/booking/NativeCheckout,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/payment_method_selection.tsx,1,,../../components/booking/NativeCheckout,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/preferences_setup.tsx,189,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/privacy_settings.tsx,185,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/progress_review.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/quick_check_in_mood.tsx,109,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/refund_request.tsx,218,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/reschedule_appointment.tsx,212,,,51; 135; 179,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/research.tsx,128,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/select_slot.tsx,1,,../../components/booking/AppointmentBooking,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/sleep_vs_mood_correlation.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/stress_trigger_analysis.tsx,155,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/subscription_plans.tsx,234,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/suggested_actions.tsx,160,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/support_groups.tsx,156,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/therapist_list.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/therapist_reviews.tsx,129,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/today_mood_snapshot.tsx,143,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/trigger_stress_factors.tsx,133,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/upcoming_appointments.tsx,181,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/upcoming_session_waiting.tsx,98,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/video_call.tsx,1,,../../components/calls/DailySession,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/voice_journal.tsx,160,,,10,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/wearables.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/patient/weekly_mental_health_report.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/profile/edit.tsx,172,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/session/[id].tsx,7,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/session/end.tsx,90,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/session/video/[id].tsx,1,,../../../components/calls/DailySession,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/settings/language.tsx,60,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/settings/privacy.tsx,74,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/therapy/biofeedback.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/therapy/breathing.tsx,92,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/therapy/cbt.tsx,131,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/therapy/meditation.tsx,61,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/therapy/plan.tsx,65,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/therapy/plan_overview.tsx,166,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/therapy/voice-journal.tsx,102,,,67,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/tracking/correlation.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/tracking/emotion-wheel.tsx,118,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/tracking/goals.tsx,127,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/tracking/history.tsx,1,,../../components/screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/tracking/journal.tsx,108,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/tracking/mood-check-in.tsx,79,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/app/tracking/sleep.tsx,100,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/animated-icon.tsx,148,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/animated-icon.web.tsx,108,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/app-tabs.tsx,32,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/app-tabs.web.tsx,115,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/booking/AppointmentBooking.tsx,26,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/booking/NativeCheckout.native.tsx,47,POST /payments/create-intent; POST /user/payments/verify; POST /user/appointments,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/booking/NativeCheckout.tsx,5,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/calls/DailySession.native.tsx,67,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/calls/DailySession.tsx,5,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/chat/CrisisAlertModal.tsx,52,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/chat/MessageBubble.tsx,45,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/chat/RecordedConversation.tsx,93,GET /chat/rooms/${encodeURIComponent(id)}/messages?limit=100; GET /ai/sessions?limit=1; GET /ai/chat/${encodeURIComponent(selected)}; POST /ai/chat; GET /ai/chat/${encodeURIComponent(response.data.session_id)}; POST /chat/rooms/${encodeURIComponent(id)}/messages,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/common/Screen.tsx,46,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/common/themed-text.tsx,73,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/common/themed-view.tsx,16,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/CustomButton.tsx,2,,./forms/CustomButton,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/CustomInput.tsx,2,,./forms/CustomInput,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/dashboard/AdminDashboard.tsx,1,,../screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/dashboard/PatientDashboard.tsx,1,,../screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/dashboard/TherapistDashboard.tsx,1,,../screens/RecordedScreens,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/external-link.tsx,25,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/forms/CustomButton.tsx,57,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/forms/CustomInput.tsx,33,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/hint-row.tsx,35,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/screens/RecordedScreens.tsx,77,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/themed-text.tsx,2,,./common/themed-text,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/themed-view.tsx,2,,./common/themed-view,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/ui/collapsible.tsx,65,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/components/web-badge.tsx,43,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/constants/theme.ts,65,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/hooks/use-api-resource.ts,32,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/hooks/use-color-scheme.ts,1,,react-native,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/hooks/use-color-scheme.web.ts,21,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/hooks/use-theme.ts,14,,,,source inventory; runtime user journeys require authenticated acceptance tests
+mobile,mobile/src/store/authStore.ts,69,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/__init__.py,0,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/config.py,63,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/core/lifespan.py,50,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/core/middleware.py,65,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/database/__init__.py,32,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/database/mongo.py,55,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/database/mongo_schema.py,129,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/database/mysql.py,5,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/database/postgres.py,62,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/firebase_config.py,23,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/main.py,22,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/__init__.py,26,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/base.py,18,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/chat.py,22,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/events.py,9,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/medical/__init__.py,3,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/medical/prescription.py,28,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/mongodb_models.py,176,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/notification.py,33,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/payments/__init__.py,5,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/payments/counsellor_payment.py,34,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/payments/user_payment.py,35,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/payments/user_refund.py,34,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/scheduling/__init__.py,4,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/scheduling/appointment.py,48,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/scheduling/availability.py,27,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/sessions/__init__.py,4,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/sessions/chat_session.py,25,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/sessions/counselling_session.py,44,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/users/__init__.py,5,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/users/admin.py,40,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/users/counsellor.py,83,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/models/users/normal_user.py,70,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/__init__.py,141,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/__init__.py,26,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/admin_management.py,45,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/analytics.py,36,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/compliance.py,13,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/content_management.py,53,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/counselling_session_management.py,33,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/counsellor_management.py,60,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/dashboard.py,69,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/moderation.py,39,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/admin/normal_user_management.py,22,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/ai.py,65,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/assessments/__init__.py,8,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/assessments/assessments.py,132,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/auth/__init__.py,10,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/auth/firebase_auth.py,37,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/counsellor/__init__.py,13,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/counsellor/appointments.py,44,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/counsellor/availability.py,49,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/counsellor/counselling_sessions.py,31,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/counsellor/dashboard.py,108,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/counsellor/payments.py,33,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/counsellor/prescriptions.py,32,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/__init__.py,16,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/ai_chat.py,217,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/chat.py,299,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/community.py,139,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/contact.py,47,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/counsellors.py,70,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/disorders.py,11,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/exercises.py,36,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/notifications.py,36,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/general/payments.py,138,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/__init__.py,15,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/appointments.py,68,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/chatbot_sessions.py,124,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/counselling_sessions.py,21,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/dashboard.py,93,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/payments.py,60,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/prescription.py,30,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/therapist.py,43,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/routes/normal_user/tracking.py,270,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/__init__.py,184,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/admins_schemas.py,105,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/appointments_schemas.py,90,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/assessments_schemas.py,49,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/auth_schemas.py,120,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/availability_schemas.py,31,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/chatbot_schemas.py,48,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/common_schemas.py,11,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/community_schemas.py,35,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/counselling_session_schemas.py,8,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/counsellors_schemas.py,186,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/disorders_schemas.py,51,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/normal_users_schemas.py,126,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/notification_schemas.py,27,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/payment_schemas.py,109,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/prescription_schemas.py,37,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/schemas/tracking_schemas.py,58,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/admin/__init__.py,19,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/admin/admin_management.py,200,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/admin/analytics_service.py,280,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/admin/content_management.py,135,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/admin/counsellor_management.py,150,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/admin/normal_user_management.py,86,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/appointments/appointment_service.py,138,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/appointments/creators.py,78,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/appointments/fetchers.py,181,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/appointments/utils.py,46,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/appointments/validators.py,66,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/assessments/assessments_services.py,153,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/auth/__init__.py,7,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/auth/firebase_auth_service.py,238,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/availability/availability_service.py,187,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/chatbot/chatbot_context.py,68,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/chatbot/chatbot_inference.py,87,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/chatbot/chatbot_service.py,253,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/counselling_services/counselling_service.py,163,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/counselling_services/daily_service.py,95,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/counsellor/counsellor_management_service.py,126,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/general/__init__.py,9,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/general/counsellors_service.py,39,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/general/general_service.py,27,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/normal_user/user_management_service.py,124,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/notifications/notification_service.py,72,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/payments/counsellor_payment_service.py,61,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/payments/stripe_service.py,31,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/payments/user_payment_service.py,94,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/services/prescriptions/prescription_service.py,55,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/utils/constants.py,120,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/utils/file_utils.py,86,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/utils/helper.py,69,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/utils/oauth.py,122,,,,source inventory; runtime user journeys require authenticated acceptance tests
+backend,backend/app/utils/unique_id_generation.py,87,,,,source inventory; runtime user journeys require authenticated acceptance tests

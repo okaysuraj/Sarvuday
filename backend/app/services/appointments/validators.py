@@ -4,7 +4,8 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.utils.constants import UserTypeEnum, CounsellorAvailabilityStatusEnum
-from app.models import CounsellorAvailability, Appointment
+from app.models import CounsellorAvailability, Appointment, Counsellor
+from datetime import datetime, timezone
 from app.schemas import CreateAppointmentRequest
 
 
@@ -16,7 +17,7 @@ async def validate_slot_availability(
         select(CounsellorAvailability).where(
             CounsellorAvailability.counsellor_id == booking_data.counsellor_id,
             CounsellorAvailability.availability_slot_id == booking_data.availability_slot_id
-        )
+        ).with_for_update()
     )
     slot = result.scalar_one_or_none()
 
@@ -24,7 +25,14 @@ async def validate_slot_availability(
         raise HTTPException(status_code=404, detail="Time slot not found")
 
     if slot.status != CounsellorAvailabilityStatusEnum.available:
-        raise HTTPException(status_code=400, detail="Time slot is no longer available")
+        raise HTTPException(status_code=409, detail="Time slot is no longer available")
+
+    start = slot.start_time.replace(tzinfo=timezone.utc) if slot.start_time.tzinfo is None else slot.start_time
+    if start <= datetime.now(timezone.utc):
+        raise HTTPException(status_code=409, detail="Time slot has already started")
+    counsellor = await db.get(Counsellor, slot.counsellor_id)
+    if not counsellor or not counsellor.is_approved:
+        raise HTTPException(status_code=409, detail="Counsellor is unavailable")
 
     return slot
 

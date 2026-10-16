@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from '../../components/CustomInput';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { authApi } from '../../api/auth';
 
 import { useAuthStore } from '../../store/authStore';
@@ -30,13 +30,19 @@ export default function SignUpScreen() {
     try {
       const userType = role === 'therapist' ? 'therapist' : 'patient';
       const response = await authApi.signUp({ name, email, password, user_type: userType });
+      if (!response.backendData.user_id || !response.backendData.access_token) {
+        throw new Error('The server returned an incomplete registration response.');
+      }
       
       // Store user info and token from backend
       login(
         { 
           uid: response.firebaseUser.uid, 
+          user_id: response.backendData.user_id,
+          name: name.trim(),
           email: response.firebaseUser.email,
-          role: response.backendData.user.user_type
+          user_type: response.backendData.user_type,
+          role: response.backendData.user_type === 'counsellor' ? 'therapist' : 'patient'
         }, 
         response.backendData.access_token
       );
@@ -48,7 +54,6 @@ export default function SignUpScreen() {
         router.replace('/');
       }
     } catch (error: any) {
-      console.log('SignUp Error:', error);
       Alert.alert('Sign Up Failed', error?.response?.data?.detail || error.message || 'Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);

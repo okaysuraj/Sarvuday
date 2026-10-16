@@ -20,6 +20,7 @@ class Notification(Base, BaseMixin):
     __tablename__ = "notifications"
     __table_args__ = (
         Index('idx_notification_user', 'user_id', 'is_read'),
+        Index('ix_notifications_recipient_created', 'user_id', 'user_type', 'created_at'),
         {}
     )
 

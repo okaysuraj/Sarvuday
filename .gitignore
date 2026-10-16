@@ -9,3 +9,6 @@ __pycache__/
 **/.DS_Store
 Huggingface_Repo/
 skills/
+mobile/dist-audit-*/
+frontend/test-results/
+frontend/playwright-report/

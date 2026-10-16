@@ -14,16 +14,12 @@ const MoodCheckIn = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleContinue = async () => {
-    if (!selectedMood) return;
+    if (selectedMood == null) return;
     
     setIsLoading(true);
     try {
       const payload = {
-        moodIndex: selectedMood,
-        energy_level: 5, // default
-        anxiety_level: 5, // default
-        sleep_quality: "Good", // default
-        notes: "Morning check-in"
+        moodIndex: { low: 0, down: 1, neutral: 2, good: 3, great: 4 }[selectedMood]
       };
       await axiosInstance.post('/user/tracking/mood', payload);
       toast.success('Mood logged successfully!');

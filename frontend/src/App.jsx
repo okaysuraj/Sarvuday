@@ -1,101 +1,105 @@
-// src/App.jsx
-
+import React, { lazy, Suspense } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import PublicLayout from './layouts/PublicLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import PageLoader from './components/common/PageLoader';
 
-import Home from './pages/landing/Home';
-import Splash from './pages/landing/Splash';
-import Register from './components/auth/Register';
-import Login from './components/auth/Login';
-import ForgotPassword from './components/auth/ForgotPassword';
-import ResetPassword from './components/auth/ResetPassword';
-import RoleSelection from './pages/onboarding/RoleSelection';
-import BasicProfileSetup from './pages/onboarding/BasicProfileSetup';
-import AgeDemographics from './pages/onboarding/AgeDemographics';
-import SymptomsSelection from './pages/onboarding/SymptomsSelection';
-import StressFactors from './pages/onboarding/StressFactors';
-import HistoryIntake from './pages/onboarding/HistoryIntake';
-import ConsentAgreement from './pages/onboarding/ConsentAgreement';
-import Disclaimer from './pages/onboarding/Disclaimer';
-import EmergencyContact from './pages/onboarding/EmergencyContact';
-import PreferencesSetup from './pages/onboarding/PreferencesSetup';
-import Disorders from './pages/tracking/Disorders';
-import ApprovedCounsellors from './pages/counsellor/ApprovedCounsellors';
-import Assessments from './pages/tracking/Assessments';
-import ContactUs from './pages/landing/ContactUs';
-import About from './pages/landing/About';
-import PrivacyPolicy from './pages/landing/PrivacyPolicy';
-import Terms from './pages/landing/Terms';
+// Public & Onboarding (Code-split)
+const Home = lazy(() => import('./pages/landing/Home'));
+const Splash = lazy(() => import('./pages/landing/Splash'));
+const Register = lazy(() => import('./components/auth/Register'));
+const Login = lazy(() => import('./components/auth/Login'));
+const ForgotPassword = lazy(() => import('./components/auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('./components/auth/ResetPassword'));
+const RoleSelection = lazy(() => import('./pages/onboarding/RoleSelection'));
+const BasicProfileSetup = lazy(() => import('./pages/onboarding/BasicProfileSetup'));
+const AgeDemographics = lazy(() => import('./pages/onboarding/AgeDemographics'));
+const SymptomsSelection = lazy(() => import('./pages/onboarding/SymptomsSelection'));
+const StressFactors = lazy(() => import('./pages/onboarding/StressFactors'));
+const HistoryIntake = lazy(() => import('./pages/onboarding/HistoryIntake'));
+const ConsentAgreement = lazy(() => import('./pages/onboarding/ConsentAgreement'));
+const Disclaimer = lazy(() => import('./pages/onboarding/Disclaimer'));
+const EmergencyContact = lazy(() => import('./pages/onboarding/EmergencyContact'));
+const PreferencesSetup = lazy(() => import('./pages/onboarding/PreferencesSetup'));
+const Disorders = lazy(() => import('./pages/tracking/Disorders'));
+const ApprovedCounsellors = lazy(() => import('./pages/counsellor/ApprovedCounsellors'));
+const Assessments = lazy(() => import('./pages/tracking/Assessments'));
+const ContactUs = lazy(() => import('./pages/landing/ContactUs'));
+const About = lazy(() => import('./pages/landing/About'));
+const PrivacyPolicy = lazy(() => import('./pages/landing/PrivacyPolicy'));
+const Terms = lazy(() => import('./pages/landing/Terms'));
 
-import NormalUserDashboard from './pages/dashboard/NormalUserDashboard';
-import AIChat from './components/normal_users/AIChat';
-import Chat from './pages/chat/Chat';
-import VideoCallPage from './pages/chat/VideoCallPage';
-import CounsellorDashboard from './pages/counsellor/CounsellorDashboard';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import ContentModeration from './pages/admin/ContentModeration';
-import TherapistSearch from './pages/counsellor/TherapistSearch';
-import TherapistProfile from './pages/counsellor/TherapistProfile';
-import BookingType from './pages/booking/BookingType';
-import BookingSlot from './pages/booking/BookingSlot';
-import BookingPayment from './pages/booking/BookingPayment';
-import UserProfile from './pages/profile/UserProfile';
-import Notifications from './pages/dashboard/Notifications';
-import MyRecords from './pages/dashboard/MyRecords';
-import MoodTracker from './pages/tracking/MoodTracker';
-import MoodCheckIn from './pages/tracking/MoodCheckIn';
-import DailyJournal from './pages/tracking/DailyJournal';
-import AIChatHome from './pages/chat/AIChatHome';
-import AIChatSession from './pages/chat/AIChatSession';
-import AIMoodAnalysisResult from './pages/chat/AIMoodAnalysisResult';
-import AIRecommendations from './pages/chat/AIRecommendations';
-import AvailabilityManagement from './pages/settings/AvailabilityManagement';
-import PatientList from './pages/counsellor/PatientList';
-import EarningsDashboard from './pages/financial/EarningsDashboard';
-import EditProfile from './pages/profile/EditProfile';
-import AppointmentsList from './pages/booking/AppointmentsList';
-import WaitingRoom from './pages/chat/WaitingRoom';
-import SessionRoom from './pages/chat/SessionRoom';
-import SessionNotes from './pages/chat/SessionNotes';
-import SessionSummary from './pages/chat/SessionSummary';
-import CommunityFeed from './pages/community/CommunityFeed';
-import PostCreation from './pages/community/PostCreation';
-import SupportGroups from './pages/community/SupportGroups';
-import GroupChat from './pages/community/GroupChat';
-import TherapistReviews from './pages/counsellor/TherapistReviews';
-import SettingsLayout from './pages/settings/SettingsLayout';
-import PrivacySettings from './pages/settings/PrivacySettings';
-import ReminderSettings from './pages/settings/ReminderSettings';
-import AccountData from './pages/settings/AccountData';
-import Wallet from './pages/financial/Wallet';
-import Subscriptions from './pages/financial/Subscriptions';
-import EmergencyHelp from './pages/community/EmergencyHelp';
+// Dashboards & Features (Code-split)
+const NormalUserDashboard = lazy(() => import('./pages/dashboard/NormalUserDashboard'));
+const Chat = lazy(() => import('./pages/chat/Chat'));
+const VideoCallPage = lazy(() => import('./pages/chat/VideoCallPage'));
+const CounsellorDashboard = lazy(() => import('./pages/counsellor/CounsellorDashboard'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const ContentModeration = lazy(() => import('./pages/admin/ContentModeration'));
+const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
+const TherapistSearch = lazy(() => import('./pages/counsellor/TherapistSearch'));
+const TherapistProfile = lazy(() => import('./pages/counsellor/TherapistProfile'));
+const BookingType = lazy(() => import('./pages/booking/BookingType'));
+const BookingSlot = lazy(() => import('./pages/booking/BookingSlot'));
+const BookingPayment = lazy(() => import('./pages/booking/BookingPayment'));
+const UserProfile = lazy(() => import('./pages/profile/UserProfile'));
+const Notifications = lazy(() => import('./pages/dashboard/Notifications'));
+const MyRecords = lazy(() => import('./pages/dashboard/MyRecords'));
+const MoodTracker = lazy(() => import('./pages/tracking/MoodTracker'));
+const MoodCheckIn = lazy(() => import('./pages/tracking/MoodCheckIn'));
+const DailyJournal = lazy(() => import('./pages/tracking/DailyJournal'));
+const AIChatHome = lazy(() => import('./pages/chat/AIChatHome'));
+const AIChatSession = lazy(() => import('./pages/chat/AIChatSession'));
+const AIMoodAnalysisResult = lazy(() => import('./pages/chat/AIMoodAnalysisResult'));
+const AIRecommendations = lazy(() => import('./pages/chat/AIRecommendations'));
+const AvailabilityManagement = lazy(() => import('./pages/settings/AvailabilityManagement'));
+const PatientList = lazy(() => import('./pages/counsellor/PatientList'));
+const EarningsDashboard = lazy(() => import('./pages/financial/EarningsDashboard'));
+const EditProfile = lazy(() => import('./pages/profile/EditProfile'));
+const AppointmentsList = lazy(() => import('./pages/booking/AppointmentsList'));
+const WaitingRoom = lazy(() => import('./pages/chat/WaitingRoom'));
+const SessionRoom = lazy(() => import('./pages/chat/SessionRoom'));
+const SessionNotes = lazy(() => import('./pages/chat/SessionNotes'));
+const SessionSummary = lazy(() => import('./pages/chat/SessionSummary'));
+const CommunityFeed = lazy(() => import('./pages/community/CommunityFeed'));
+const PostCreation = lazy(() => import('./pages/community/PostCreation'));
+const SupportGroups = lazy(() => import('./pages/community/SupportGroups'));
+const GroupChat = lazy(() => import('./pages/community/GroupChat'));
+const TherapistReviews = lazy(() => import('./pages/counsellor/TherapistReviews'));
+const SettingsLayout = lazy(() => import('./pages/settings/SettingsLayout'));
+const PrivacySettings = lazy(() => import('./pages/settings/PrivacySettings'));
+const ReminderSettings = lazy(() => import('./pages/settings/ReminderSettings'));
+const AccountData = lazy(() => import('./pages/settings/AccountData'));
+const Wallet = lazy(() => import('./pages/financial/Wallet'));
+const Subscriptions = lazy(() => import('./pages/financial/Subscriptions'));
+const EmergencyHelp = lazy(() => import('./pages/community/EmergencyHelp'));
 
-// New Phase 8 Imports
-import GoalTracking from './pages/tracking/GoalTracking';
-import SleepTracking from './pages/tracking/SleepTracking';
-import SleepMoodCorrelation from './pages/tracking/SleepMoodCorrelation';
-import MedicationPlan from './pages/tracking/MedicationPlan';
-import StressTriggerAnalysis from './pages/tracking/StressTriggerAnalysis';
-import TriggerStressFactors from './pages/tracking/TriggerStressFactors';
-import ProgressDashboard from './pages/tracking/ProgressDashboard';
-import WeeklyReport from './pages/tracking/WeeklyReport';
-import TodayMoodSnapshot from './pages/tracking/TodayMoodSnapshot';
-import MoodCalendar from './pages/tracking/MoodCalendar';
-import VoiceMoodJournal from './pages/tracking/VoiceMoodJournal';
-import WearableIntegration from './pages/tracking/WearableIntegration';
-import GuidedMeditation from './pages/tracking/GuidedMeditation';
+// Tracking Suite (Code-split)
+const GoalTracking = lazy(() => import('./pages/tracking/GoalTracking'));
+const SleepTracking = lazy(() => import('./pages/tracking/SleepTracking'));
+const SleepMoodCorrelation = lazy(() => import('./pages/tracking/SleepMoodCorrelation'));
+const MedicationPlan = lazy(() => import('./pages/tracking/MedicationPlan'));
+const StressTriggerAnalysis = lazy(() => import('./pages/tracking/StressTriggerAnalysis'));
+const TriggerStressFactors = lazy(() => import('./pages/tracking/TriggerStressFactors'));
+const ProgressDashboard = lazy(() => import('./pages/tracking/ProgressDashboard'));
+const WeeklyReport = lazy(() => import('./pages/tracking/WeeklyReport'));
+const TodayMoodSnapshot = lazy(() => import('./pages/tracking/TodayMoodSnapshot'));
+const MoodCalendar = lazy(() => import('./pages/tracking/MoodCalendar'));
+const VoiceMoodJournal = lazy(() => import('./pages/tracking/VoiceMoodJournal'));
+const WearableIntegration = lazy(() => import('./pages/tracking/WearableIntegration'));
+const GuidedMeditation = lazy(() => import('./pages/tracking/GuidedMeditation'));
+
 const App = () => {
   return (
     <Router>
       <ToastContainer />
-      <Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
         {/* Public routes with Header/Footer */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
@@ -126,10 +130,11 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/emergency" element={<EmergencyHelp />} />
         </Route>
 
         {/* Dashboard routes without Header/Footer */}
-        <Route element={<DashboardLayout />}>
+        <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
           <Route
             path="/normal-user-dashboard/*"
             element={
@@ -317,7 +322,7 @@ const App = () => {
           <Route
             path="/counsellor-dashboard/*"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['counsellor']}>
                 <CounsellorDashboard />
               </ProtectedRoute>
             }
@@ -325,7 +330,7 @@ const App = () => {
           <Route
             path="/admin-dashboard/*"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboard />
               </ProtectedRoute>
             }
@@ -333,7 +338,7 @@ const App = () => {
           <Route
             path="/admin-dashboard/moderation"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['admin']}>
                 <ContentModeration />
               </ProtectedRoute>
             }
@@ -347,13 +352,13 @@ const App = () => {
           <Route path="/community/groups" element={<SupportGroups />} />
           <Route path="/community/groups/:groupId" element={<GroupChat />} />
           <Route path="/settings" element={<SettingsLayout />}>
+            <Route index element={<Navigate to="privacy" replace />} />
             <Route path="privacy" element={<PrivacySettings />} />
             <Route path="reminders" element={<ReminderSettings />} />
             <Route path="data" element={<AccountData />} />
           </Route>
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/subscriptions" element={<Subscriptions />} />
-          <Route path="/emergency" element={<EmergencyHelp />} />
           
           {/* Tracking Routes */}
           <Route path="/goals" element={<ProtectedRoute><GoalTracking /></ProtectedRoute>} />
@@ -369,8 +374,14 @@ const App = () => {
           <Route path="/journal/voice" element={<ProtectedRoute><VoiceMoodJournal /></ProtectedRoute>} />
           <Route path="/wearables" element={<ProtectedRoute><WearableIntegration /></ProtectedRoute>} />
           <Route path="/meditation" element={<ProtectedRoute><GuidedMeditation /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<Navigate to="/normal-user-dashboard" replace />} />
+          <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><UserManagement /></ProtectedRoute>} />
+          <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/moderation" element={<ProtectedRoute allowedRoles={['admin']}><ContentModeration /></ProtectedRoute>} />
         </Route>
+        <Route path="*" element={<main className="max-w-xl mx-auto p-8"><h1 className="text-2xl font-semibold">Page not found</h1><a className="inline-block underline mt-4" href="/">Return home</a></main>} />
       </Routes>
+      </Suspense>
     </Router>
   );
 };

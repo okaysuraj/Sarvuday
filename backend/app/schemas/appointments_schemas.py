@@ -42,7 +42,7 @@ class AppointmentBase(BaseModel):
     appointment_id: str
     status: AppointmentStatusEnum
     availability_slot_id: str
-    payment_id: str
+    payment_id: Optional[str] = None
     reason: Optional[str] = None
     created_at: datetime
     session: SessionAppointmentView
@@ -56,6 +56,7 @@ class CreateAppointmentRequest(BaseModel):
     counsellor_id: str
     availability_slot_id: str
     reason: Optional[str] = None
+    payment_id: Optional[str] = None
 
 class CreateAppointmentResponse(BaseModel):
     message: str

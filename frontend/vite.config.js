@@ -9,12 +9,28 @@ export default defineConfig({
     port: 5180,       // Dedicated port for Sarvuday
   },
   build: {
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
-          ui: ['framer-motion', 'react-icons', 'recharts']
+        manualChunks(id) {
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/react-router-dom/')) {
+            return 'vendor-react';
+          }
+          if (id.includes('node_modules/firebase/')) {
+            return 'vendor-firebase';
+          }
+          if (id.includes('node_modules/recharts/') || id.includes('node_modules/d3-')) {
+            return 'vendor-charts';
+          }
+          if (id.includes('node_modules/framer-motion/')) {
+            return 'vendor-motion';
+          }
+          if (id.includes('node_modules/react-icons/')) {
+            return 'vendor-icons';
+          }
+          if (id.includes('node_modules/@daily-co/')) {
+            return 'vendor-daily';
+          }
         }
       }
     }

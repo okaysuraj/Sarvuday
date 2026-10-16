@@ -14,7 +14,7 @@ class UserRefund(Base, BaseMixin):
         {}
     )
 
-    refund_id = Column(String(20), primary_key=True, nullable=False, unique=True)
+    refund_id = Column(String(20), primary_key=True, nullable=False)
     user_id = Column(String(20), ForeignKey("normal_users.user_id"), nullable=True)
     payment_id = Column(String(20), ForeignKey("user_payments.payment_id"), nullable=True)
 

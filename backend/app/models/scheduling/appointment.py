@@ -1,6 +1,6 @@
 # app/models/scheduling/appointment.py
 
-from sqlalchemy import Column, String, Text, Enum as SqlEnum, ForeignKey, Index, Boolean
+from sqlalchemy import Column, String, Text, Enum as SqlEnum, ForeignKey, Index, Boolean, text
 from sqlalchemy.orm import relationship
 from app.database.postgres import Base
 from app.models.base import BaseMixin
@@ -10,6 +10,12 @@ class Appointment(Base, BaseMixin):
     __tablename__ = "appointments"
     __table_args__ = (
         Index('appointment_id', 'availability_slot_id', 'session_id'),
+        Index('uq_appointment_active_slot', 'availability_slot_id', unique=True,
+              postgresql_where=text("status IN ('pending', 'confirmed')")),
+        Index('uq_appointment_session', 'session_id', unique=True),
+        Index('uq_appointment_payment', 'payment_id', unique=True),
+        Index('ix_appointments_user_status_created', 'user_id', 'status', 'created_at'),
+        Index('ix_appointments_counsellor_status_created', 'counsellor_id', 'status', 'created_at'),
     )
 
     appointment_id = Column(String(20), primary_key=True, nullable=False)
@@ -21,7 +27,7 @@ class Appointment(Base, BaseMixin):
     status = Column(SqlEnum(AppointmentStatusEnum), default=AppointmentStatusEnum.pending)
     reason = Column(Text)
     is_emergency = Column(Boolean, default=False)
-    payment_id = Column(String(20), ForeignKey("user_payments.payment_id"), nullable=False)
+    payment_id = Column(String(20), ForeignKey("user_payments.payment_id"), nullable=True)
     
     # Refund if any
     refund_id = Column(String(20), ForeignKey("user_refunds.refund_id"), nullable=True)

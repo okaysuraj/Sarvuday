@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TouchableOpacity, Animated, AccessibilityInfo, AppState } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter, useFocusEffect } from 'expo-router';
 
 export default function BreathingExerciseScreen() {
   const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(false);
   const [instruction, setInstruction] = useState('Ready');
   const [scale] = useState(new Animated.Value(1));
+  const [reduceMotion, setReduceMotion] = useState(false);
+  useEffect(() => {
+    void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+    const preference = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduceMotion);
+    const lifecycle = AppState.addEventListener('change', state => { if (state !== 'active') setIsPlaying(false); });
+    return () => { preference.remove(); lifecycle.remove(); };
+  }, []);
+  useFocusEffect(useCallback(() => () => { setIsPlaying(false); scale.stopAnimation(); scale.setValue(1); }, [scale]));
 
   useEffect(() => {
     let interval: any;
@@ -26,7 +34,7 @@ export default function BreathingExerciseScreen() {
         setInstruction(phases[phaseIndex].text);
         
         Animated.timing(scale, {
-          toValue: phases[phaseIndex].scaleTo,
+          toValue: reduceMotion ? 1 : phases[phaseIndex].scaleTo,
           duration: phases[phaseIndex].duration,
           useNativeDriver: true,
         }).start();
@@ -47,8 +55,9 @@ export default function BreathingExerciseScreen() {
 
     return () => {
       if (interval) clearInterval(interval);
+      scale.stopAnimation();
     };
-  }, [isPlaying, scale]);
+  }, [isPlaying, scale, reduceMotion]);
 
   return (
     <View className="flex-1 bg-cream-bg">
@@ -59,7 +68,7 @@ export default function BreathingExerciseScreen() {
         </TouchableOpacity>
         
         <View className="flex-1 justify-center items-center">
-          <Text className="font-headline-md font-bold text-primary text-xl tracking-tighter uppercase">MindEase AI</Text>
+          <Text className="font-headline-md font-bold text-primary text-xl tracking-tighter uppercase">Sarvuday AI</Text>
         </View>
 
         <TouchableOpacity className="w-10 h-10 rounded-full border-[1.5px] border-ink-black bg-accent-pink items-center justify-center">

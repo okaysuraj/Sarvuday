@@ -15,7 +15,7 @@ class UserPayment(Base, BaseMixin):
         {}
     )
 
-    payment_id = Column(String(20), primary_key=True, nullable=False, unique=True)
+    payment_id = Column(String(20), primary_key=True, nullable=False)
     user_id = Column(String(20), ForeignKey("normal_users.user_id"), nullable=False)
     
     amount = Column(DECIMAL(10, 2), nullable=False)

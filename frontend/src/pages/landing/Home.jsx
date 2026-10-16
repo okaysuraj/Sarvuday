@@ -76,7 +76,7 @@ const Home = () => {
               <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-[#71717A]">
                 <div className="flex items-center gap-1.5">
                   <span className="material-symbols-rounded text-emerald-600 text-base">verified_user</span>
-                  <span>HIPAA & GDPR Standards</span>
+                  <span>Personal wellbeing tools</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="material-symbols-rounded text-emerald-600 text-base">lock</span>
@@ -172,20 +172,20 @@ const Home = () => {
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center divide-y md:divide-y-0 md:divide-x divide-[#EAEAEA]">
             <div className="py-2 px-4">
-              <span className="block text-xl font-semibold text-[#121214]">100%</span>
-              <span className="text-xs text-[#71717A]">Private & Encrypted</span>
+              <span className="block text-xl font-semibold text-[#121214]">Your account</span>
+              <span className="text-xs text-[#71717A]">Personal records</span>
             </div>
             <div className="py-2 px-4">
-              <span className="block text-xl font-semibold text-[#121214]">24/7</span>
+              <span className="block text-xl font-semibold text-[#121214]">Chat</span>
               <span className="text-xs text-[#71717A]">Empathetic AI Companion</span>
             </div>
             <div className="py-2 px-4">
-              <span className="block text-xl font-semibold text-[#121214]">Certified</span>
-              <span className="text-xs text-[#71717A]">Licensed Psychologists</span>
+              <span className="block text-xl font-semibold text-[#121214]">Find</span>
+              <span className="text-xs text-[#71717A]">Approved counsellors</span>
             </div>
             <div className="py-2 px-4">
-              <span className="block text-xl font-semibold text-[#121214]">Immediate</span>
-              <span className="text-xs text-[#71717A]">Emergency Escalation</span>
+              <span className="block text-xl font-semibold text-[#121214]">Support</span>
+              <span className="text-xs text-[#71717A]">Saved emergency contacts</span>
             </div>
           </div>
         </div>
@@ -282,7 +282,7 @@ const Home = () => {
                 Moderated Circles &amp; Crisis Protocol
               </h3>
               <p className="text-sm text-[#6E6D7A] leading-relaxed">
-                Find solidarity in anonymous peer support groups. If acute distress or crisis keywords are detected, our system instantly offers one-tap emergency contacts and local hotlines.
+                Browse peer support groups and keep an emergency contact saved in your profile.
               </p>
             </div>
 

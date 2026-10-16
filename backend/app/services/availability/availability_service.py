@@ -1,187 +1,110 @@
-# app/services/appointments/availability_service.py
-
+﻿"""Availability writes serialize by counsellor and preserve booked clinical history."""
+from datetime import datetime, timezone
+from fastapi import HTTPException
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete, update
-from sqlalchemy import select, and_, or_
-from app.models import CounsellorAvailability, Counsellor
-from app.schemas import AvailableSlotsResponse, AddAvailabilitySlot, UpdateAvailabilitySlot, AvailableSlot
-from fastapi import HTTPException, status
+from app.models import Appointment, Counsellor, CounsellorAvailability
+from app.schemas import AddAvailabilitySlot, AvailableSlot, AvailableSlotsResponse, UpdateAvailabilitySlot
+from app.utils.constants import CounsellorAvailabilityStatusEnum
 from app.utils.unique_id_generation import generate_available_slot_id
+
+
+def utc_naive(value):
+    return value.astimezone(timezone.utc).replace(tzinfo=None) if value.tzinfo else value
 
 
 class CounsellorAvailabilityService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def get_availability_slots(
-        self,
-        counsellor_id: str
-    ) -> AvailableSlotsResponse:
-        """Get all availability slots for counsellor"""
-        # Check eligibility first
+    async def get_availability_slots(self, counsellor_id: str):
         await self._check_counsellor_eligibility(counsellor_id)
-        
-        result = await self.db.execute(
-            select(CounsellorAvailability).where(
-                CounsellorAvailability.counsellor_id == counsellor_id, 
-            ).order_by(
-                CounsellorAvailability.start_time
-            )
-        )
-        slots = result.scalars().all()
-        
-        return AvailableSlotsResponse(
-            slots=[AvailableSlot.model_validate(slot) for slot in slots]
-        )
+        records = (await self.db.execute(select(CounsellorAvailability)
+            .where(CounsellorAvailability.counsellor_id == counsellor_id)
+            .order_by(CounsellorAvailability.start_time).limit(500))).scalars().all()
+        return AvailableSlotsResponse(slots=[AvailableSlot.model_validate(record) for record in records])
 
-    async def add_availability_slot(
-        self,
-        counsellor_id: str,
-        availability_data: AddAvailabilitySlot
-    ) -> AvailableSlot:
-        """Add new availability slot"""
-        # Check eligibility first
-        await self._check_counsellor_eligibility(counsellor_id)
-
-        start_time = availability_data.start_time
-        end_time = availability_data.end_time
-        notes = availability_data.notes
-        
-        if start_time >= end_time:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Start time must be before end time"
-            )
-
-        # Check for overlapping slots
-        overlapping = await self.db.execute(
-            select(CounsellorAvailability).where(
-                and_(
-                    CounsellorAvailability.counsellor_id == counsellor_id,
-                    or_(
-                        and_(
-                            CounsellorAvailability.start_time < end_time,
-                            CounsellorAvailability.end_time > start_time
-                        )
-                    )
-                )
-            )
-        )
-        
-        if overlapping.scalars().first():
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Time slot overlaps with existing availability"
-            )
-
-        availability_slot_id = generate_available_slot_id()
-        
-        slot = CounsellorAvailability(
-            availability_slot_id=availability_slot_id,
-            counsellor_id=counsellor_id,
-            start_time=start_time,
-            end_time=end_time,
-            notes=notes
-        )
-        
-        self.db.add(slot)
-        await self.db.commit()
-        await self.db.refresh(slot)
-        
-        return AvailableSlot.model_validate(slot)
-
-    async def remove_availability_slot(
-        self,
-        counsellor_id: str,
-        slot_id: str,
-    ) -> bool:
-        """Remove availability slot"""
-        # Check eligibility first
-        await self._check_counsellor_eligibility(counsellor_id)
-        
-        result = await self.db.execute(
-            delete(CounsellorAvailability).where(
-                and_(
-                    CounsellorAvailability.availability_slot_id == slot_id,
-                    CounsellorAvailability.counsellor_id == counsellor_id
-                )
-            )
-        )
-        await self.db.commit()
-        return result.rowcount > 0
-
-    async def update_availability_slot(
-        self,
-        counsellor_id: str,
-        slot_id: str,
-        update_slot_data: UpdateAvailabilitySlot
-    ) -> AvailableSlot:
-        """Update availability slot (optimized)"""
-        # Check eligibility first
-        await self._check_counsellor_eligibility(counsellor_id)
-
-        # Get existing slot first for validation
-        existing_slot = await self.db.execute(
-            select(CounsellorAvailability).where(
-                CounsellorAvailability.availability_slot_id == slot_id,
-                CounsellorAvailability.counsellor_id == counsellor_id
-            )
-        )
-        existing_slot = existing_slot.scalars().first()
-        
-        if not existing_slot:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Slot not found or not owned by counsellor"
-            )
-
-        # Build update values dynamically
-        update_values = update_slot_data.model_dump(exclude_unset=True)
-        
-        # Handle time validation
-        start_time = update_values.get('start_time', existing_slot.start_time)
-        end_time = update_values.get('end_time', existing_slot.end_time)
-        
-        if start_time >= end_time:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Start time must be before end time"
-            )
-
-        # Perform the update
-        await self.db.execute(
-            update(CounsellorAvailability)
-            .where(
-                CounsellorAvailability.availability_slot_id == slot_id,
-                CounsellorAvailability.counsellor_id == counsellor_id
-            )
-            .values(**update_values)
-        )
-        await self.db.commit()
-        # Refresh and return the updated object
-        await self.db.refresh(existing_slot)
-        return AvailableSlot.model_validate(existing_slot)
-    
-    async def _check_counsellor_eligibility(self, counsellor_id: str):
-        """Check if counsellor exists, is verified, and approved"""
-        counsellor = await self.db.execute(
-            select(Counsellor).where(Counsellor.user_id == counsellor_id)
-        )
-        counsellor = counsellor.scalars().first()
-        
-        if not counsellor:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Counsellor not found"
-            )
-        if not counsellor.is_email_verified:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Counsellor account is not verified"
-            )
+    async def _check_counsellor_eligibility(self, counsellor_id, *, lock=False):
+        query = select(Counsellor).where(Counsellor.user_id == counsellor_id)
+        if lock:
+            query = query.with_for_update()
+        counsellor = (await self.db.execute(query)).scalar_one_or_none()
+        if counsellor is None:
+            raise HTTPException(status_code=404, detail="Counsellor not found")
+        if not counsellor.is_email_verified and not counsellor.is_phone_verified:
+            raise HTTPException(status_code=403, detail="Counsellor account verification is required")
         if not counsellor.is_approved:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Counsellor account is not approved by admin"
-            )
+            raise HTTPException(status_code=403, detail="Counsellor approval is required")
+        return counsellor
+
+    def _validate_times(self, start, end):
+        start, end = utc_naive(start), utc_naive(end)
+        if start >= end:
+            raise HTTPException(status_code=422, detail="Start time must be before end time")
+        if start <= datetime.now(timezone.utc).replace(tzinfo=None):
+            raise HTTPException(status_code=422, detail="Availability must start in the future")
+        return start, end
+
+    async def _assert_no_overlap(self, counsellor_id, start, end, exclude_id=None):
+        query = select(CounsellorAvailability.availability_slot_id).where(
+            CounsellorAvailability.counsellor_id == counsellor_id,
+            CounsellorAvailability.start_time < end, CounsellorAvailability.end_time > start,
+        )
+        if exclude_id is not None:
+            query = query.where(CounsellorAvailability.availability_slot_id != exclude_id)
+        if (await self.db.execute(query.limit(1))).first():
+            raise HTTPException(status_code=409, detail="Time slot overlaps with existing availability")
+
+    async def add_availability_slot(self, counsellor_id: str, availability_data: AddAvailabilitySlot):
+        # Lock a stable parent row even when no availability rows exist yet.
+        await self._check_counsellor_eligibility(counsellor_id, lock=True)
+        start, end = self._validate_times(availability_data.start_time, availability_data.end_time)
+        await self._assert_no_overlap(counsellor_id, start, end)
+        if availability_data.status == CounsellorAvailabilityStatusEnum.booked:
+            raise HTTPException(status_code=422, detail="Only the booking workflow can book an availability slot")
+        record = CounsellorAvailability(availability_slot_id=generate_available_slot_id(),
+            counsellor_id=counsellor_id, start_time=start, end_time=end,
+            notes=availability_data.notes, status=availability_data.status or CounsellorAvailabilityStatusEnum.available)
+        self.db.add(record)
+        await self.db.commit()
+        await self.db.refresh(record)
+        return AvailableSlot.model_validate(record)
+
+    async def _owned_slot(self, counsellor_id, slot_id):
+        record = (await self.db.execute(select(CounsellorAvailability).where(
+            CounsellorAvailability.availability_slot_id == slot_id,
+            CounsellorAvailability.counsellor_id == counsellor_id,
+        ).with_for_update())).scalar_one_or_none()
+        if record is None:
+            raise HTTPException(status_code=404, detail="Availability slot not found")
+        if record.status == CounsellorAvailabilityStatusEnum.booked:
+            raise HTTPException(status_code=409, detail="Booked slots cannot be changed")
+        if record.is_locked and record.locked_until and utc_naive(record.locked_until) > datetime.now(timezone.utc).replace(tzinfo=None):
+            raise HTTPException(status_code=409, detail="Availability is currently locked")
+        if (await self.db.execute(select(Appointment.appointment_id).where(
+                Appointment.availability_slot_id == slot_id).limit(1))).first():
+            raise HTTPException(status_code=409, detail="Slots with appointment history cannot be changed")
+        return record
+
+    async def update_availability_slot(self, counsellor_id: str, slot_id: str, update_slot_data: UpdateAvailabilitySlot):
+        await self._check_counsellor_eligibility(counsellor_id, lock=True)
+        record = await self._owned_slot(counsellor_id, slot_id)
+        values = update_slot_data.model_dump(exclude_unset=True)
+        if values.get("start_time", record.start_time) is None or values.get("end_time", record.end_time) is None:
+            raise HTTPException(status_code=422, detail="Availability times cannot be cleared")
+        start, end = self._validate_times(values.get("start_time", record.start_time),
+                                           values.get("end_time", record.end_time))
+        await self._assert_no_overlap(counsellor_id, start, end, exclude_id=slot_id)
+        record.start_time, record.end_time = start, end
+        if "notes" in values:
+            record.notes = values["notes"]
+        await self.db.commit()
+        await self.db.refresh(record)
+        return AvailableSlot.model_validate(record)
+
+    async def remove_availability_slot(self, counsellor_id: str, slot_id: str):
+        await self._check_counsellor_eligibility(counsellor_id, lock=True)
+        record = await self._owned_slot(counsellor_id, slot_id)
+        await self.db.delete(record)
+        await self.db.commit()
         return True

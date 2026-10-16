@@ -50,7 +50,7 @@ const BasicProfileSetup = () => {
       </header>
 
       {/* Main Content Canvas */}
-      <main className="flex-grow flex flex-col items-center justify-center p-margin-mobile md:p-margin-desktop relative overflow-hidden">
+      <div className="flex-grow flex flex-col items-center justify-center p-margin-mobile md:p-margin-desktop relative overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute top-10 left-10 w-24 h-24 bg-surface rounded-full border-outline -z-10 hidden md:block"></div>
         <div className="absolute bottom-20 right-20 w-32 h-32 bg-secondary-container border-outline transform -z-10 hidden md:block"></div>
@@ -108,7 +108,7 @@ const BasicProfileSetup = () => {
             </button>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

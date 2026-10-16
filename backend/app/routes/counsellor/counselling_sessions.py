@@ -24,7 +24,7 @@ async def delete_session_rooms(
     current_user: Counsellor = Depends(ensure_counsellor_user),
     db: AsyncSession = Depends(get_db)
 ):
-    status = await CounsellingSessionService(db).delete_counselling_room(session_id)
+    status = await CounsellingSessionService(db).delete_counselling_room(session_id, counsellor_id=current_user.user_id)
     if status:
         return None
     else:

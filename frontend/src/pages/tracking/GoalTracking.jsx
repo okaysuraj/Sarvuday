@@ -30,30 +30,24 @@ const GoalTracking = () => {
     try {
       const res = await axiosInstance.post('/user/tracking/goals', {
         title: newTitle,
-        progress_total: parseInt(newTotal) || 7,
-        progress_current: 0,
-        streak: 1
+        progress_total: Number(newTotal)
       });
-      setGoals(prev => [...prev, res.data || { id: Date.now(), title: newTitle, progress_total: parseInt(newTotal) || 7, progress_current: 0, streak: 1 }]);
+      if (!res.data.id) throw new Error('The goal was not saved.');
+      setGoals((await axiosInstance.get('/user/tracking/goals')).data);
       toast.success('New goal created successfully!');
-    } catch (err) {
-      setGoals(prev => [...prev, { id: Date.now(), title: newTitle, progress_total: parseInt(newTotal) || 7, progress_current: 0, streak: 1 }]);
-      toast.success('Goal added to your wellness plan!');
-    } finally {
       setShowAddModal(false);
       setNewTitle('');
+    } catch (err) {
+      toast.error(err.userMessage || 'Your goal could not be saved.');
     }
   };
 
-  const handleIncrementGoal = (goalId) => {
-    setGoals(prev => prev.map(g => {
-      if (g.id === goalId) {
-        const nextCurrent = Math.min(g.progress_total, (g.progress_current || 0) + 1);
-        toast.success(`Progress recorded for "${g.title}"!`);
-        return { ...g, progress_current: nextCurrent };
-      }
-      return g;
-    }));
+  const handleIncrementGoal = async (goalId) => {
+    try {
+      const response = await axiosInstance.patch(`/user/tracking/goals/${goalId}/increment`);
+      setGoals(previous => previous.map(goal => goal.id === goalId ? { ...goal, progress_current: response.data.progress_current, streak: response.data.streak } : goal));
+      toast.success('Your progress was saved.');
+    } catch { toast.error('Your progress could not be saved. Please try again.'); }
   };
 
   if (loading) {

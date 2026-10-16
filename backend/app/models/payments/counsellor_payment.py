@@ -15,7 +15,7 @@ class CounsellorPayment(Base, BaseMixin):
         {}
     )
 
-    payment_id = Column(String(20), primary_key=True, nullable=False, unique=True)
+    payment_id = Column(String(20), primary_key=True, nullable=False)
     counsellor_id = Column(String(20), ForeignKey("counsellors.user_id"), nullable=False)
     appointment_id = Column(String(20), ForeignKey("appointments.appointment_id"), nullable=False)
 

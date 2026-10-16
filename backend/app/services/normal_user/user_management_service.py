@@ -4,12 +4,14 @@ from fastapi import HTTPException, UploadFile
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from app.models import (
     NormalUser,
     ChatSession,
-    CounsellingSession
+    CounsellingSession,
+    Appointment,
 )
+from app.utils.constants import AppointmentStatusEnum
 from app.schemas import (
     NormalUserBase,
     UserUpdateRequest,
@@ -27,35 +29,36 @@ class UserManagementService:
         """Get comprehensive dashboard overview"""
         # Get user basic info
         user = await self._get_user(user_id)
-        
+
         # Get recent chat sessions count
         chat_sessions_count = await self.db.execute(
             select(func.count()).where(ChatSession.user_id == user_id)
         )
-        
+
         # Get upcoming appointments
         upcoming_appointments = await self.db.execute(
-            select(CounsellingSession).where(
+            select(CounsellingSession).join(Appointment, Appointment.session_id == CounsellingSession.session_id).where(
                 CounsellingSession.user_id == user_id,
-                CounsellingSession.session_scheduled_at > datetime.now()
-            ).order_by(CounsellingSession.session_scheduled_at)
+                Appointment.status.in_([AppointmentStatusEnum.pending, AppointmentStatusEnum.confirmed]),
+                CounsellingSession.session_scheduled_at > datetime.now(timezone.utc).replace(tzinfo=None)
+            ).order_by(CounsellingSession.session_scheduled_at).limit(50)
         )
-        
+
         # Total sessions attended
         total_sessions = await self.db.execute(
             select(func.count()).where(
                 CounsellingSession.user_id == user_id,
-                CounsellingSession.session_expires_at < datetime.now()
+                CounsellingSession.video_session_completed.is_(True)
             )
         )
-        
+
         # Total chat messages
         total_messages = await self.db.execute(
             select(func.sum(ChatSession.message_count)).where(
                 ChatSession.user_id == user_id
             )
         )
-        
+
         return DashboardOverviewResponse(
             user=NormalUserBase.model_validate(user),
             chat_sessions_count=chat_sessions_count.scalar(),
@@ -102,16 +105,9 @@ class UserManagementService:
             message="Data Updated successfully",
             user=NormalUserBase.model_validate(user)
         )
-        
+
     async def delete_account(self, user_id: str) -> bool:
-        """Soft delete counsellor account"""
-        user = await self._get_user(user_id)
-        
-        await self.db.delete(user)
-        await self.db.commit()
-        await self.db.refresh(user)
-        
-        return None
+        raise HTTPException(status_code=503, detail="Account erasure is unavailable until cross-store retention and audit workflows are configured.")
 
     async def _get_user(self, user_id: str) -> NormalUser:
         """Internal method to get user or raise 404"""
@@ -119,5 +115,3 @@ class UserManagementService:
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         return user
-    
-    

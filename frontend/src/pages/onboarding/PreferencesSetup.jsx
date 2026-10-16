@@ -107,7 +107,7 @@ const PreferencesSetup = () => {
       </header>
 
       {/* Main Content Canvas */}
-      <main className="flex-grow overflow-y-auto px-margin-mobile md:px-margin-desktop py-12 flex flex-col items-center">
+      <div className="flex-grow overflow-y-auto px-margin-mobile md:px-margin-desktop py-12 flex flex-col items-center">
         <div className="w-full max-w-3xl flex flex-col gap-stack-lg">
           {/* Header Section */}
           <section className="text-center">
@@ -223,7 +223,7 @@ const PreferencesSetup = () => {
             </div>
           </form>
         </div>
-      </main>
+      </div>
 
       {/* Footer */}
       <footer className="bg-surface-container dark:bg-surface-dim w-full py-8 border-t-[1.5px] border-outline px-margin-mobile md:px-margin-desktop mt-auto">

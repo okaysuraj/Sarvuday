@@ -17,7 +17,7 @@ const ConsentAgreement = () => {
   return (
     <div className="bg-surface min-h-screen flex items-center justify-center p-margin-desktop relative overflow-hidden font-body-md text-on-surface">
       {/* Main Content Container (Bento Layout) */}
-      <main className="w-full max-w-[1120px] bg-surface-container-lowest border-outline rounded-xl shadow-subtle flex flex-col md:flex-row overflow-hidden relative z-10">
+      <div className="w-full max-w-[1120px] bg-surface-container-lowest border-outline rounded-xl shadow-subtle flex flex-col md:flex-row overflow-hidden relative z-10">
         
         {/* Left Column: Context & Graphic */}
         <section className="w-full md:w-[40%] bg-accent-sage p-container-padding border-b-[1.5px] md:border-b-0 md:border-r-[1.5px] border-outline flex flex-col justify-between">
@@ -128,7 +128,7 @@ const ConsentAgreement = () => {
           </div>
         </section>
 
-      </main>
+      </div>
     </div>
   );
 };

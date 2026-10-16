@@ -47,12 +47,12 @@ const VoiceMoodJournal = () => {
       }, 1000);
       try {
         recognitionRef.current?.start();
-      } catch (e) {}
+      } catch { /* Recognition may already be stopped or started. */ }
     } else {
       clearInterval(interval);
       try {
         recognitionRef.current?.stop();
-      } catch (e) {}
+      } catch { /* Recognition may already be stopped or started. */ }
     }
     return () => clearInterval(interval);
   }, [isRecording]);
@@ -76,7 +76,7 @@ const VoiceMoodJournal = () => {
         text: `[Voice Note] ${transcript}`
       });
       toast.success('Voice journal saved successfully!');
-      navigate('/daily-journal');
+      navigate('/journal');
     } catch (error) {
       console.error(error);
       toast.error('Failed to save voice journal.');

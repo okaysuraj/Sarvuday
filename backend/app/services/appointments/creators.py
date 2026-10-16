@@ -21,7 +21,7 @@ async def create_appointment_record(
     user_id: str,
     slot: CounsellorAvailability,
     booking_data: CreateAppointmentRequest,
-    payment_id: str
+    payment_id: str | None
 ) -> AppointmentBase:
     appointment_id = generate_appointment_id()
     

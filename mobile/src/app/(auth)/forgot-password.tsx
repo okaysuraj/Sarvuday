@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from '../../components/CustomInput';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { authApi } from '../../api/auth';
 
 export default function ForgotPasswordScreen() {

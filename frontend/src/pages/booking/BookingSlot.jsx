@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import { toast } from 'react-toastify';
 
 const BookingSlot = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const counsellorId = location.state?.counsellorId;
+  const { id } = useParams();
+  const counsellorId = location.state?.counsellorId || id;
   const bookingType = location.state?.bookingType;
 
   const [counsellor, setCounsellor] = useState(null);
@@ -64,7 +65,7 @@ const BookingSlot = () => {
           date: selectedDate.toISOString()
         }
       });
-      setAvailableSlots(res.data.slots || []);
+      setAvailableSlots((res.data.slots || []).map(slot => ({ ...slot, id: slot.availability_slot_id })));
       setSelectedSlot(null);
     } catch (err) {
       console.error('Failed to load slots', err);
@@ -94,17 +95,17 @@ const BookingSlot = () => {
 
   // Group slots
   const morningSlots = availableSlots.filter(s => {
-    const hour = parseInt(s.start_time.split(':')[0], 10);
+    const hour = new Date(s.start_time).getHours();
     return hour < 12;
   });
   
   const afternoonSlots = availableSlots.filter(s => {
-    const hour = parseInt(s.start_time.split(':')[0], 10);
+    const hour = new Date(s.start_time).getHours();
     return hour >= 12 && hour < 17;
   });
   
   const eveningSlots = availableSlots.filter(s => {
-    const hour = parseInt(s.start_time.split(':')[0], 10);
+    const hour = new Date(s.start_time).getHours();
     return hour >= 17;
   });
 
@@ -141,7 +142,7 @@ const BookingSlot = () => {
               </div>
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">schedule</span>
-                <span className="font-label-bold text-label-bold">{counsellor.session_duration || 50} min Session</span>
+                <span className="font-label-bold text-label-bold">{counsellor.session_duration ?? 'Not recorded'} min Session</span>
               </div>
             </div>
           </div>
@@ -212,7 +213,7 @@ const BookingSlot = () => {
                           onClick={() => !s.is_booked && setSelectedSlot(s)}
                           className={`py-3 px-4 rounded-xl border-outline text-center transition-all ${s.is_booked ? 'bg-surface-container-low opacity-40 cursor-not-allowed line-through' : selectedSlot?.id === s.id ? 'slot-selected' : 'hover:bg-secondary-container'}`}
                         >
-                          {s.start_time.substring(0, 5)}
+                          {new Date(s.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </button>
                       ))}
                     </div>
@@ -232,7 +233,7 @@ const BookingSlot = () => {
                           onClick={() => !s.is_booked && setSelectedSlot(s)}
                           className={`py-3 px-4 rounded-xl border-outline text-center transition-all ${s.is_booked ? 'bg-surface-container-low opacity-40 cursor-not-allowed line-through' : selectedSlot?.id === s.id ? 'slot-selected' : 'hover:bg-secondary-container'}`}
                         >
-                          {s.start_time.substring(0, 5)}
+                          {new Date(s.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </button>
                       ))}
                     </div>
@@ -252,7 +253,7 @@ const BookingSlot = () => {
                           onClick={() => !s.is_booked && setSelectedSlot(s)}
                           className={`py-3 px-4 rounded-xl border-outline text-center transition-all ${s.is_booked ? 'bg-surface-container-low opacity-40 cursor-not-allowed line-through' : selectedSlot?.id === s.id ? 'slot-selected' : 'hover:bg-secondary-container'}`}
                         >
-                          {s.start_time.substring(0, 5)}
+                          {new Date(s.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </button>
                       ))}
                     </div>
@@ -268,7 +269,7 @@ const BookingSlot = () => {
         <div className="flex flex-col">
           <span className="font-label-md text-label-md text-on-surface-variant">Selected Appointment</span>
           <span className="font-label-bold text-label-bold text-ink-black">
-            {selectedDate.toDateString()} {selectedSlot ? `at ${selectedSlot.start_time.substring(0, 5)}` : '--:--'}
+            {selectedDate.toDateString()} {selectedSlot ? `at ${new Date(selectedSlot.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : '--:--'}
           </span>
         </div>
         <div className="flex gap-4">

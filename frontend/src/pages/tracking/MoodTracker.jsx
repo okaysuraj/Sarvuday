@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
+import { moodValue, recordedStreak } from '../../utils/healthMetrics';
 
 const MoodTracker = () => {
   const navigate = useNavigate();
@@ -43,30 +44,30 @@ const MoodTracker = () => {
       const d = new Date(log.created_at);
       if (d.getFullYear() === currentDate.getFullYear() && d.getMonth() === currentDate.getMonth()) {
         const day = d.getDate();
-        moodByDay[day] = log;
+        if (!moodByDay[day]) moodByDay[day] = log;
       }
     }
   });
 
   const getMoodVisual = (val) => {
-    const num = parseInt(val);
+    const num = moodValue(val);
     switch (num) {
-      case 5:
-        return { color: 'bg-emerald-100 border-emerald-300 text-emerald-800', icon: 'sentiment_very_satisfied', label: 'Elevated' };
       case 4:
-        return { color: 'bg-teal-50 border-teal-200 text-teal-800', icon: 'sentiment_satisfied', label: 'Good' };
+        return { color: 'bg-emerald-100 border-emerald-300 text-emerald-800', icon: 'sentiment_very_satisfied', label: 'Elevated' };
       case 3:
-        return { color: 'bg-stone-50 border-stone-200 text-stone-700', icon: 'sentiment_neutral', label: 'Neutral' };
+        return { color: 'bg-teal-50 border-teal-200 text-teal-800', icon: 'sentiment_satisfied', label: 'Good' };
       case 2:
-        return { color: 'bg-amber-50 border-amber-200 text-amber-800', icon: 'sentiment_dissatisfied', label: 'Low' };
+        return { color: 'bg-stone-50 border-stone-200 text-stone-700', icon: 'sentiment_neutral', label: 'Neutral' };
       case 1:
+        return { color: 'bg-amber-50 border-amber-200 text-amber-800', icon: 'sentiment_dissatisfied', label: 'Low' };
+      case 0:
         return { color: 'bg-rose-50 border-rose-200 text-rose-800', icon: 'sentiment_very_dissatisfied', label: 'Very Low' };
       default:
         return { color: 'bg-white border-stone-200 text-stone-400', icon: 'add', label: 'Unlogged' };
     }
   };
 
-  const streakDays = Math.max(moodLogs.length > 0 ? 1 : 0, moodLogs.length);
+  const streakDays = recordedStreak(moodLogs);
 
   return (
     <div className="flex-1 w-full bg-background p-margin-mobile md:p-margin-desktop relative">

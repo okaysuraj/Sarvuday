@@ -9,7 +9,12 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/images/icon.png",
-      "bundleIdentifier": "com.sarvuday.app"
+      "bundleIdentifier": "com.sarvuday.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Sarvuday requires camera access for telehealth therapy sessions.",
+        "NSMicrophoneUsageDescription": "Sarvuday requires microphone access for telehealth therapy sessions and audio check-ins.",
+        "CADisableMinimumFrameDurationOnPhone": true
+      }
     },
     "android": {
       "package": "com.sarvuday.app",
@@ -19,6 +24,12 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "MODIFY_AUDIO_SETTINGS",
+        "INTERNET"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -37,7 +48,14 @@
       ],
       "expo-image",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-secure-store",
+      [
+        "@stripe/stripe-react-native",
+        {
+          "enableGooglePay": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

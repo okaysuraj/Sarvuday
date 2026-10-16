@@ -1,7 +1,7 @@
 # app/services/disorders_services.py
 
 from fastapi import HTTPException
-from app.database import disorders_collection
+from app.database import sync_disorders_collection
 from app.schemas import DisordersListResponse
 
 
@@ -10,7 +10,7 @@ class DisordersService:
     @classmethod
     def fetch_disorders_data(cls) -> DisordersListResponse:
 
-        disorders_cursor = disorders_collection.find()
+        disorders_cursor = sync_disorders_collection.find()
         disorders = list(disorders_cursor)
         total_count = len(disorders)
 

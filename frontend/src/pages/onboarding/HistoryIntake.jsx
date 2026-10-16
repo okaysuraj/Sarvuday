@@ -71,7 +71,7 @@ const HistoryIntake = () => {
       </header>
 
       {/* Main Content Canvas */}
-      <main className="flex-grow flex flex-col items-center justify-center py-stack-lg px-margin-desktop">
+      <div className="flex-grow flex flex-col items-center justify-center py-stack-lg px-margin-desktop">
         <div className="w-full max-w-3xl bg-surface-container-lowest neo-border rounded-xl p-container-padding shadow-subtle relative overflow-hidden">
           {/* Decorative Elements */}
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-surface rounded-full neo-border opacity-50 pointer-events-none hidden md:block"></div>
@@ -157,7 +157,7 @@ const HistoryIntake = () => {
             <span className="material-symbols-outlined text-lg">arrow_forward</span>
           </button>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

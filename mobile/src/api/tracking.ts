@@ -36,6 +36,16 @@ export const trackingApi = {
     return response.data;
   },
 
+  toggleMedication: async (medId: string) => {
+    const response = await api.patch(`/user/tracking/medications/${medId}/toggle`);
+    return response.data;
+  },
+
+  addMedication: async (data: { name: string, dosage?: string, schedule?: string, refill_days?: number, type?: string }) => {
+    const response = await api.post('/user/tracking/medications', data);
+    return response.data;
+  },
+
   getGoals: async () => {
     const response = await api.get('/user/tracking/goals');
     return response.data;

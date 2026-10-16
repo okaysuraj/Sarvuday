@@ -6,8 +6,9 @@ import { Outlet } from 'react-router-dom';
 const PublicLayout = () => {
   return (
     <>
+      <a href="#main-content" className="sr-only focus:not-sr-only">Skip to main content</a>
       <Header />
-      <Outlet /> {/* nested route content goes here */}
+      <main id="main-content"><Outlet /></main>
       <Footer />
     </>
   );

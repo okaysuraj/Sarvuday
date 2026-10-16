@@ -3,15 +3,17 @@
 
 import React, { useState } from 'react';
 import styles from './ChatInput.module.css';
-import { FaPaperclip, FaSmile, FaArrowUp } from 'react-icons/fa';
+import { FaArrowUp } from 'react-icons/fa';
 
 const ChatInput = ({ onSend, onTyping }) => {
   const [input, setInput] = useState('');
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = () => {
-    if (!input.trim()) return;
-    onSend(input.trim());
-    setInput('');
+  const handleSubmit = async () => {
+    if (!input.trim() || sending) return;
+    setSending(true);
+    try { if (await onSend(input.trim()) !== false) setInput(''); }
+    finally { setSending(false); }
   };
 
   const handleChange = (e) => {
@@ -22,11 +24,12 @@ const ChatInput = ({ onSend, onTyping }) => {
   return (
     <div className={styles.chatInputContainer}>
       <div className={styles.chatInputWrapper}>
-        <button className={styles.iconButton}><FaPaperclip /></button>
         <input
           type="text"
           className={styles.inputField}
           placeholder="Type your message..."
+          aria-label="Message"
+          maxLength={10000}
           value={input}
           onChange={handleChange}
           onKeyDown={(e) => {
@@ -36,8 +39,7 @@ const ChatInput = ({ onSend, onTyping }) => {
             }
           }}
         />
-        <button className={styles.iconButton}><FaSmile /></button>
-        <button className={styles.sendButton} onClick={handleSubmit}>
+        <button className={styles.sendButton} onClick={handleSubmit} disabled={sending || !input.trim()} aria-label="Send message">
           <FaArrowUp />
         </button>
       </div>

@@ -53,7 +53,7 @@ const StressFactors = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center px-margin-desktop py-stack-lg max-w-[1200px] mx-auto w-full">
+      <div className="flex-grow flex flex-col items-center px-margin-desktop py-stack-lg max-w-[1200px] mx-auto w-full">
         {/* Progress Bar */}
         <div className="w-full max-w-2xl mb-stack-lg">
           <div className="flex justify-between items-center mb-stack-sm font-label-bold text-label-bold">
@@ -96,7 +96,7 @@ const StressFactors = () => {
             <span className="material-symbols-outlined">arrow_forward</span>
           </button>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

@@ -29,4 +29,4 @@ async def get_prescriptions(
     current_user: Counsellor = Depends(ensure_counsellor_user),
     db: AsyncSession = Depends(get_db)
 ):
-    return await PrescriptionService(db).get_users_prescription(current_user.user_id, user_id)
+    return await PrescriptionService(db).get_user_prescriptions(user_id, current_user.user_id)

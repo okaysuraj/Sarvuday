@@ -1,6 +1,1 @@
-import React from 'react';
-import { Redirect } from 'expo-router';
-
-export default function PatientDashboardRedirect() {
-  return <Redirect href="/(tabs)" />;
-}
+export { RecordedPatientDashboard as default } from '../../components/screens/RecordedScreens';

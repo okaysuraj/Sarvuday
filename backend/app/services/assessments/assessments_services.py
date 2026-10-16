@@ -2,7 +2,7 @@
 
 from fastapi import HTTPException, status
 from datetime import datetime, timezone
-from app.database import assessments_collection, users_scores_collection
+from app.database import sync_assessments_collection, sync_users_scores_collection
 from app.schemas import AssessmentSchema, ScoreResponseSchema, ScoreRequestSchema, ComprehensiveScoreResponse
 from app.utils.constants import (
     MAX_BDI_SCORE,
@@ -12,7 +12,7 @@ from app.utils.constants import (
 
 class AssessmentsService:
     def fetch_assessment_data(self, question_type: str) -> AssessmentSchema:
-        questions_cursor = assessments_collection.find(
+        questions_cursor = sync_assessments_collection.find(
             {"questionType": question_type}
         ).sort("id", 1)
 
@@ -36,7 +36,7 @@ class AssessmentsService:
     def save_score_to_db(self, user_id: str, assessment_type: str, score: ScoreResponseSchema) -> None:
         """Save user score to database"""
         try:
-            users_scores_collection.insert_one({
+            sync_users_scores_collection.insert_one({
                 "user_id": user_id,
                 "assessment_type": assessment_type,
                 "score": score.final_score,
@@ -123,7 +123,7 @@ class AssessmentsService:
         results = {}
         latest_timestamp = None
         
-        for doc in users_scores_collection.aggregate(pipeline):
+        for doc in sync_users_scores_collection.aggregate(pipeline):
             assessment_type = doc["_id"]
             score_data = doc["latest_score"]
             

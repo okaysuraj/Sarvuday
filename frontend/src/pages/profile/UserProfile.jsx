@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
-import { toast } from 'react-toastify';
 import { auth } from '../../config/firebase';
 
 const UserProfile = () => {
@@ -13,7 +12,7 @@ const UserProfile = () => {
     const fetchProfile = async () => {
       try {
         const userType = localStorage.getItem('userType') || 'normal_user';
-        const endpoint = userType === 'counsellor' ? '/counsellor/dashboard/profile' : '/user/dashboard/profile';
+        const endpoint = userType === 'admin' ? '/admin/dashboard/profile' : userType === 'counsellor' ? '/counsellor/dashboard/profile' : '/user/dashboard/profile';
         const response = await axiosInstance.get(endpoint);
         setProfileData(response.data);
       } catch (error) {
@@ -41,7 +40,7 @@ const UserProfile = () => {
   }
 
   const userName = profileData?.name || 'User';
-  const location = profileData?.city ? `${profileData.city}, India` : 'Not specified';
+  const location = profileData?.city ? [profileData.city, profileData.country].filter(Boolean).join(', ') : 'Not specified';
 
   return (
     <div className="flex-grow p-stack-lg max-w-6xl mx-auto w-full space-y-gutter">
@@ -51,8 +50,8 @@ const UserProfile = () => {
       <section className="flex flex-col md:flex-row items-center gap-stack-md bg-white p-10 rounded-xl border-outline shadow-subtle">
         <div className="relative">
           <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-outline overflow-hidden bg-surface flex items-center justify-center text-4xl text-ink-black font-bold">
-            {profileData?.profile_image_url ? (
-              <img alt="Profile" className="w-full h-full object-cover" src={profileData.profile_image_url} />
+            {profileData?.profile_pic ? (
+              <img alt="Profile" className="w-full h-full object-cover" src={profileData.profile_pic} />
             ) : (
               userName.charAt(0).toUpperCase()
             )}
@@ -65,7 +64,7 @@ const UserProfile = () => {
         <div className="text-center md:text-left flex-grow">
           <h2 className="font-display-lg text-display-lg text-on-surface mb-1">{userName}</h2>
           <div className="flex flex-wrap justify-center md:justify-start gap-3 items-center">
-            <span className="px-4 py-1.5 bg-secondary-container text-on-secondary-container font-label-bold text-label-bold rounded-full border-outline">Standard Member</span>
+            <span className="px-4 py-1.5 bg-secondary-container text-on-secondary-container font-label-bold text-label-bold rounded-full border-outline">Account profile</span>
             <span className="text-on-surface-variant font-body-md flex items-center gap-1">
               <span className="material-symbols-outlined text-[18px]">location_on</span> {location}
             </span>

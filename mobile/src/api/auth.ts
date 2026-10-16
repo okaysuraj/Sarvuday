@@ -3,7 +3,7 @@ import { auth } from './firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken, sendPasswordResetEmail } from 'firebase/auth';
 
 export const authApi = {
-  login: async (email: string, password: string, user_type: string = 'patient') => {
+  login: async (email: string, password: string) => {
     // 1. Authenticate with Firebase
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const idToken = await getIdToken(userCredential.user);
@@ -11,7 +11,6 @@ export const authApi = {
     // 2. Send ID token to FastAPI backend
     const response = await apiClient.post('/auth/firebase-login', {
       id_token: idToken,
-      user_type: user_type
     });
     
     return {
@@ -28,7 +27,7 @@ export const authApi = {
     // 2. Register user in FastAPI backend
     const response = await apiClient.post('/auth/firebase-register', {
       id_token: idToken,
-      user_type: data.user_type || 'patient',
+      user_type: data.user_type === 'therapist' ? 'counsellor' : 'normal_user',
       name: data.name,
       terms_accepted: true,
       privacy_policy_accepted: true

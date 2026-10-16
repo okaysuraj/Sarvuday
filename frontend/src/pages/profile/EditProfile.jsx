@@ -15,7 +15,7 @@ const EditProfile = () => {
   });
 
   const userType = localStorage.getItem('userType');
-  const endpoint = userType === 'counsellor' ? '/counsellor/dashboard/profile' : '/dashboard/profile';
+  const endpoint = userType === 'admin' ? '/admin/dashboard/profile' : userType === 'counsellor' ? '/counsellor/dashboard/profile' : '/user/dashboard/profile';
 
   useEffect(() => {
     fetchProfile();
@@ -42,7 +42,9 @@ const EditProfile = () => {
     e.preventDefault();
     try {
       setSaving(true);
-      await axiosInstance.patch(endpoint, profileData);
+      const payload = new FormData();
+      for (const key of ['name', 'phone_number', 'bio']) payload.append(key, profileData[key] || '');
+      await axiosInstance.patch(endpoint, payload);
       toast.success('Profile updated successfully');
       navigate('/profile');
     } catch (err) {

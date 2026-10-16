@@ -2,8 +2,10 @@
 
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from app.models import Counsellor
+from sqlalchemy import select, func
+from datetime import datetime, timedelta, timezone
+from app.models import Counsellor, CounsellorAvailability, Appointment, CounsellingSession, CounsellorPayment
+from app.utils.constants import AppointmentStatusEnum, CounsellorPayoutStatusEnum
 from app.schemas import (
     CounsellorBase, 
     CounsellorUpdateRequest, 
@@ -25,16 +27,33 @@ class CounsellorManagementService:
         counsellor = result.scalars().first()
         
         if not counsellor:
-            return None
-            
+            raise HTTPException(status_code=404, detail="Counsellor not found")
+        now = datetime.now(timezone.utc)
+        # Scheduling columns currently hold UTC timestamps without an offset.
+        upcoming = (await self.db.execute(select(func.count()).select_from(Appointment)
+            .join(CounsellorAvailability, Appointment.availability_slot_id == CounsellorAvailability.availability_slot_id)
+            .where(Appointment.counsellor_id == counsellor_id,
+                   Appointment.status.in_([AppointmentStatusEnum.pending, AppointmentStatusEnum.confirmed]),
+                   CounsellorAvailability.start_time > now.replace(tzinfo=None)))).scalar_one()
+        counts = (await self.db.execute(select(
+            func.count(Appointment.appointment_id),
+            func.count(Appointment.appointment_id).filter(Appointment.status == AppointmentStatusEnum.completed),
+        ).where(Appointment.counsellor_id == counsellor_id))).one()
+        payouts = (await self.db.execute(select(
+            func.coalesce(func.sum(CounsellorPayment.net_payout_amount), 0),
+            func.count(CounsellorPayment.payment_id).filter(CounsellorPayment.payout_date >= now - timedelta(days=30)),
+        ).where(CounsellorPayment.counsellor_id == counsellor_id,
+                CounsellorPayment.status == CounsellorPayoutStatusEnum.completed))).one()
+        rating = (await self.db.execute(select(func.avg(CounsellingSession.rating))
+            .where(CounsellingSession.counsellor_id == counsellor_id))).scalar_one()
         return CounsellorDashboardView(
-            upcoming_appointments=0,
-            total_sessions=0,
-            recent_payments=0,
-            completion_rate=0,
-            average_rating=0,
+            upcoming_appointments=upcoming,
+            total_sessions=counts[1],
+            recent_payments=payouts[1],
+            completion_rate=round(counts[1] * 100 / counts[0], 2) if counts[0] else 0,
+            average_rating=float(rating) if rating is not None else None,
             profile_completion=self._calculate_profile_completion(counsellor),
-            revenue=0,
+            revenue=float(payouts[0]),
         )
 
     async def get_profile(self, counsellor_id: str) -> Optional[CounsellorBase]:
@@ -78,14 +97,7 @@ class CounsellorManagementService:
         )
 
     async def delete_account(self, user_id: str) -> bool:
-        """Soft delete counsellor account"""
-        counsellor = await self._get_counsellor(user_id)
-        
-        await self.db.delete(counsellor)
-        await self.db.commit()
-        await self.db.refresh(counsellor)
-        
-        return None
+        raise HTTPException(status_code=503, detail="Account erasure is unavailable until cross-store retention and audit workflows are configured.")
     
     async def _get_counsellor(self, user_id: str) -> Counsellor:
         """Internal method to get user or raise 404"""

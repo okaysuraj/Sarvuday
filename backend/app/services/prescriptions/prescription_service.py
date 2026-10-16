@@ -1,113 +1,55 @@
-# app/services/prescriptions/prescription_service.py
-
-from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, and_
-from typing import List, Optional
-from app.models import Prescription, CounsellingSession
 from datetime import datetime, timezone
-from app.schemas import (
-    PrescriptionListResponse,
-    PrescriptionBase,
-    PrescriptionCreate
-)
+from fastapi import HTTPException
+from sqlalchemy import select, func
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models import Prescription, CounsellingSession
+from app.schemas import PrescriptionBase, PrescriptionCreate, PrescriptionListResponse
+from app.utils.unique_id_generation import generate_prescription_id
+
 
 class PrescriptionService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def list_prescriptions(self, user_id: str) -> PrescriptionListResponse:
-        # Query to get the total count of prescriptions
-        count_query = select(func.count()).where(Prescription.user_id == user_id)
-        total_result = await self.db.execute(count_query)
-        total_count = total_result.scalar()
+    async def list_prescriptions(self, user_id: str, limit: int = 100, offset: int = 0):
+        query = select(Prescription).where(Prescription.user_id == user_id)
+        total = (await self.db.execute(select(func.count()).select_from(query.subquery()))).scalar_one()
+        records = (await self.db.execute(query.order_by(Prescription.generated_date.desc())
+                                        .limit(min(max(limit, 1), 100)).offset(max(offset, 0)))).scalars().all()
+        return PrescriptionListResponse(total_count=total, prescriptions=[PrescriptionBase.model_validate(p) for p in records])
 
-        # Query to get the list of prescriptions
-        result = await self.db.execute(
-            select(Prescription)
-            .where(Prescription.user_id == user_id)
-            .order_by(Prescription.generated_date.desc())
-        )
-        prescriptions = result.scalars().all()
-
-        # Return the response in the desired format
-        return PrescriptionListResponse(
-            total_count=total_count,
-            prescriptions=[PrescriptionBase.model_validate(prescription) for prescription in prescriptions]
-        )
-
-    async def get_prescription(
-        self,
-        user_id: str,
-        prescription_id: str
-    ) -> PrescriptionBase:
-        # Fetch the prescription by ID
-        prescription = await self.db.get(Prescription, prescription_id)
-        if not prescription or prescription.user_id != user_id:
+    async def get_prescription(self, user_id: str, prescription_id: str):
+        record = await self.db.get(Prescription, prescription_id)
+        if record is None or record.user_id != user_id:
             raise HTTPException(status_code=404, detail="Prescription not found")
+        return PrescriptionBase.model_validate(record)
 
-        # Return the prescription in the desired format
-        return PrescriptionBase.model_validate(prescription)
-    
-    async def create_prescription(
-        self,
-        counsellor_id: str,
-        prescription_data: PrescriptionCreate
-    ) -> PrescriptionBase:
-        """Create a new prescription"""
-        # Verify the session belongs to this counsellor
-        session = await self.db.execute(
-            select(CounsellingSession).where(
-                and_(
-                    CounsellingSession.session_id == prescription_data.session_id,
-                    CounsellingSession.counsellor_id == counsellor_id
-                )
-            )
-        )
-        session = session.scalars().first()
-        
-        if not session:
-            raise ValueError("Session not found or doesn't belong to this counsellor")
-
-        prescription = Prescription(
-            **prescription_data.model_dump(),
-            counsellor_id=counsellor_id,
-            created_at=datetime.now(timezone.utc)
-        )
-        
-        self.db.add(prescription)
+    async def create_prescription(self, counsellor_id: str, prescription_data: PrescriptionCreate):
+        session = (await self.db.execute(select(CounsellingSession).where(
+            CounsellingSession.session_id == prescription_data.session_id,
+            CounsellingSession.counsellor_id == counsellor_id,
+            CounsellingSession.user_id == prescription_data.user_id,
+        ))).scalar_one_or_none()
+        if session is None:
+            raise HTTPException(status_code=404, detail="Patient session not found")
+        if not session.video_session_completed:
+            raise HTTPException(status_code=409, detail="Complete the clinical session before creating a prescription")
+        now = datetime.now(timezone.utc)
+        record = Prescription(**prescription_data.model_dump(), prescription_id=generate_prescription_id(),
+                              counsellor_id=counsellor_id, generated_date=now.replace(tzinfo=None), created_at=now)
+        self.db.add(record)
         await self.db.commit()
-        await self.db.refresh(prescription)
-        return prescription
-    
-    async def get_user_prescriptions(
-        self,
-        user_id: str,
-        counsellor_id: str
-    ) -> List[PrescriptionBase]:
-        """Get all prescriptions for a user by this counsellor"""
-        result = await self.db.execute(
-            select(Prescription).where(
-                and_(
-                    Prescription.user_id == user_id,
-                    Prescription.counsellor_id == counsellor_id
-                )
-            ).order_by(Prescription.created_at.desc())
-        )
-        return result.scalars().all()
-    
-    async def get_session_prescription(
-        self,
-        session_id: str,
-        counsellor_id: str
-    ) -> Optional[PrescriptionBase]:
-        """Get prescription for a specific session"""
-        result = await self.db.execute(
-            select(Prescription).where(
-                and_(
-                    Prescription.session_id == session_id,
-                    Prescription.counsellor_id == counsellor_id
-                )
-            )
-        )
-        return result.scalars().first()
+        await self.db.refresh(record)
+        return PrescriptionBase.model_validate(record)
+
+    async def get_user_prescriptions(self, user_id: str, counsellor_id: str):
+        query = select(Prescription).where(Prescription.user_id == user_id, Prescription.counsellor_id == counsellor_id)
+        total = (await self.db.execute(select(func.count()).select_from(query.subquery()))).scalar_one()
+        records = (await self.db.execute(query.order_by(Prescription.created_at.desc()).limit(100))).scalars().all()
+        return PrescriptionListResponse(total_count=total, prescriptions=[PrescriptionBase.model_validate(p) for p in records])
+
+    async def get_session_prescription(self, session_id: str, counsellor_id: str):
+        record = (await self.db.execute(select(Prescription).where(
+            Prescription.session_id == session_id, Prescription.counsellor_id == counsellor_id
+        ).order_by(Prescription.created_at.desc()).limit(1))).scalar_one_or_none()
+        return PrescriptionBase.model_validate(record) if record else None

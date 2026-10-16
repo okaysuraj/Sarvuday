@@ -1,6 +1,6 @@
 # app/models/scheduling/availability.py
 
-from sqlalchemy import Column, String, Text, DateTime, Enum as SqlEnum, ForeignKey, Index, Boolean
+from sqlalchemy import Column, String, Text, DateTime, Enum as SqlEnum, ForeignKey, Index, Boolean, CheckConstraint
 from sqlalchemy.orm import relationship
 from app.database.postgres import Base
 from app.models.base import BaseMixin
@@ -10,6 +10,8 @@ class CounsellorAvailability(Base, BaseMixin):
     __tablename__ = "counsellor_availability"
     __table_args__ = (
         Index('idx_availability_slot', 'counsellor_id', 'start_time', unique=True),
+        CheckConstraint('end_time > start_time', name='ck_availability_positive_duration'),
+        Index('ix_availability_counsellor_status_start', 'counsellor_id', 'status', 'start_time'),
     )
 
     availability_slot_id = Column(String(20), primary_key=True, nullable=False)

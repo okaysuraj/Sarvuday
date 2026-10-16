@@ -12,6 +12,10 @@ from app.schemas import (
     UserPaymentInitiateResponse,
 )
 from app.services.payments.user_payment_service import UserPaymentService
+from pydantic import BaseModel, Field
+
+class VerifyPaymentRequest(BaseModel):
+    payment_id: str = Field(min_length=1, max_length=20)
 
 router = APIRouter(prefix="/payments", tags=["Normal User Payment Management"])
 
@@ -46,7 +50,7 @@ async def initiate_payment(
 
 @router.post("/verify", status_code=status.HTTP_201_CREATED, summary="Verify the initiated payment to confirm booking. Normal User Authentication required")
 async def verify_payment(
-    verification_data ,
+    verification_data: VerifyPaymentRequest,
     current_user: NormalUser = Depends(ensure_normal_user),
     db: AsyncSession = Depends(get_db)
 ):

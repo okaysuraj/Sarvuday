@@ -51,7 +51,7 @@ const AgeDemographics = () => {
       </header>
 
       {/* Main Content Canvas */}
-      <main className="flex-grow flex items-center justify-center py-12 px-margin-desktop w-full max-w-7xl mx-auto relative">
+      <div className="flex-grow flex items-center justify-center py-12 px-margin-desktop w-full max-w-7xl mx-auto relative">
         {/* Decorative Memphis Elements */}
         <div className="absolute top-20 left-10 w-24 h-24 bg-surface rounded-full border-outline -z-10 opacity-60 mix-blend-multiply pointer-events-none hidden md:block"></div>
         <div className="absolute bottom-40 right-20 w-32 h-32 bg-secondary-fixed border-outline -z-10 opacity-60 mix-blend-multiply pointer-events-none hidden md:block"></div>
@@ -130,7 +130,7 @@ const AgeDemographics = () => {
             </div>
           </form>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

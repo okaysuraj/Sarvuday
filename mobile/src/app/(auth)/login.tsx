@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from '../../components/CustomInput';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuthStore } from '../../store/authStore';
 import { authApi } from '../../api/auth';
 
@@ -26,21 +26,25 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       // API call to backend
-      const response = await authApi.login(email, password, 'patient');
+      const response = await authApi.login(email.trim(), password);
+      if (!response.backendData.user_id || !response.backendData.access_token) {
+        throw new Error('The server returned an incomplete sign-in response.');
+      }
       
       // Store user info and token from backend
       login(
         { 
           uid: response.firebaseUser.uid, 
+          user_id: response.backendData.user_id,
           email: response.firebaseUser.email,
-          role: response.backendData.user_type
+          user_type: response.backendData.user_type,
+          role: response.backendData.user_type === 'counsellor' ? 'therapist' : response.backendData.user_type === 'admin' ? 'admin' : 'patient'
         }, 
         response.backendData.access_token
       );
       
       router.replace('/');
     } catch (error: any) {
-      console.log('Login Error:', error);
       Alert.alert('Login Failed', error?.response?.data?.detail || error.message || 'Invalid credentials or server error.');
     } finally {
       setIsLoading(false);

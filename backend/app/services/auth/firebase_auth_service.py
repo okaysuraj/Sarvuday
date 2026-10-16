@@ -9,9 +9,11 @@ from app.utils.unique_id_generation import generate_user_id
 from app.utils.constants import UserTypeEnum
 from app.schemas import FirebaseRegisterRequest, FirebaseLoginRequest, UserLoginResponse
 from firebase_admin import auth
-from jose import jwt
+import jwt
 from datetime import timedelta
 from app.config import settings
+from sqlalchemy.exc import IntegrityError
+from starlette.concurrency import run_in_threadpool
 
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 SECRET_KEY = settings.secret_key
@@ -36,11 +38,16 @@ class FirebaseAuthService:
 
     async def firebase_register(self, payload: FirebaseRegisterRequest) -> UserLoginResponse:
         """Register a new user via Firebase ID token."""
-        decoded_token = self._verify_firebase_token(payload.id_token)
+        decoded_token = await run_in_threadpool(self._verify_firebase_token, payload.id_token)
 
         email = decoded_token.get("email")
         phone = decoded_token.get("phone_number")
         firebase_uid = decoded_token.get("uid")
+
+        if not firebase_uid:
+            raise HTTPException(status_code=401, detail="Invalid Firebase identity.")
+        if not payload.terms_accepted or not payload.privacy_policy_accepted:
+            raise HTTPException(status_code=400, detail="Accept the terms and privacy policy to register.")
 
         if not email and not phone:
             raise HTTPException(
@@ -76,7 +83,7 @@ class FirebaseAuthService:
 
         user = user_class(
             user_id=user_id,
-            email=email or "",
+            email=email,
             phone_number=phone,
             name=payload.name,
             gender=payload.gender,
@@ -84,15 +91,19 @@ class FirebaseAuthService:
             user_type=payload.user_type,
             is_email_verified=bool(email and decoded_token.get("email_verified", False)),
             is_phone_verified=bool(phone),
-            terms_accepted=payload.terms_accepted,
-            privacy_policy_accepted=payload.privacy_policy_accepted,
             last_login_at=datetime.now(timezone.utc).replace(tzinfo=None),
         )
+        if hasattr(user, "terms_accepted"):
+            user.terms_accepted = payload.terms_accepted
+            user.privacy_policy_accepted = payload.privacy_policy_accepted
 
         try:
             self.db.add(user)
             await self.db.commit()
             await self.db.refresh(user)
+        except IntegrityError:
+            await self.db.rollback()
+            raise HTTPException(status_code=409, detail="An account with this identity already exists.")
         except Exception:
             await self.db.rollback()
             raise
@@ -101,6 +112,7 @@ class FirebaseAuthService:
 
         return UserLoginResponse(
             status="success",
+            user_id=user.user_id,
             access_token=access_token,
             user_type=user.user_type.value,
             token_type="bearer",
@@ -112,7 +124,7 @@ class FirebaseAuthService:
         
         Auto-detects user_type by searching all user tables if not provided.
         """
-        decoded_token = self._verify_firebase_token(payload.id_token)
+        decoded_token = await run_in_threadpool(self._verify_firebase_token, payload.id_token)
         firebase_uid = decoded_token.get("uid")
         email = decoded_token.get("email")
 
@@ -127,23 +139,18 @@ class FirebaseAuthService:
         if payload.user_type:
             # Look up in the specified table
             user = await self._find_user_by_firebase_uid(firebase_uid, payload.user_type)
-            if not user and email:
-                user = await self._find_user_by_email(email, payload.user_type)
-                # Link firebase_uid if found by email
-                if user and not user.firebase_uid:
-                    user.firebase_uid = firebase_uid
+            if not user:
+                user = await self._link_verified_email(decoded_token, payload.user_type)
         else:
             # Auto-detect: search all user tables
             for user_type in [UserTypeEnum.normal_user, UserTypeEnum.counsellor, UserTypeEnum.admin]:
                 user = await self._find_user_by_firebase_uid(firebase_uid, user_type)
                 if user:
                     break
-            if not user and email:
+            if not user:
                 for user_type in [UserTypeEnum.normal_user, UserTypeEnum.counsellor, UserTypeEnum.admin]:
-                    user = await self._find_user_by_email(email, user_type)
+                    user = await self._link_verified_email(decoded_token, user_type)
                     if user:
-                        if not user.firebase_uid:
-                            user.firebase_uid = firebase_uid
                         break
 
         if not user:
@@ -151,6 +158,9 @@ class FirebaseAuthService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="User not found. Please register first.",
             )
+
+        if user.user_type == UserTypeEnum.admin and not user.is_approved:
+            raise HTTPException(status_code=403, detail="Administrator access has not been approved.")
 
         # Update verification status and last login
         if email and decoded_token.get("email_verified", False):
@@ -169,6 +179,7 @@ class FirebaseAuthService:
 
         return UserLoginResponse(
             status="success",
+            user_id=user.user_id,
             access_token=access_token,
             user_type=user.user_type.value,
             token_type="bearer",
@@ -183,6 +194,7 @@ class FirebaseAuthService:
             "sub": user.user_id,
             "email": user.email,
             "user_type": user.user_type.value,
+            "iat": datetime.now(timezone.utc),
             "exp": datetime.now(timezone.utc) + timedelta(
                 minutes=ACCESS_TOKEN_EXPIRE_MINUTES
             )
@@ -191,12 +203,26 @@ class FirebaseAuthService:
 
     def _verify_firebase_token(self, id_token: str) -> dict:
         try:
-            return auth.verify_id_token(id_token)
-        except Exception as e:
+            return auth.verify_id_token(id_token, check_revoked=True)
+        except Exception:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"Invalid Firebase token: {str(e)}",
+                detail="Invalid or revoked Firebase token.",
             )
+
+    async def _link_verified_email(self, decoded_token: dict, user_type: UserTypeEnum):
+        """Only link a legacy account after Firebase proves email ownership.
+
+        An existing UID is never overwritten or bypassed by an email match.
+        """
+        email = decoded_token.get("email")
+        if not email or not decoded_token.get("email_verified"):
+            return None
+        user = await self._find_user_by_email(email, user_type)
+        if not user or user.firebase_uid:
+            return None
+        user.firebase_uid = decoded_token["uid"]
+        return user
 
     async def _find_user_by_firebase_uid(self, uid: str, user_type: UserTypeEnum):
         model = self.MODEL_MAP[user_type]

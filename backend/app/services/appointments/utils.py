@@ -3,6 +3,7 @@
 from datetime import datetime, timezone
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from app.schemas import CancelAppointmentResponse
 from app.models import Appointment, CounsellorAvailability
 from app.utils.constants import AppointmentStatusEnum, PaymentStatusEnum, CounsellorAvailabilityStatusEnum
@@ -13,13 +14,20 @@ async def cancel_appointment_logic(
     appointment: Appointment,
     reason: str = None
 ) -> datetime:
-    if appointment.status == AppointmentStatusEnum.cancelled:
-        raise HTTPException(status_code=400, detail="Appointment already cancelled")
+    if appointment.status not in (AppointmentStatusEnum.pending, AppointmentStatusEnum.confirmed):
+        raise HTTPException(status_code=409, detail="Only an active appointment can be cancelled")
+    if appointment.payment_id:
+        raise HTTPException(status_code=503, detail="Paid appointment cancellation is unavailable until verified refund handling is configured")
 
-    slot = await db.get(CounsellorAvailability, appointment.availability_slot_id)
-    if slot:
-        slot.status = CounsellorAvailabilityStatusEnum.available
-        db.add(slot)
+    slot = (await db.execute(select(CounsellorAvailability).where(
+        CounsellorAvailability.availability_slot_id == appointment.availability_slot_id).with_for_update())).scalar_one_or_none()
+    if slot is None:
+        raise HTTPException(status_code=409, detail="Appointment timing is unavailable")
+    start = slot.start_time.replace(tzinfo=timezone.utc) if slot.start_time.tzinfo is None else slot.start_time.astimezone(timezone.utc)
+    if start <= datetime.now(timezone.utc):
+        raise HTTPException(status_code=409, detail="An appointment that has started cannot be cancelled")
+    slot.status = CounsellorAvailabilityStatusEnum.available
+    db.add(slot)
 
     appointment.status = AppointmentStatusEnum.cancelled
     if reason:
@@ -29,7 +37,7 @@ async def cancel_appointment_logic(
     await db.commit()
     
     refund_payment_id = None
-    refund_status = PaymentStatusEnum.pending
+    refund_status = "not_required"
     
     # TODO: Trigger refund process if integrated
     

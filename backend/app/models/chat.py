@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, Enum as SQLEnum, Text
+from sqlalchemy import Column, String, Boolean, Enum as SQLEnum, Text, Index
 from enum import Enum
 from app.database.postgres import Base
 from app.models.base import BaseMixin
@@ -11,6 +11,7 @@ class MessageType(str, Enum):
 
 class DirectMessage(Base, BaseMixin):
     __tablename__ = "direct_messages"
+    __table_args__ = (Index('ix_messages_room_created', 'room_id', 'created_at'),)
 
     message_id = Column(String(50), primary_key=True, index=True)
     room_id = Column(String(100), index=True, nullable=False)

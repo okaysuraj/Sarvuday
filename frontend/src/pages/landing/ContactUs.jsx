@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../../utils/axiosInstance';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -33,12 +34,12 @@ const ContactUs = () => {
         message: 'Sending your inquiry...'
       });
       
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await axiosInstance.post('/contact', formData);
       
       setStatus({
         submitted: true,
         success: true,
-        message: 'Thank you. Your message has been received. Our support team typically responds within 24 business hours.'
+        message: 'Thank you. Your message has been received.'
       });
       
       setFormData({

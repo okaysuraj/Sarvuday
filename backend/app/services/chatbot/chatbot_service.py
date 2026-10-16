@@ -181,7 +181,7 @@ class ChatBotService:
         Fetch the conversation history from the database using the session ID.
         If the session does not exist, return an empty list.
         """
-        session = chatbot_collection.find_one({"session_id": session_id})
+        session = await chatbot_collection.find_one({"session_id": session_id})
         return session.get("conversation", []) if session else []
 
 
@@ -195,7 +195,7 @@ class ChatBotService:
         }
 
         # Update the session in MongoDB
-        chatbot_collection.update_one(
+        await chatbot_collection.update_one(
             {"user_id": user_id, "session_id": session_id},
             {
                 "$push": {"conversation": conversation_object},  # Append the new conversation object

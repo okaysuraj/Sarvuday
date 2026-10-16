@@ -4,10 +4,10 @@
 # chatbot service which lives at /user/chatbot/*.
 # The frontend's AIChat.jsx calls these endpoints directly.
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 
 from app.database import get_db
@@ -22,13 +22,13 @@ router = APIRouter()
 # ---------- Request/Response models for the AI endpoints ----------
 
 class AIChatRequest(BaseModel):
-    message: str
-    session_id: Optional[str] = None
+    message: str = Field(min_length=1, max_length=10000)
+    session_id: Optional[str] = Field(default=None, min_length=1, max_length=20)
 
 
 class AIChatResponse(BaseModel):
     reply: str
-    is_crisis: bool = False
+    is_crisis: Optional[bool] = None
     session_id: str
 
 
@@ -65,6 +65,11 @@ async def list_ai_sessions(
     "/chat/{session_id}",
     status_code=status.HTTP_200_OK,
     summary="Get chat history for a specific AI session",
+)
+@router.get(
+    "/sessions/{session_id}/history",
+    status_code=status.HTTP_200_OK,
+    summary="Get chat history for mobile client compatibility",
 )
 async def get_ai_chat_history(
     session_id: str,
@@ -128,22 +133,17 @@ async def ai_chat(
         )
 
         reply = result.response if hasattr(result, "response") else str(result)
-        is_crisis = result.is_crisis if hasattr(result, "is_crisis") else False
+        is_crisis = result.is_crisis if hasattr(result, "is_crisis") else None
 
         return AIChatResponse(
             reply=reply,
             is_crisis=is_crisis,
             session_id=session_id,
         )
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        # Fallback if chatbot service is unavailable
-        return AIChatResponse(
-            reply="I'm sorry, the AI service is currently unavailable. Please try again later.",
-            is_crisis=False,
-            session_id=session_id,
-        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="The AI service is temporarily unavailable") from exc
 
 
 @router.delete(
@@ -182,13 +182,14 @@ async def match_counsellor(
 
     matches = []
     for c in counsellors:
-        specialization = c.specializations or "General Counselling"
+        specialties = c.specializations or []
+        specialization = ", ".join(specialties)
         # Calculate a simple relevance score based on user concerns
-        user_concerns = (current_user.primary_concerns or "").lower()
+        user_concerns = current_user.primary_concerns or []
         spec_lower = specialization.lower()
 
         # Simple word overlap scoring
-        concern_words = set(user_concerns.split(",")) if user_concerns else set()
+        concern_words = {concern.strip().lower() for concern in user_concerns}
         spec_words = set(spec_lower.split(","))
         overlap = len(concern_words & spec_words) if concern_words and spec_words else 0
 

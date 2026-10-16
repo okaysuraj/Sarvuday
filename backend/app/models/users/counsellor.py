@@ -2,7 +2,7 @@
 
 from sqlalchemy import (
     Column, String, Boolean, Enum as SqlEnum, Text, Integer,
-    ForeignKey, TIMESTAMP, DateTime, Index, DECIMAL
+    ForeignKey, TIMESTAMP, DateTime, Index, DECIMAL, JSON
 )
 from sqlalchemy.orm import relationship
 from app.database.postgres import Base
@@ -23,7 +23,7 @@ class Counsellor(Base, BaseMixin):
     user_id = Column(String(20), primary_key=True, nullable=False, unique=True, index=True)
 
     # Authentication
-    email = Column(String(255), nullable=False, unique=True)
+    email = Column(String(255), nullable=True, unique=True)
     phone_number = Column(String(15), unique=True)
     hashed_password = Column(String(255))
     firebase_uid = Column(String(255), unique=True)
@@ -36,9 +36,9 @@ class Counsellor(Base, BaseMixin):
     bio = Column(Text)
 
     # Professional Info
-    education_qualifications = Column(Text)
-    certifications = Column(Text)
-    specializations = Column(Text)
+    education_qualifications = Column(JSON)
+    certifications = Column(JSON)
+    specializations = Column(JSON)
     license_number = Column(String(255))
     license_issuing_authority = Column(String(255))
     license_expiry_date = Column(DateTime)
@@ -58,7 +58,7 @@ class Counsellor(Base, BaseMixin):
     approved_by = Column(String(20), ForeignKey("admins.user_id"))
 
     # Location
-    languages = Column(Text)
+    languages = Column(JSON)
     country = Column(String(100))
     state = Column(String(100))
     city = Column(String(100))

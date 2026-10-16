@@ -16,7 +16,7 @@ SortOrder = Literal["asc", "desc"]
 # Counsellor Base
 class CounsellorBase(BaseModel):
     user_id: str
-    email: EmailStr
+    email: Optional[EmailStr] = None
     name: str
     gender: Optional[GenderEnum]
     phone_number: Optional[str] = Field(default=None, min_length=10, max_length=15)
@@ -178,8 +178,8 @@ class CounsellorDashboardView(BaseModel):
     upcoming_appointments: int
     total_sessions: int
     recent_payments: int
-    completion_rate: int
-    average_rating: float
+    completion_rate: float
+    average_rating: Optional[float] = None
     patient_stats: Optional[Json] = None
     profile_completion: float
     revenue: float

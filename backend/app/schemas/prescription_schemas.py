@@ -1,7 +1,7 @@
 
 
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 
 
@@ -9,10 +9,10 @@ class PrescriptionBase(BaseModel):
     prescription_id: str
     session_id: str
     user_id: str
-    counsellor_id: str
-    diagnosis: str
-    medications: List[dict]
-    recommendations: List[str]
+    counsellor_id: Optional[str] = None
+    diagnosis: Optional[str] = None
+    medications: Optional[List[dict]] = None
+    recommendations: Optional[List[str]] = None
     created_at: datetime
     
     model_config = {"from_attributes": True} 
@@ -25,7 +25,7 @@ class PrescriptionListResponse(BaseModel):
 class PrescriptionCreate(BaseModel):
     session_id: str
     user_id: str
-    diagnosis: str
+    diagnosis: str = Field(min_length=1, max_length=20000)
     medications: List[dict] = Field(
         ...,
         example=[{"name": "Medication A", "dosage": "10mg", "frequency": "daily"}]
