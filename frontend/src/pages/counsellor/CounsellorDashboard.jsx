@@ -1,1 +1,1 @@
-export { CounsellorDashboard as default } from '../../components/dashboard/RecordedDashboards';
+export { CounsellorDashboard as default } from '../../components/dashboard/DashboardViews';

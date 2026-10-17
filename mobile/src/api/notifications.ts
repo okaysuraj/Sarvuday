@@ -10,5 +10,5 @@ export const notificationsApi = {
   markAsRead: async (notificationId: string) => {
     const response = await api.put(`/notifications/${notificationId}/read`);
     return response.data;
-  }
+  },
 };

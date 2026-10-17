@@ -1,9 +1,14 @@
-# app/routes/auth/firebase_auth.py
+"""Firebase auth endpoints and access checks."""
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import get_db
-from app.schemas import FirebaseRegisterRequest, FirebaseLoginRequest, UserLoginResponse
+
+from app.database.postgres import get_db
+from app.schemas.auth_schemas import (
+    FirebaseLoginRequest,
+    FirebaseRegisterRequest,
+    UserLoginResponse,
+)
 from app.services.auth import FirebaseAuthService
 
 router = APIRouter()

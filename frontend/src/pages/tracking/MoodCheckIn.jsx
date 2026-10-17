@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../utils/axiosInstance';
 import { toast } from 'react-toastify';
+import axiosInstance from '../../utils/axiosInstance';
 
 const MoodCheckIn = () => {
   const navigate = useNavigate();
@@ -15,11 +15,11 @@ const MoodCheckIn = () => {
 
   const handleContinue = async () => {
     if (selectedMood == null) return;
-    
+
     setIsLoading(true);
     try {
       const payload = {
-        moodIndex: { low: 0, down: 1, neutral: 2, good: 3, great: 4 }[selectedMood]
+        moodIndex: { low: 0, down: 1, neutral: 2, good: 3, great: 4 }[selectedMood],
       };
       await axiosInstance.post('/user/tracking/mood', payload);
       toast.success('Mood logged successfully!');
@@ -33,17 +33,45 @@ const MoodCheckIn = () => {
   };
 
   const moods = [
-    { id: 'low', label: 'Low', icon: 'sentiment_very_dissatisfied', hoverBg: 'group-hover:bg-surface', selectedBg: 'bg-surface' },
-    { id: 'down', label: 'Down', icon: 'sentiment_dissatisfied', hoverBg: 'group-hover:bg-surface', selectedBg: 'bg-surface' },
-    { id: 'neutral', label: 'Neutral', icon: 'sentiment_neutral', hoverBg: 'group-hover:bg-surface-dim', selectedBg: 'bg-surface-dim' },
-    { id: 'good', label: 'Good', icon: 'sentiment_satisfied', hoverBg: 'group-hover:bg-accent-sage', selectedBg: 'bg-accent-sage' },
-    { id: 'great', label: 'Great', icon: 'sentiment_very_satisfied', hoverBg: 'group-hover:bg-secondary-fixed', selectedBg: 'bg-secondary-fixed' }
+    {
+      id: 'low',
+      label: 'Low',
+      icon: 'sentiment_very_dissatisfied',
+      hoverBg: 'group-hover:bg-surface',
+      selectedBg: 'bg-surface',
+    },
+    {
+      id: 'down',
+      label: 'Down',
+      icon: 'sentiment_dissatisfied',
+      hoverBg: 'group-hover:bg-surface',
+      selectedBg: 'bg-surface',
+    },
+    {
+      id: 'neutral',
+      label: 'Neutral',
+      icon: 'sentiment_neutral',
+      hoverBg: 'group-hover:bg-surface-dim',
+      selectedBg: 'bg-surface-dim',
+    },
+    {
+      id: 'good',
+      label: 'Good',
+      icon: 'sentiment_satisfied',
+      hoverBg: 'group-hover:bg-accent-sage',
+      selectedBg: 'bg-accent-sage',
+    },
+    {
+      id: 'great',
+      label: 'Great',
+      icon: 'sentiment_very_satisfied',
+      hoverBg: 'group-hover:bg-secondary-fixed',
+      selectedBg: 'bg-secondary-fixed',
+    },
   ];
 
   return (
     <div className="min-h-screen bg-background font-body-md text-on-surface overflow-x-hidden relative flex flex-col p-margin-mobile md:p-margin-desktop z-50">
-      
-      
       {/* Pattern Background */}
       <div className="absolute inset-0 dot-pattern -z-20"></div>
 
@@ -54,13 +82,21 @@ const MoodCheckIn = () => {
 
       {/* Header */}
       <header className="w-full max-w-[1000px] mx-auto flex items-center justify-between gap-stack-md mb-stack-lg z-10 relative">
-        <button onClick={handleClose} aria-label="Close check-in" className="w-12 h-12 flex items-center justify-center bg-surface-container-lowest border-outline rounded-full shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all group">
-          <span className="material-symbols-outlined text-ink-black group-hover:text-error transition-colors">close</span>
+        <button
+          onClick={handleClose}
+          aria-label="Close check-in"
+          className="w-12 h-12 flex items-center justify-center bg-surface-container-lowest border-outline rounded-full shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all group"
+        >
+          <span className="material-symbols-outlined text-ink-black group-hover:text-error transition-colors">
+            close
+          </span>
         </button>
-        
+
         <div className="flex-grow max-w-lg flex flex-col gap-2 hidden md:flex">
           <div className="flex justify-between items-center">
-            <span className="font-label-bold text-label-bold text-ink-black uppercase tracking-wider">Morning Check-in</span>
+            <span className="font-label-bold text-label-bold text-ink-black uppercase tracking-wider">
+              Morning Check-in
+            </span>
             <span className="font-label-bold text-label-bold text-outline">Step 1 of 4</span>
           </div>
           <div className="h-3 w-full bg-surface-container-lowest border-outline rounded-full overflow-hidden shadow-subtle">
@@ -68,7 +104,10 @@ const MoodCheckIn = () => {
           </div>
         </div>
 
-        <button onClick={handleClose} className="px-4 py-2 font-label-bold text-label-bold text-ink-black hover:text-primary transition-colors underline underline-offset-4 decoration-[1.5px]">
+        <button
+          onClick={handleClose}
+          className="px-4 py-2 font-label-bold text-label-bold text-ink-black hover:text-primary transition-colors underline underline-offset-4 decoration-[1.5px]"
+        >
           Skip
         </button>
       </header>
@@ -76,34 +115,44 @@ const MoodCheckIn = () => {
       {/* Content */}
       <div className="flex-grow flex items-center justify-center w-full z-10">
         <section className="bg-surface-container-lowest border-outline rounded-xl md:rounded-xl shadow-subtle p-6 md:p-stack-lg w-full max-w-[1000px] flex flex-col items-center text-center">
-          
           <div className="max-w-2xl mb-stack-lg">
-            <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-ink-black mb-stack-sm">How are you feeling right now?</h1>
-            <p className="font-body-lg text-body-lg text-on-surface-variant">Take a moment to check in with yourself. There are no wrong answers.</p>
+            <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-ink-black mb-stack-sm">
+              How are you feeling right now?
+            </h1>
+            <p className="font-body-lg text-body-lg text-on-surface-variant">
+              Take a moment to check in with yourself. There are no wrong answers.
+            </p>
           </div>
 
           <div className="flex justify-center items-center gap-4 md:gap-stack-md w-full mb-stack-lg flex-wrap md:flex-nowrap">
             {moods.map((mood) => {
               const isSelected = selectedMood === mood.id;
               return (
-                <button 
+                <button
                   key={mood.id}
                   className={`flex flex-col items-center gap-stack-sm group focus:outline-none ${isSelected ? 'mood-selected' : ''}`}
                   onClick={() => setSelectedMood(mood.id)}
                 >
-                  <div className={`mood-icon-container w-20 h-20 md:w-32 md:h-32 rounded-full border-outline shadow-subtle flex items-center justify-center transition-all duration-200 ${!isSelected ? `bg-surface-variant group-hover:-translate-y-2 ${mood.hoverBg}` : mood.selectedBg}`}>
-                    <span className="material-symbols-outlined text-ink-black text-4xl md:text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  <div
+                    className={`mood-icon-container w-20 h-20 md:w-32 md:h-32 rounded-full border-outline shadow-subtle flex items-center justify-center transition-all duration-200 ${!isSelected ? `bg-surface-variant group-hover:-translate-y-2 ${mood.hoverBg}` : mood.selectedBg}`}
+                  >
+                    <span
+                      className="material-symbols-outlined text-ink-black text-4xl md:text-5xl"
+                      style={{ fontVariationSettings: "'FILL' 1" }}
+                    >
                       {mood.icon}
                     </span>
                   </div>
-                  <span className="mood-label font-headline-sm text-lg md:text-headline-sm text-ink-black transition-colors">{mood.label}</span>
+                  <span className="mood-label font-headline-sm text-lg md:text-headline-sm text-ink-black transition-colors">
+                    {mood.label}
+                  </span>
                 </button>
               );
             })}
           </div>
 
           <div className="w-full flex justify-center mt-stack-md pt-stack-md border-t-[1.5px] border-outline-variant/30">
-            <button 
+            <button
               onClick={handleContinue}
               disabled={!selectedMood || isLoading}
               className="bg-primary text-on-primary font-headline-sm text-headline-sm px-16 py-4 rounded-xl border-outline shadow-subtle hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-subtle flex items-center justify-center gap-2"

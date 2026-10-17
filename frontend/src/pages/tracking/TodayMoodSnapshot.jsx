@@ -1,1 +1,1 @@
-export { RecordedSnapshot as default } from '../../components/tracking/RecordedTracking';
+export { SnapshotView as default } from '../../components/tracking/TrackingViews';

@@ -1,12 +1,11 @@
-import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
-import { useAuthStore } from '../../store/authStore';
+import { ActivityIndicator, View } from 'react-native';
+import { AdminDashboard } from '../../components/dashboard/AdminDashboard';
 import { PatientDashboard } from '../../components/dashboard/PatientDashboard';
 import { TherapistDashboard } from '../../components/dashboard/TherapistDashboard';
-import { AdminDashboard } from '../../components/dashboard/AdminDashboard';
+import { useAuthStore } from '../../store/authStore';
 
 export default function HomeTabScreen() {
-  const user = useAuthStore(state => state.user);
+  const user = useAuthStore((state) => state.user);
 
   if (!user) {
     return (

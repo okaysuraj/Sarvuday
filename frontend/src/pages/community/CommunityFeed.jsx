@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../utils/axiosInstance';
 import { toast } from 'react-toastify';
+import axiosInstance from '../../utils/axiosInstance';
 
 const CommunityFeed = () => {
   const navigate = useNavigate();
@@ -28,7 +28,9 @@ const CommunityFeed = () => {
 
   const handleInteract = async (postId, action) => {
     try {
-      await axiosInstance.post(`/community/posts/${postId}/interact`, { action });
+      await axiosInstance.post(`/community/posts/${postId}/interact`, {
+        action,
+      });
       fetchFeed();
     } catch (error) {
       console.error('Interaction failed', error);
@@ -45,34 +47,40 @@ const CommunityFeed = () => {
 
   return (
     <div className="flex-1 p-margin-desktop bg-background min-h-screen font-body-lg text-body-lg">
-      
-      
       {/* Header */}
       <header className="flex justify-between items-end mb-stack-lg border-b border-outline pb-stack-sm">
         <div>
           <h2 className="font-display-lg text-display-lg text-ink-black mb-2">Community Feed</h2>
-          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">A safe space to share, reflect, and support one another anonymously.</p>
+          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+            A safe space to share, reflect, and support one another anonymously.
+          </p>
         </div>
         <div className="flex gap-4">
-          <button 
+          <button
             onClick={() => navigate('/community/new')}
             className="hidden md:flex bg-primary text-on-primary font-label-bold text-label-bold py-3 px-6 rounded-xl neo-border shadow-subtle neo-active transition-all items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined">edit_square</span>
             Post Anonymously
           </button>
-          
+
           <div className="relative hidden lg:block">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">search</span>
-            <input className="pl-10 pr-4 py-3 bg-[#f9f8f3] rounded-xl neo-border focus:border-primary focus:shadow-subtle outline-none transition-all font-body-md text-body-md" placeholder="Search posts..." type="text"/>
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">
+              search
+            </span>
+            <input
+              className="pl-10 pr-4 py-3 bg-[#f9f8f3] rounded-xl neo-border focus:border-primary focus:shadow-subtle outline-none transition-all font-body-md text-body-md"
+              placeholder="Search posts..."
+              type="text"
+            />
           </div>
         </div>
       </header>
 
       {/* Filters (Chips) */}
       <div className="flex flex-wrap gap-3 mb-stack-lg">
-        {filters.map(f => (
-          <button 
+        {filters.map((f) => (
+          <button
             key={f.id}
             onClick={() => setFilter(f.id)}
             className={`px-6 py-2 rounded-full neo-border font-label-bold text-label-bold transition-all ${filter === f.id ? 'bg-primary text-on-primary shadow-subtle neo-active' : 'bg-surface-bright text-on-surface hover:bg-accent-sage'}`}
@@ -84,32 +92,53 @@ const CommunityFeed = () => {
 
       {/* Bento Grid Feed */}
       {loading ? (
-        <div className="flex justify-center items-center h-40"><span className="material-symbols-outlined animate-spin text-4xl text-primary">autorenew</span></div>
+        <div className="flex justify-center items-center h-40">
+          <span className="material-symbols-outlined animate-spin text-4xl text-primary">
+            autorenew
+          </span>
+        </div>
       ) : posts.length === 0 ? (
-        <div className="text-center p-8 bg-white neo-border rounded-xl">No posts found. Be the first to share!</div>
+        <div className="text-center p-8 bg-white neo-border rounded-xl">
+          No posts found. Be the first to share!
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-stack-md">
           {posts.map((post, i) => (
-            <article key={post.id} className={`col-span-1 md:col-span-12 lg:col-span-${i === 0 ? '8' : i === 1 ? '4' : '6'} bg-surface-bright bg-surface border-outline rounded-xl neo-border p-container-padding flex flex-col gap-4 relative overflow-hidden`}>
+            <article
+              key={post.id}
+              className={`col-span-1 md:col-span-12 lg:col-span-${i === 0 ? '8' : i === 1 ? '4' : '6'} bg-surface-bright bg-surface border-outline rounded-xl neo-border p-container-padding flex flex-col gap-4 relative overflow-hidden`}
+            >
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-accent-sage flex items-center justify-center neo-border">
                     <span className="material-symbols-outlined text-primary">psychology</span>
                   </div>
                   <div>
-                    <span className="font-label-bold text-label-bold text-ink-black block">{post.is_anonymous ? 'Anonymous' : 'User'}</span>
-                    <span className="font-label-md text-label-md text-on-surface-variant">{new Date(post.created_at).toLocaleString()}</span>
+                    <span className="font-label-bold text-label-bold text-ink-black block">
+                      {post.is_anonymous ? 'Anonymous' : 'User'}
+                    </span>
+                    <span className="font-label-md text-label-md text-on-surface-variant">
+                      {new Date(post.created_at).toLocaleString()}
+                    </span>
                   </div>
                 </div>
               </div>
-              <p className="font-body-lg text-body-lg text-on-surface-variant flex-1 whitespace-pre-wrap">{post.content}</p>
-              
+              <p className="font-body-lg text-body-lg text-on-surface-variant flex-1 whitespace-pre-wrap">
+                {post.content}
+              </p>
+
               <div className="flex gap-4 mt-4 border-t-[1.5px] border-outline pt-4">
-                <button onClick={() => handleInteract(post.id, 'hug')} className="flex items-center gap-2 text-primary font-label-bold text-label-bold hover:bg-primary-fixed rounded-full px-4 py-2 transition-colors">
+                <button
+                  onClick={() => handleInteract(post.id, 'hug')}
+                  className="flex items-center gap-2 text-primary font-label-bold text-label-bold hover:bg-primary-fixed rounded-full px-4 py-2 transition-colors"
+                >
                   <span className="material-symbols-outlined">favorite</span>
                   <span>{post.hugs || 0} Hugs</span>
                 </button>
-                <button onClick={() => handleInteract(post.id, 'relate')} className="flex items-center gap-2 text-on-surface-variant font-label-bold text-label-bold hover:bg-surface-variant rounded-full px-4 py-2 transition-colors">
+                <button
+                  onClick={() => handleInteract(post.id, 'relate')}
+                  className="flex items-center gap-2 text-on-surface-variant font-label-bold text-label-bold hover:bg-surface-variant rounded-full px-4 py-2 transition-colors"
+                >
                   <span className="material-symbols-outlined">handshake</span>
                   <span>{post.relates || 0} Relates</span>
                 </button>
@@ -118,10 +147,10 @@ const CommunityFeed = () => {
           ))}
         </div>
       )}
-      
+
       {/* Mobile Post Button */}
       <div className="fixed bottom-6 right-6 md:hidden z-50">
-        <button 
+        <button
           onClick={() => navigate('/community/new')}
           className="w-14 h-14 bg-primary text-on-primary rounded-full neo-border shadow-subtle flex items-center justify-center neo-active"
         >

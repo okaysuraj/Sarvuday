@@ -1,16 +1,17 @@
-# app/routes/admin/__init__.py
+"""init   endpoints and access checks."""
 
 from fastapi import APIRouter
+
 from . import (
-    dashboard,
     admin_management,
-    counsellor_management,
-    normal_user_management,
-    content_management,
     analytics,
-    counselling_session_management,
     compliance,
-    moderation
+    content_management,
+    counselling_session_management,
+    counsellor_management,
+    dashboard,
+    moderation,
+    normal_user_management,
 )
 
 admin_router = APIRouter()

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const About = () => {
@@ -15,7 +14,8 @@ const About = () => {
             A quiet digital harbor for mental wellness and human healing.
           </h1>
           <p className="text-base sm:text-lg text-[#6E6D7A] leading-relaxed max-w-2xl">
-            SarvUday was created to dismantle the barrier between people facing emotional distress and the licensed clinical care they deserve.
+            SarvUday was created to dismantle the barrier between people facing emotional distress
+            and the licensed clinical care they deserve.
           </p>
         </div>
 
@@ -23,10 +23,15 @@ const About = () => {
         <div className="bg-white border-[#EAEAEA] rounded-2xl p-8 sm:p-10 shadow-sm space-y-6 text-sm sm:text-base text-[#6E6D7A] leading-relaxed">
           <h2 className="text-xl font-semibold text-[#121214]">Why SarvUday Exists</h2>
           <p>
-            Navigating psychological struggles is often accompanied by isolation and overwhelming complexity. Traditional care models are frequently out of reach, expensive, or burdened with bureaucratic friction.
+            Navigating psychological struggles is often accompanied by isolation and overwhelming
+            complexity. Traditional care models are frequently out of reach, expensive, or burdened
+            with bureaucratic friction.
           </p>
           <p>
-            At SarvUday, we unite modern tele-health infrastructure with deeply compassionate clinical principles. By providing private WebRTC rooms, a 24/7 AI companion for de-escalation, and longitudinal mood analytics, we empower you to understand your emotional rhythms and connect with certified practitioners from the comfort of home.
+            At SarvUday, we unite modern tele-health infrastructure with deeply compassionate
+            clinical principles. By providing private WebRTC rooms, a 24/7 AI companion for
+            de-escalation, and longitudinal mood analytics, we empower you to understand your
+            emotional rhythms and connect with certified practitioners from the comfort of home.
           </p>
         </div>
 
@@ -38,7 +43,8 @@ const About = () => {
             </div>
             <h3 className="text-base font-semibold text-[#121214]">Deep Empathy</h3>
             <p className="text-xs sm:text-sm text-[#6E6D7A] leading-relaxed">
-              Every feature, from our prompt library to session notes, is built with gentleness and emotional respect.
+              Every feature, from our prompt library to session notes, is built with gentleness and
+              emotional respect.
             </p>
           </div>
 
@@ -48,7 +54,8 @@ const About = () => {
             </div>
             <h3 className="text-base font-semibold text-[#121214]">Uncompromising Privacy</h3>
             <p className="text-xs sm:text-sm text-[#6E6D7A] leading-relaxed">
-              Your mental health journey is strictly private. We adhere to rigorous HIPAA and GDPR encryption standards.
+              Your mental health journey is strictly private. We adhere to rigorous HIPAA and GDPR
+              encryption standards.
             </p>
           </div>
 
@@ -58,7 +65,8 @@ const About = () => {
             </div>
             <h3 className="text-base font-semibold text-[#121214]">Clinical Integrity</h3>
             <p className="text-xs sm:text-sm text-[#6E6D7A] leading-relaxed">
-              Our tools are rooted in evidence-informed cognitive-behavioral principles and guided by licensed counsellors.
+              Our tools are rooted in evidence-informed cognitive-behavioral principles and guided
+              by licensed counsellors.
             </p>
           </div>
         </div>
@@ -67,13 +75,20 @@ const About = () => {
         <div className="bg-[#FAF9F6] border-[#EAEAEA] rounded-2xl p-8 text-center space-y-4">
           <h2 className="text-xl font-semibold text-[#121214]">Ready to take the first step?</h2>
           <p className="text-xs sm:text-sm text-[#6E6D7A] max-w-md mx-auto">
-            Explore our vetted counsellors or start an anonymous conversation with our 24/7 AI companion.
+            Explore our vetted counsellors or start an anonymous conversation with our 24/7 AI
+            companion.
           </p>
           <div className="flex justify-center gap-3 pt-2">
-            <Link to="/register" className="px-5 py-2.5 rounded-lg bg-[#18181B] text-white text-xs sm:text-sm font-medium hover:bg-[#27272A] transition-all">
+            <Link
+              to="/register"
+              className="px-5 py-2.5 rounded-lg bg-[#18181B] text-white text-xs sm:text-sm font-medium hover:bg-[#27272A] transition-all"
+            >
               Join SarvUday
             </Link>
-            <Link to="/contact-us" className="px-5 py-2.5 rounded-lg border-[#EAEAEA] bg-white text-[#121214] text-xs sm:text-sm font-medium hover:bg-[#F5F4F0] transition-all">
+            <Link
+              to="/contact-us"
+              className="px-5 py-2.5 rounded-lg border-[#EAEAEA] bg-white text-[#121214] text-xs sm:text-sm font-medium hover:bg-[#F5F4F0] transition-all"
+            >
               Contact Our Team
             </Link>
           </div>

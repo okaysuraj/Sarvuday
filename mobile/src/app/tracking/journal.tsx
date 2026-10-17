@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { CustomButton } from '../../components/CustomButton';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { trackingApi } from '../../api/tracking';
+import { CustomButton } from '../../components/forms/CustomButton';
 
 const TRIGGERS = ['Work', 'Family', 'Sleep', 'Health', 'Money', 'Relationship'];
 
@@ -17,7 +25,7 @@ export default function JournalEntryScreen() {
 
   const toggleTrigger = (trigger: string) => {
     if (selectedTriggers.includes(trigger)) {
-      setSelectedTriggers(selectedTriggers.filter(t => t !== trigger));
+      setSelectedTriggers(selectedTriggers.filter((t) => t !== trigger));
     } else {
       setSelectedTriggers([...selectedTriggers, trigger]);
     }
@@ -29,16 +37,19 @@ export default function JournalEntryScreen() {
       if (moodIndex !== undefined) {
         await trackingApi.logMood({
           moodIndex: Number(moodIndex),
-          notes: emotions ? `Emotions: ${emotions}` : undefined
+          notes: emotions ? `Emotions: ${emotions}` : undefined,
         });
       }
 
       await trackingApi.submitJournal({
-        text: selectedTriggers.length > 0 ? `${entry}\n\nTriggers: ${selectedTriggers.join(', ')}` : entry
+        text:
+          selectedTriggers.length > 0
+            ? `${entry}\n\nTriggers: ${selectedTriggers.join(', ')}`
+            : entry,
       });
 
       Alert.alert('Saved', 'Your check-in has been saved successfully.', [
-        { text: 'OK', onPress: () => router.push('/(tabs)') }
+        { text: 'OK', onPress: () => router.push('/(tabs)') },
       ]);
     } catch (error) {
       Alert.alert('Error', 'Failed to save your check-in. Please try again.');
@@ -58,9 +69,14 @@ export default function JournalEntryScreen() {
         </Text>
       </View>
 
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1"
+      >
         <View className="flex-1 px-6 pt-6">
-          <Text className="font-headline-md text-on-surface text-lg font-bold mb-4">What's on your mind?</Text>
+          <Text className="font-headline-md text-on-surface text-lg font-bold mb-4">
+            What's on your mind?
+          </Text>
           <TextInput
             className="flex-1 bg-surface-container-highest rounded-xl p-4 font-body-md text-on-surface text-base"
             placeholder="Write your thoughts here..."
@@ -70,11 +86,13 @@ export default function JournalEntryScreen() {
             value={entry}
             onChangeText={setEntry}
           />
-          
+
           <View className="mt-6 mb-8">
-            <Text className="font-headline-md text-on-surface text-lg font-bold mb-3">Tag any factors or triggers</Text>
+            <Text className="font-headline-md text-on-surface text-lg font-bold mb-3">
+              Tag any factors or triggers
+            </Text>
             <View className="flex-row flex-wrap gap-3">
-              {TRIGGERS.map(trigger => {
+              {TRIGGERS.map((trigger) => {
                 const isSelected = selectedTriggers.includes(trigger);
                 return (
                   <TouchableOpacity
@@ -84,7 +102,9 @@ export default function JournalEntryScreen() {
                       isSelected ? 'bg-error border-error' : 'bg-surface border-outline-variant'
                     }`}
                   >
-                    <Text className={`font-label-bold text-sm ${isSelected ? 'text-on-error' : 'text-on-surface'}`}>
+                    <Text
+                      className={`font-label-bold text-sm ${isSelected ? 'text-on-error' : 'text-on-surface'}`}
+                    >
                       {trigger}
                     </Text>
                   </TouchableOpacity>
@@ -95,7 +115,7 @@ export default function JournalEntryScreen() {
         </View>
 
         <View className="p-6 border-t border-surface-variant bg-surface">
-          <CustomButton 
+          <CustomButton
             title="Save Entry"
             onPress={handleSave}
             disabled={!entry.trim()}

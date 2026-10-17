@@ -1,17 +1,18 @@
-# app/schemas/counsellors_schemas.py
+"""Request validation and response models for counsellors."""
+
+from datetime import datetime
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel, EmailStr, Field, Json
-from typing import Optional, List
-from datetime import datetime
-from decimal import Decimal
-from app.utils.constants import (
-    GenderEnum
-)
-from typing import Literal
+
+from app.schemas.pagination import Pagination
+from app.utils.constants import GenderEnum
 
 # Common sorting types for counsellor queries
-CounsellorSortBy = Literal["created_at", "name", "session_fee", "experience_years", "average_rating"]
-SortOrder = Literal["asc", "desc"]
+CounsellorSortBy = Literal[
+    "created_at", "name", "session_fee", "experience_years", "average_rating"
+]
+
 
 # Counsellor Base
 class CounsellorBase(BaseModel):
@@ -45,26 +46,8 @@ class CounsellorBase(BaseModel):
 
     created_at: datetime
 
-    class Config:
-        from_attributes = True
-        json_encoders = {
-            Decimal: lambda v: float(v) if v is not None else None
-        }
+    model_config = {"from_attributes": True}
 
-# Admin View
-class CounsellorAdminView(CounsellorBase):
-    approved_by: Optional[str]
-    address: Optional[str]
-    pincode: Optional[str]
-
-    license_number: Optional[str]
-    license_issuing_authority: Optional[str]
-    license_expiry_date: Optional[datetime]
-    identity_proof_url: Optional[str]
-    license_proof_url: Optional[str]
-
-    terms_accepted: bool = False
-    privacy_policy_accepted: bool = False
 
 # Web View
 class CounsellorWebView(BaseModel):
@@ -91,11 +74,8 @@ class CounsellorWebView(BaseModel):
     total_reviews: int = 0
     is_featured: bool = False
 
-    class Config:
-        from_attributes = True
-        json_encoders = {
-            Decimal: lambda v: float(v) if v is not None else None
-        }
+    model_config = {"from_attributes": True}
+
 
 # Update Request
 class CounsellorUpdateRequest(BaseModel):
@@ -116,9 +96,9 @@ class CounsellorUpdateRequest(BaseModel):
     identity_proof_url: Optional[str] = None
     license_proof_url: Optional[str] = None
 
-    session_fee: Optional[float] = None
-    session_duration: Optional[int] = None
-    experience_years: Optional[int] = None
+    session_fee: Optional[float] = Field(default=None, ge=0)
+    session_duration: Optional[int] = Field(default=None, ge=0)
+    experience_years: Optional[int] = Field(default=None, ge=0)
 
     country: Optional[str] = None
     state: Optional[str] = None
@@ -126,8 +106,9 @@ class CounsellorUpdateRequest(BaseModel):
     address: Optional[str] = None
     pincode: Optional[str] = None
 
+
 # Filter Query and Responses
-class CounsellorFilterQuery(BaseModel):
+class CounsellorFilterQuery(Pagination):
     user_id: Optional[str] = None
     name: Optional[str] = None
     email: Optional[str] = None
@@ -141,38 +122,43 @@ class CounsellorFilterQuery(BaseModel):
     certifications: Optional[List[str]] = None
     specializations: Optional[List[str]] = None
     languages: Optional[List[str]] = None
-    min_experience: Optional[int] = None
-    max_experience: Optional[int] = None
-    min_fee: Optional[float] = None
-    max_fee: Optional[float] = None
+    min_experience: Optional[int] = Field(default=None, ge=0)
+    max_experience: Optional[int] = Field(default=None, ge=0)
+    min_fee: Optional[float] = Field(default=None, ge=0)
+    max_fee: Optional[float] = Field(default=None, ge=0)
 
     country: Optional[str] = None
     state: Optional[str] = None
     city: Optional[str] = None
 
-    sort_by: Optional[Literal["created_at", "name", "session_fee", "experience_years", "average_rating"]] = "created_at"
-    sort_order: Optional[Literal["asc", "desc"]] = "desc"
-    limit: Optional[int] = 10
-    offset: Optional[int] = 0
+    sort_by: CounsellorSortBy = "created_at"
+
+
+class CounsellorAdminView(CounsellorBase):
+    """License metadata is available to reviewers, not the public directory."""
+
+    license_number: Optional[str] = None
+    license_issuing_authority: Optional[str] = None
+    license_expiry_date: Optional[datetime] = None
+
 
 class CounsellorListResponse(BaseModel):
     total: int
     limit: int = 10
     offset: int = 0
-    counsellors: List[CounsellorBase]
+    counsellors: List[CounsellorAdminView]
+
 
 # Other Responses
 class CounsellorUpdateResponse(BaseModel):
     message: str
     counsellor: CounsellorBase
 
-class CounsellorApprovalResponse(BaseModel):
-    message: str
-    counsellor: CounsellorAdminView
 
 class CounsellorListWebView(BaseModel):
     total_count: int
     counsellors: List[CounsellorWebView]
+
 
 class CounsellorDashboardView(BaseModel):
     upcoming_appointments: int
@@ -183,4 +169,3 @@ class CounsellorDashboardView(BaseModel):
     patient_stats: Optional[Json] = None
     profile_completion: float
     revenue: float
-

@@ -1,3 +1,5 @@
-import { RecordedProgress } from '../../components/tracking/RecordedTracking';
+import { ProgressView } from '../../components/tracking/TrackingViews';
 
-export default function Page() { return <RecordedProgress weekly />; }
+export default function Page() {
+  return <ProgressView weekly />;
+}

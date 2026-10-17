@@ -1,8 +1,7 @@
-import React from 'react';
-import { View, Text, Image } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { CustomButton } from '../../components/CustomButton';
+import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { CustomButton } from '../../components/forms/CustomButton';
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -10,11 +9,8 @@ export default function WelcomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-surface">
       <View className="flex-1 px-container-padding py-10 justify-between items-center">
-        
         <View className="items-center mt-10">
-          <Text className="font-headline-md text-primary text-3xl font-bold mb-2">
-            SarvUday
-          </Text>
+          <Text className="font-headline-md text-primary text-3xl font-bold mb-2">SarvUday</Text>
           <Text className="font-body-md text-on-surface-variant text-base text-center px-4">
             Mental Wellness for Everyone. Begin your journey to better mental health today.
           </Text>

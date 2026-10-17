@@ -1,11 +1,12 @@
-# app/routes/general/notifications.py
+"""Notifications endpoints and access checks."""
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import get_db
-from app.utils.oauth import get_current_user
-from app.schemas import NotificationListResponse
+
+from app.database.postgres import get_db
+from app.schemas.notification_schemas import NotificationListResponse
 from app.services.notifications.notification_service import NotificationService
+from app.utils.oauth import get_current_user
 
 router = APIRouter()
 
@@ -33,4 +34,6 @@ async def mark_notification_read(
     current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    return await NotificationService(db).mark_as_read(current_user.user_id, notification_id)
+    return await NotificationService(db).mark_as_read(
+        current_user.user_id, notification_id
+    )

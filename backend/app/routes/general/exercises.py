@@ -1,36 +1,56 @@
-"""The exercise catalog is clinical content curated in MongoDB, without seed rows."""
+"""Only explicitly published exercises are visible to clients."""
+
 from fastapi import APIRouter, Depends, HTTPException, Query
-from bson import ObjectId
-from pymongo.errors import PyMongoError
-from app.database import get_mongo_db
+from sqlalchemy import or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.database.postgres import get_db
+from app.models.content import Exercise
+from app.schemas.records import record_fields
 
 router = APIRouter(tags=["Exercises"])
 
 
 def present(record):
-    return {**{key: value for key, value in record.items() if key not in {"_id", "status"}},
-            "id": record.get("id") or str(record["_id"])}
+    result = record_fields(
+        record,
+        "title",
+        "category",
+        "description",
+        "published",
+        "duration_min",
+        "instructions",
+        "audio_url",
+    )
+    result["id"] = record.public_id or record.id
+    return result
 
 
 @router.get("/")
-async def get_exercises(limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0),
-                        mongo_db=Depends(get_mongo_db)):
-    try:
-        records = await mongo_db.exercises.find({"published": True}).sort("title", 1).skip(offset).limit(limit).to_list(length=limit)
-        return [present(record) for record in records]
-    except PyMongoError as exc:
-        raise HTTPException(status_code=503, detail="Exercise catalog is unavailable") from exc
+async def get_exercises(
+    limit: int = Query(50, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    db: AsyncSession = Depends(get_db),
+):
+    records = await db.scalars(
+        select(Exercise)
+        .where(Exercise.published.is_(True))
+        .order_by(Exercise.title, Exercise.id)
+        .offset(offset)
+        .limit(limit)
+    )
+    return [present(record) for record in records]
 
 
 @router.get("/{exercise_id}")
-async def get_exercise_by_id(exercise_id: str, mongo_db=Depends(get_mongo_db)):
-    identifiers = [{"id": exercise_id}]
-    if ObjectId.is_valid(exercise_id):
-        identifiers.append({"_id": ObjectId(exercise_id)})
-    try:
-        record = await mongo_db.exercises.find_one({"published": True, "$or": identifiers})
-        if record is None:
-            raise HTTPException(status_code=404, detail="Exercise not found")
-        return present(record)
-    except PyMongoError as exc:
-        raise HTTPException(status_code=503, detail="Exercise catalog is unavailable") from exc
+async def get_exercise_by_id(exercise_id: str, db: AsyncSession = Depends(get_db)):
+    # Public aliases remain usable after importing the old opaque record IDs.
+    record = await db.scalar(
+        select(Exercise).where(
+            Exercise.published.is_(True),
+            or_(Exercise.id == exercise_id, Exercise.public_id == exercise_id),
+        )
+    )
+    if record is None:
+        raise HTTPException(status_code=404, detail="Exercise not found")
+    return present(record)

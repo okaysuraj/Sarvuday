@@ -1,8 +1,10 @@
 """Bounded uploads and file operations confined to the configured upload root."""
+
 import uuid
 from pathlib import Path
 from typing import Optional
-from fastapi import UploadFile, HTTPException
+
+from fastapi import HTTPException, UploadFile
 
 BASE_UPLOAD_DIR = Path("uploads")
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png"}
@@ -12,18 +14,27 @@ MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 MIME_EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png", "application/pdf": ".pdf"}
 
 
-def validate_file_type(file: UploadFile, allowed_types: set, label: str = "file") -> None:
-    if file.content_type not in allowed_types or file.content_type not in MIME_EXTENSIONS:
+def validate_file_type(
+    file: UploadFile, allowed_types: set, label: str = "file"
+) -> None:
+    if (
+        file.content_type not in allowed_types
+        or file.content_type not in MIME_EXTENSIONS
+    ):
         raise HTTPException(status_code=400, detail=f"Invalid {label} type")
     position = file.file.tell()
     file.file.seek(0)
     header = file.file.read(8)
     file.file.seek(position)
-    valid = {"image/jpeg": header.startswith(b"\xff\xd8\xff"),
-             "image/png": header.startswith(b"\x89PNG\r\n\x1a\n"),
-             "application/pdf": header.startswith(b"%PDF-")}
+    valid = {
+        "image/jpeg": header.startswith(b"\xff\xd8\xff"),
+        "image/png": header.startswith(b"\x89PNG\r\n\x1a\n"),
+        "application/pdf": header.startswith(b"%PDF-"),
+    }
     if not valid.get(file.content_type):
-        raise HTTPException(status_code=400, detail="The file content does not match its declared type")
+        raise HTTPException(
+            status_code=400, detail="The file content does not match its declared type"
+        )
 
 
 def validate_file_size(file: UploadFile, max_size: int) -> None:
@@ -37,9 +48,14 @@ def validate_file_size(file: UploadFile, max_size: int) -> None:
         raise HTTPException(status_code=400, detail="The uploaded file is empty")
 
 
-def save_uploaded_file(file: UploadFile, subdir: str, base_upload_dir: Path = BASE_UPLOAD_DIR,
-                       allowed_types: Optional[set] = None, label: str = "file",
-                       max_size: int = MAX_FILE_SIZE_BYTES) -> Optional[str]:
+def save_uploaded_file(
+    file: UploadFile,
+    subdir: str,
+    base_upload_dir: Path = BASE_UPLOAD_DIR,
+    allowed_types: Optional[set] = None,
+    label: str = "file",
+    max_size: int = MAX_FILE_SIZE_BYTES,
+) -> Optional[str]:
     if file is None:
         return None
     validate_file_type(file, allowed_types or set(MIME_EXTENSIONS), label)
@@ -57,7 +73,9 @@ def save_uploaded_file(file: UploadFile, subdir: str, base_upload_dir: Path = BA
             while chunk := file.file.read(65536):
                 copied += len(chunk)
                 if copied > max_size:
-                    raise HTTPException(status_code=413, detail="The uploaded file is too large")
+                    raise HTTPException(
+                        status_code=413, detail="The uploaded file is too large"
+                    )
                 output.write(chunk)
     except Exception:
         destination.unlink(missing_ok=True)
@@ -74,10 +92,18 @@ def delete_file(relative_path: str) -> None:
         destination.unlink()
 
 
-def replace_uploaded_file(file: UploadFile, old_relative_path: Optional[str], subdir: str,
-                           base_upload_dir: Path = BASE_UPLOAD_DIR, allowed_types: Optional[set] = None,
-                           label: str = "file", max_size: int = MAX_FILE_SIZE_BYTES) -> Optional[str]:
-    saved = save_uploaded_file(file, subdir, base_upload_dir, allowed_types, label, max_size)
+def replace_uploaded_file(
+    file: UploadFile,
+    old_relative_path: Optional[str],
+    subdir: str,
+    base_upload_dir: Path = BASE_UPLOAD_DIR,
+    allowed_types: Optional[set] = None,
+    label: str = "file",
+    max_size: int = MAX_FILE_SIZE_BYTES,
+) -> Optional[str]:
+    saved = save_uploaded_file(
+        file, subdir, base_upload_dir, allowed_types, label, max_size
+    )
     if saved and old_relative_path:
         old = Path(old_relative_path).resolve()
         root = base_upload_dir.resolve()

@@ -1,7 +1,7 @@
-# app/services/general/__init__.py
+"""Public disorder and approved counsellor directory services."""
 
-from .general_service import DisordersService
 from .counsellors_service import CounsellorService
+from .disorders_service import DisordersService
 
 __all__ = [
     "DisordersService",

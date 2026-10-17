@@ -23,12 +23,16 @@
   padding: 6px 8px 6px 16px;
   align-items: center;
   gap: 8px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .chatInputWrapper:focus-within {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.06), var(--shadow-card);
+  box-shadow:
+    0 0 0 3px rgba(24, 24, 27, 0.06),
+    var(--shadow-card);
 }
 
 .inputField {
@@ -59,7 +63,9 @@
   justify-content: center;
   border-radius: var(--radius-full);
   font-size: 18px;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .iconButton:hover {
@@ -78,7 +84,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
   flex-shrink: 0;
 }
 

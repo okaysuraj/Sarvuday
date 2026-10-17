@@ -1,3 +1,5 @@
-import { RecordedInsights } from '../../components/tracking/RecordedTracking';
+import { InsightsView } from '../../components/tracking/TrackingViews';
 
-export default function Page() { return <RecordedInsights  />; }
+export default function Page() {
+  return <InsightsView />;
+}

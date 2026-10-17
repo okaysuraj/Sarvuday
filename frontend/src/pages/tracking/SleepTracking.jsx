@@ -1,1 +1,1 @@
-export { RecordedSleep as default } from '../../components/tracking/RecordedTracking';
+export { SleepView as default } from '../../components/tracking/TrackingViews';

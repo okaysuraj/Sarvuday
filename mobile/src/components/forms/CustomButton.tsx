@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 
 interface CustomButtonProps {
   title: string;
@@ -48,7 +48,9 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
       {isLoading ? (
         <ActivityIndicator color={variant === 'outline' ? '#18181B' : '#ffffff'} />
       ) : (
-        <Text className={`font-headline-md text-base ${variantStyles.split(' ')[1]} ${textClassName}`}>
+        <Text
+          className={`font-headline-md text-base ${variantStyles.split(' ')[1]} ${textClassName}`}
+        >
           {title}
         </Text>
       )}

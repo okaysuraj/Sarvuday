@@ -47,7 +47,9 @@
   padding: 8px 16px;
   width: 280px;
   box-shadow: var(--shadow-subtle);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .searchBar:focus-within {
@@ -160,7 +162,9 @@
   border-radius: var(--radius-md);
   cursor: pointer;
   flex-shrink: 0;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .dateBox:hover {

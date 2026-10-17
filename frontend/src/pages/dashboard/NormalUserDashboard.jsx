@@ -1,1 +1,1 @@
-export { UserDashboard as default } from '../../components/dashboard/RecordedDashboards';
+export { UserDashboard as default } from '../../components/dashboard/DashboardViews';

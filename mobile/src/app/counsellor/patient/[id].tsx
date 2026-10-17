@@ -1,1 +1,1 @@
-export { RecordedPatientDetail as default } from '../../../components/screens/RecordedAdministration';
+export { PatientDetailScreen as default } from '../../../components/screens/PatientRecords';

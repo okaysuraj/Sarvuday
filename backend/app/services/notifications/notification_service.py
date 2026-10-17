@@ -1,18 +1,22 @@
-# app/services/notifications/notification_service.py
+"""Notification service business logic and persistence."""
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update
-from fastapi import HTTPException, status
 from uuid import uuid4
+
+from fastapi import HTTPException, status
+from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.models.notification import Notification, NotificationTypeEnum
-from app.schemas import NotificationBase, NotificationListResponse
+from app.schemas.notification_schemas import NotificationBase, NotificationListResponse
 
 
 class NotificationService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def get_notifications(self, user_id: str, limit: int = 50) -> NotificationListResponse:
+    async def get_notifications(
+        self, user_id: str, limit: int = 50
+    ) -> NotificationListResponse:
         """Get all notifications for a user, newest first."""
         query = (
             select(Notification)
@@ -24,9 +28,7 @@ class NotificationService:
         notifications = result.scalars().all()
 
         return NotificationListResponse(
-            notifications=[
-                NotificationBase.model_validate(n) for n in notifications
-            ],
+            notifications=[NotificationBase.model_validate(n) for n in notifications],
             total=len(notifications),
         )
 

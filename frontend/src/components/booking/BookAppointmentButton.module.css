@@ -11,7 +11,9 @@
   font-weight: 500;
   font-size: 13px;
   font-family: var(--font-body);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
 .bookBtn:hover {

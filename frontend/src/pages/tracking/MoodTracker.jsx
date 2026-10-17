@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import { moodValue, recordedStreak } from '../../utils/healthMetrics';
 
@@ -10,8 +10,18 @@ const MoodTracker = () => {
   const [loading, setLoading] = useState(true);
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const currentMonthStr = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
@@ -42,7 +52,10 @@ const MoodTracker = () => {
   moodLogs.forEach((log) => {
     if (log.created_at) {
       const d = new Date(log.created_at);
-      if (d.getFullYear() === currentDate.getFullYear() && d.getMonth() === currentDate.getMonth()) {
+      if (
+        d.getFullYear() === currentDate.getFullYear() &&
+        d.getMonth() === currentDate.getMonth()
+      ) {
         const day = d.getDate();
         if (!moodByDay[day]) moodByDay[day] = log;
       }
@@ -53,17 +66,41 @@ const MoodTracker = () => {
     const num = moodValue(val);
     switch (num) {
       case 4:
-        return { color: 'bg-emerald-100 border-emerald-300 text-emerald-800', icon: 'sentiment_very_satisfied', label: 'Elevated' };
+        return {
+          color: 'bg-emerald-100 border-emerald-300 text-emerald-800',
+          icon: 'sentiment_very_satisfied',
+          label: 'Elevated',
+        };
       case 3:
-        return { color: 'bg-teal-50 border-teal-200 text-teal-800', icon: 'sentiment_satisfied', label: 'Good' };
+        return {
+          color: 'bg-teal-50 border-teal-200 text-teal-800',
+          icon: 'sentiment_satisfied',
+          label: 'Good',
+        };
       case 2:
-        return { color: 'bg-stone-50 border-stone-200 text-stone-700', icon: 'sentiment_neutral', label: 'Neutral' };
+        return {
+          color: 'bg-stone-50 border-stone-200 text-stone-700',
+          icon: 'sentiment_neutral',
+          label: 'Neutral',
+        };
       case 1:
-        return { color: 'bg-amber-50 border-amber-200 text-amber-800', icon: 'sentiment_dissatisfied', label: 'Low' };
+        return {
+          color: 'bg-amber-50 border-amber-200 text-amber-800',
+          icon: 'sentiment_dissatisfied',
+          label: 'Low',
+        };
       case 0:
-        return { color: 'bg-rose-50 border-rose-200 text-rose-800', icon: 'sentiment_very_dissatisfied', label: 'Very Low' };
+        return {
+          color: 'bg-rose-50 border-rose-200 text-rose-800',
+          icon: 'sentiment_very_dissatisfied',
+          label: 'Very Low',
+        };
       default:
-        return { color: 'bg-white border-stone-200 text-stone-400', icon: 'add', label: 'Unlogged' };
+        return {
+          color: 'bg-white border-stone-200 text-stone-400',
+          icon: 'add',
+          label: 'Unlogged',
+        };
     }
   };
 
@@ -74,18 +111,26 @@ const MoodTracker = () => {
       {/* Month Selector */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="font-display-lg text-3xl md:text-4xl text-primary font-bold">{currentMonthStr}</h2>
-          <p className="text-sm text-on-surface-variant mt-1">Holistic emotional baseline and check-in timeline.</p>
+          <h2 className="font-display-lg text-3xl md:text-4xl text-primary font-bold">
+            {currentMonthStr}
+          </h2>
+          <p className="text-sm text-on-surface-variant mt-1">
+            Holistic emotional baseline and check-in timeline.
+          </p>
         </div>
         <div className="flex gap-2">
           <button
-            onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))}
+            onClick={() =>
+              setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))
+            }
             className="p-2 border border-stone-300 rounded-full hover:bg-stone-100 transition-colors bg-white"
           >
             <span className="material-symbols-outlined">chevron_left</span>
           </button>
           <button
-            onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))}
+            onClick={() =>
+              setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))
+            }
             className="p-2 border border-stone-300 rounded-full hover:bg-stone-100 transition-colors bg-white"
           >
             <span className="material-symbols-outlined">chevron_right</span>
@@ -96,7 +141,9 @@ const MoodTracker = () => {
       {/* Header Summary Section */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
         <div className="md:col-span-8 bg-white border border-stone-200 rounded-xl p-6 flex flex-col justify-center">
-          <h3 className="font-bold text-xl text-on-surface mb-2">{monthNames[currentDate.getMonth()]} Reflection</h3>
+          <h3 className="font-bold text-xl text-on-surface mb-2">
+            {monthNames[currentDate.getMonth()]} Reflection
+          </h3>
           <p className="text-sm text-on-surface-variant leading-relaxed">
             {moodLogs.length > 0
               ? `You have logged ${Object.keys(moodByDay).length} emotional check-ins this month. Tracking trends helps identify triggers and celebrate progress.`
@@ -116,12 +163,17 @@ const MoodTracker = () => {
         {/* Quick Stats Bento Card */}
         <div className="md:col-span-4 bg-white border border-stone-200 rounded-xl p-6 flex flex-col justify-between shadow-subtle relative overflow-hidden">
           <div className="relative z-10">
-            <p className="text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Check-in Consistency</p>
+            <p className="text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">
+              Check-in Consistency
+            </p>
             <p className="text-3xl font-bold text-ink-black">{streakDays} Days</p>
           </div>
           <div className="flex justify-between items-end relative z-10 mt-4">
             <p className="text-xs text-stone-600 font-medium">Verified platform logs</p>
-            <span className="material-symbols-outlined text-3xl text-rose-500" style={{ fontVariationSettings: "'FILL' 1" }}>
+            <span
+              className="material-symbols-outlined text-3xl text-rose-500"
+              style={{ fontVariationSettings: "'FILL' 1" }}
+            >
               favorite
             </span>
           </div>
@@ -131,13 +183,17 @@ const MoodTracker = () => {
       {/* Calendar Heatmap Grid */}
       <section className="bg-white border border-stone-200 rounded-xl p-4 sm:p-8">
         {loading ? (
-          <div className="py-16 text-center text-sm text-on-surface-variant">Loading calendar check-ins...</div>
+          <div className="py-16 text-center text-sm text-on-surface-variant">
+            Loading calendar check-ins...
+          </div>
         ) : (
           <div>
             {/* Days Headers */}
             <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-bold text-stone-400">
               {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
-                <div key={day} className="py-2">{day}</div>
+                <div key={day} className="py-2">
+                  {day}
+                </div>
               ))}
             </div>
 
@@ -145,7 +201,10 @@ const MoodTracker = () => {
             <div className="grid grid-cols-7 gap-2 sm:gap-3">
               {/* Empty leading offset */}
               {[...Array(firstDayOfWeek)].map((_, i) => (
-                <div key={`offset-${i}`} className="aspect-square bg-stone-50/50 rounded-xl opacity-30" />
+                <div
+                  key={`offset-${i}`}
+                  className="aspect-square bg-stone-50/50 rounded-xl opacity-30"
+                />
               ))}
 
               {/* Month Days */}
@@ -160,7 +219,11 @@ const MoodTracker = () => {
                     onClick={() => {
                       if (!log) navigate('/tracking/mood-check-in');
                     }}
-                    title={log ? `Day ${dayNum}: ${visual.label} (Energy: ${log.energy_level}/10)` : `Day ${dayNum}: Click to check in`}
+                    title={
+                      log
+                        ? `Day ${dayNum}: ${visual.label} (Energy: ${log.energy_level}/10)`
+                        : `Day ${dayNum}: Click to check in`
+                    }
                     className={`aspect-square border rounded-xl flex flex-col p-2 cursor-pointer transition-all hover:scale-102 ${visual.color}`}
                   >
                     <span className="text-xs font-bold">{dayNum}</span>

@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   // Interactive 4-7-8 Breathing Circle State
   const [breathingActive, setBreathingActive] = useState(false);
-  const [breathPhase, setBreathPhase] = useState("idle"); // 'idle' | 'inhale' | 'hold' | 'exhale'
+  const [breathPhase, setBreathPhase] = useState('idle'); // 'idle' | 'inhale' | 'hold' | 'exhale'
   const [secondsLeft, setSecondsLeft] = useState(0);
 
   useEffect(() => {
     let timer;
     if (breathingActive) {
       const cycle = () => {
-        setBreathPhase("inhale");
+        setBreathPhase('inhale');
         setSecondsLeft(4);
         timer = setTimeout(() => {
-          setBreathPhase("hold");
+          setBreathPhase('hold');
           setSecondsLeft(7);
           timer = setTimeout(() => {
-            setBreathPhase("exhale");
+            setBreathPhase('exhale');
             setSecondsLeft(8);
             timer = setTimeout(() => {
               if (breathingActive) cycle();
@@ -27,7 +27,7 @@ const Home = () => {
       };
       cycle();
     } else {
-      setBreathPhase("idle");
+      setBreathPhase('idle');
       setSecondsLeft(0);
     }
     return () => clearTimeout(timer);
@@ -51,7 +51,8 @@ const Home = () => {
               </h1>
 
               <p className="text-base sm:text-lg text-[#6E6D7A] leading-relaxed max-w-xl">
-                Connect with licensed counsellors, track your daily emotional rhythm, and access an empathetic 24/7 companion whenever you need support.
+                Connect with licensed counsellors, track your daily emotional rhythm, and access an
+                empathetic 24/7 companion whenever you need support.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -67,7 +68,9 @@ const Home = () => {
                   to="/therapists"
                   className="px-6 py-3 rounded-lg bg-white border-[#EAEAEA] text-[#121214] text-sm font-medium hover:bg-[#F5F4F0] active:scale-[0.98] transition-all inline-flex items-center gap-2"
                 >
-                  <span className="material-symbols-rounded text-base text-[#71717A]">stethoscope</span>
+                  <span className="material-symbols-rounded text-base text-[#71717A]">
+                    stethoscope
+                  </span>
                   <span>Explore Therapists</span>
                 </Link>
               </div>
@@ -75,7 +78,9 @@ const Home = () => {
               {/* Trust Metric Micro-strip */}
               <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-[#71717A]">
                 <div className="flex items-center gap-1.5">
-                  <span className="material-symbols-rounded text-emerald-600 text-base">verified_user</span>
+                  <span className="material-symbols-rounded text-emerald-600 text-base">
+                    verified_user
+                  </span>
                   <span>Personal wellbeing tools</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -83,7 +88,9 @@ const Home = () => {
                   <span>256-Bit Encrypted WebRTC</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="material-symbols-rounded text-emerald-600 text-base">psychology</span>
+                  <span className="material-symbols-rounded text-emerald-600 text-base">
+                    psychology
+                  </span>
                   <span>Licensed Practitioners</span>
                 </div>
               </div>
@@ -107,26 +114,26 @@ const Home = () => {
                     {/* Outer Breathing Ring */}
                     <div
                       className={`absolute inset-0 rounded-full border-emerald-500/20 transition-transform duration-[4000ms] ease-out ${
-                        breathPhase === "inhale"
-                          ? "scale-110 bg-[#EDF3EC]/50"
-                          : breathPhase === "hold"
-                          ? "scale-110 bg-[#EDF3EC]/70"
-                          : breathPhase === "exhale"
-                          ? "scale-90 bg-transparent"
-                          : "scale-100 bg-[#F5F4F0]/60"
+                        breathPhase === 'inhale'
+                          ? 'scale-110 bg-[#EDF3EC]/50'
+                          : breathPhase === 'hold'
+                            ? 'scale-110 bg-[#EDF3EC]/70'
+                            : breathPhase === 'exhale'
+                              ? 'scale-90 bg-transparent'
+                              : 'scale-100 bg-[#F5F4F0]/60'
                       }`}
                     ></div>
 
                     {/* Inner Center Circle */}
                     <div className="relative z-10 w-28 h-28 rounded-full bg-white border-[#EAEAEA] shadow-sm flex flex-col items-center justify-center p-2">
                       <span className="text-xs uppercase tracking-widest text-[#71717A] font-medium">
-                        {breathPhase === "idle"
-                          ? "Ready"
-                          : breathPhase === "inhale"
-                          ? "Inhale"
-                          : breathPhase === "hold"
-                          ? "Hold"
-                          : "Exhale"}
+                        {breathPhase === 'idle'
+                          ? 'Ready'
+                          : breathPhase === 'inhale'
+                            ? 'Inhale'
+                            : breathPhase === 'hold'
+                              ? 'Hold'
+                              : 'Exhale'}
                       </span>
                       {breathingActive && (
                         <span className="text-lg font-mono font-semibold text-[#121214] mt-1">
@@ -138,25 +145,28 @@ const Home = () => {
 
                   <p className="text-xs text-[#71717A] mt-4 max-w-xs">
                     {breathingActive
-                      ? "Inhale through your nose (4s), hold gently (7s), exhale slowly (8s)."
-                      : "Take one quiet minute to regulate your autonomic nervous system."}
+                      ? 'Inhale through your nose (4s), hold gently (7s), exhale slowly (8s).'
+                      : 'Take one quiet minute to regulate your autonomic nervous system.'}
                   </p>
 
                   <button
                     onClick={() => setBreathingActive(!breathingActive)}
                     className={`mt-5 px-5 py-2 rounded-lg text-xs font-medium transition-all ${
                       breathingActive
-                        ? "bg-[#FDEBEC] text-[#8F2B26] hover:bg-[#FADBDC]"
-                        : "bg-[#EDF3EC] text-[#244B36] hover:bg-[#DCEADA]"
+                        ? 'bg-[#FDEBEC] text-[#8F2B26] hover:bg-[#FADBDC]'
+                        : 'bg-[#EDF3EC] text-[#244B36] hover:bg-[#DCEADA]'
                     }`}
                   >
-                    {breathingActive ? "Stop Breathing Exercise" : "Start 1-Min Calm Practice"}
+                    {breathingActive ? 'Stop Breathing Exercise' : 'Start 1-Min Calm Practice'}
                   </button>
                 </div>
 
                 <div className="bg-[#FAF9F6] -mx-7 -mb-7 p-4 border-t border-[#EAEAEA] flex items-center justify-between text-xs text-[#71717A]">
                   <span>Feeling distressed right now?</span>
-                  <Link to="/emergency" className="text-[#8F2B26] font-medium hover:underline flex items-center gap-1">
+                  <Link
+                    to="/emergency"
+                    className="text-[#8F2B26] font-medium hover:underline flex items-center gap-1"
+                  >
                     <span>Emergency SOS</span>
                     <span className="material-symbols-rounded text-sm">arrow_forward</span>
                   </Link>
@@ -209,17 +219,19 @@ const Home = () => {
               <div className="w-10 h-10 rounded-xl bg-[#EDF3EC] text-[#244B36] flex items-center justify-center">
                 <span className="material-symbols-rounded text-xl">videocam</span>
               </div>
-              <h3 className="text-xl font-semibold text-[#121214]">
-                One-on-One Tele-Counselling
-              </h3>
+              <h3 className="text-xl font-semibold text-[#121214]">One-on-One Tele-Counselling</h3>
               <p className="text-sm text-[#6E6D7A] leading-relaxed">
-                Connect face-to-face or via private audio with licensed psychotherapists. Seamless WebRTC telehealth rooms, calendar slot-locking, and confidential session notes.
+                Connect face-to-face or via private audio with licensed psychotherapists. Seamless
+                WebRTC telehealth rooms, calendar slot-locking, and confidential session notes.
               </p>
             </div>
 
             <div className="mt-8 pt-6 border-t border-[#EAEAEA] flex items-center justify-between">
               <span className="text-xs text-[#71717A]">Verified practitioners</span>
-              <Link to="/therapists" className="text-xs font-semibold text-[#121214] flex items-center gap-1 hover:underline">
+              <Link
+                to="/therapists"
+                className="text-xs font-semibold text-[#121214] flex items-center gap-1 hover:underline"
+              >
                 <span>Browse Therapists</span>
                 <span className="material-symbols-rounded text-sm">arrow_forward</span>
               </Link>
@@ -232,17 +244,19 @@ const Home = () => {
               <div className="w-10 h-10 rounded-xl bg-[#EEF3F8] text-[#214467] flex items-center justify-center">
                 <span className="material-symbols-rounded text-xl">smart_toy</span>
               </div>
-              <h3 className="text-xl font-semibold text-[#121214]">
-                24/7 AI Companion
-              </h3>
+              <h3 className="text-xl font-semibold text-[#121214]">24/7 AI Companion</h3>
               <p className="text-sm text-[#6E6D7A] leading-relaxed">
-                When anxious thoughts arise at 3 AM, our trained AI companion listens without judgment, provides structured CBT prompts, and monitors sentiment safety.
+                When anxious thoughts arise at 3 AM, our trained AI companion listens without
+                judgment, provides structured CBT prompts, and monitors sentiment safety.
               </p>
             </div>
 
             <div className="mt-8 pt-6 border-t border-[#EAEAEA] flex items-center justify-between">
               <span className="text-xs text-[#71717A]">Always available</span>
-              <Link to="/ai-chat" className="text-xs font-semibold text-[#121214] flex items-center gap-1 hover:underline">
+              <Link
+                to="/ai-chat"
+                className="text-xs font-semibold text-[#121214] flex items-center gap-1 hover:underline"
+              >
                 <span>Talk Now</span>
                 <span className="material-symbols-rounded text-sm">arrow_forward</span>
               </Link>
@@ -255,17 +269,19 @@ const Home = () => {
               <div className="w-10 h-10 rounded-xl bg-[#F6F3EB] text-[#6B5524] flex items-center justify-center">
                 <span className="material-symbols-rounded text-xl">query_stats</span>
               </div>
-              <h3 className="text-xl font-semibold text-[#121214]">
-                Mood &amp; Sleep Analytics
-              </h3>
+              <h3 className="text-xl font-semibold text-[#121214]">Mood &amp; Sleep Analytics</h3>
               <p className="text-sm text-[#6E6D7A] leading-relaxed">
-                Log morning sentiment, track restorative sleep, and correlate stress triggers. Turn subtle emotional shifts into actionable personal insights.
+                Log morning sentiment, track restorative sleep, and correlate stress triggers. Turn
+                subtle emotional shifts into actionable personal insights.
               </p>
             </div>
 
             <div className="mt-8 pt-6 border-t border-[#EAEAEA] flex items-center justify-between">
               <span className="text-xs text-[#71717A]">Visual health trends</span>
-              <Link to="/mood-tracker" className="text-xs font-semibold text-[#121214] flex items-center gap-1 hover:underline">
+              <Link
+                to="/mood-tracker"
+                className="text-xs font-semibold text-[#121214] flex items-center gap-1 hover:underline"
+              >
                 <span>Track Mood</span>
                 <span className="material-symbols-rounded text-sm">arrow_forward</span>
               </Link>
@@ -288,7 +304,10 @@ const Home = () => {
 
             <div className="mt-8 pt-6 border-t border-[#EAEAEA] flex items-center justify-between">
               <span className="text-xs text-[#71717A]">You are never alone</span>
-              <Link to="/community" className="text-xs font-semibold text-[#121214] flex items-center gap-1 hover:underline">
+              <Link
+                to="/community"
+                className="text-xs font-semibold text-[#121214] flex items-center gap-1 hover:underline"
+              >
                 <span>Join Circles</span>
                 <span className="material-symbols-rounded text-sm">arrow_forward</span>
               </Link>
@@ -304,7 +323,9 @@ const Home = () => {
             Our Care Philosophy
           </span>
           <blockquote className="text-2xl sm:text-3xl font-serif italic text-[#121214] leading-snug">
-            &ldquo;Mental health care shouldn&apos;t feel like an impersonal clinical maze. We built SarvUday as a calm digital harbor where healing begins with dignity and genuine human listening.&rdquo;
+            &ldquo;Mental health care shouldn&apos;t feel like an impersonal clinical maze. We built
+            SarvUday as a calm digital harbor where healing begins with dignity and genuine human
+            listening.&rdquo;
           </blockquote>
           <p className="text-xs text-[#71717A]">
             SarvUday Clinical Advisory Board &bull; Licensed Psychological Care Standards
@@ -355,7 +376,8 @@ const Home = () => {
             Take the first step toward peace of mind.
           </h2>
           <p className="text-sm sm:text-base text-[#6E6D7A] leading-relaxed">
-            Create an account in less than two minutes. Confidential, personalized, and backed by licensed care.
+            Create an account in less than two minutes. Confidential, personalized, and backed by
+            licensed care.
           </p>
           <div className="flex justify-center gap-3 pt-2">
             <Link

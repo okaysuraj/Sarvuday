@@ -1,20 +1,29 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { communityApi } from '@/api/community';
 import { useAuthStore } from '@/store/authStore';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { format } from 'date-fns';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function GroupChatScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const { user } = useAuthStore();
-  
+
   const [messages, setMessages] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
-  
+
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -34,7 +43,7 @@ export default function GroupChatScreen() {
 
   const handleSend = async () => {
     if (!newMessage.trim() || !user) return;
-    
+
     const msgContent = newMessage.trim();
     setNewMessage('');
 
@@ -44,16 +53,16 @@ export default function GroupChatScreen() {
       content: msgContent,
       user_id: user.user_id,
       is_anonymous: true,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
-    setMessages(prev => [...prev, tempMsg]);
+    setMessages((prev) => [...prev, tempMsg]);
 
     try {
       await communityApi.createPost({
         content: msgContent,
         is_anonymous: true,
         has_trigger_warning: false,
-        group_id: id as string
+        group_id: id as string,
       });
       // fetchFeed(); // uncomment to refresh from server
     } catch (error) {
@@ -72,21 +81,26 @@ export default function GroupChatScreen() {
   const suggestionChips = ['Great job! 👏', 'Sending support ❤️', 'I relate to this 🤝'];
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       className="flex-1 bg-cream-bg"
     >
       {/* Header */}
       <View className="bg-surface flex-row justify-between items-center px-6 py-4 w-full border-b-[1.5px] border-ink-black z-50">
         <View className="flex-row items-center gap-4">
-          <TouchableOpacity onPress={() => router.back()} className="p-2 rounded-xl hover:bg-surface-variant/20">
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="p-2 rounded-xl hover:bg-surface-variant/20"
+          >
             <Ionicons name="arrow-back" size={24} color="#002da5" />
           </TouchableOpacity>
           <View>
             <Text className="font-headline-sm text-primary font-bold text-lg">Mindful Circle</Text>
             <View className="flex-row items-center gap-1">
               <View className="w-2 h-2 rounded-full bg-[#4CAF50]" />
-              <Text className="font-label-md text-on-surface-variant text-xs">24 active members</Text>
+              <Text className="font-label-md text-on-surface-variant text-xs">
+                24 active members
+              </Text>
             </View>
           </View>
         </View>
@@ -101,10 +115,10 @@ export default function GroupChatScreen() {
       </View>
 
       {/* Chat Area */}
-      <ScrollView 
+      <ScrollView
         ref={scrollViewRef}
         onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
-        className="flex-1 px-4 pt-6" 
+        className="flex-1 px-4 pt-6"
         contentContainerStyle={{ paddingBottom: 24, gap: 16 }}
       >
         <View className="flex-row justify-center my-2">
@@ -115,10 +129,13 @@ export default function GroupChatScreen() {
 
         {messages.map((msg, idx) => {
           const isMe = msg.user_id === user?.user_id;
-          
+
           if (isMe) {
             return (
-              <View key={msg.id || idx} className="flex-col items-end gap-1 w-full max-w-[85%] self-end mb-2">
+              <View
+                key={msg.id || idx}
+                className="flex-col items-end gap-1 w-full max-w-[85%] self-end mb-2"
+              >
                 <View className="flex-row items-center gap-2 px-2">
                   <Text className="text-[10px] text-on-surface-variant">
                     {format(new Date(msg.created_at), 'hh:mm a')}
@@ -132,7 +149,10 @@ export default function GroupChatScreen() {
             );
           } else {
             return (
-              <View key={msg.id || idx} className="flex-col items-start gap-1 w-full max-w-[85%] mb-2">
+              <View
+                key={msg.id || idx}
+                className="flex-col items-start gap-1 w-full max-w-[85%] mb-2"
+              >
                 <View className="flex-row items-center gap-2 px-2">
                   <View className="w-6 h-6 rounded-lg bg-accent-pink border-[1.5px] border-ink-black flex items-center justify-center">
                     <Ionicons name="happy" size={14} color="#1A1A1A" />
@@ -153,9 +173,13 @@ export default function GroupChatScreen() {
 
       {/* Input Area */}
       <View className="bg-surface-bright px-4 py-4 border-t-[1.5px] border-ink-black flex-col gap-4 pb-safe">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-3 -mx-4 px-4 pb-2">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          className="flex-row gap-3 -mx-4 px-4 pb-2"
+        >
           {suggestionChips.map((chip, idx) => (
-            <TouchableOpacity 
+            <TouchableOpacity
               key={idx}
               onPress={() => setNewMessage(chip)}
               className="mr-3 px-4 py-2 rounded-full border-[1.5px] border-ink-black bg-white shadow-[2px_2px_0px_0px_#1A1A1A] active:shadow-none active:translate-x-[1px] active:translate-y-[1px]"
@@ -167,7 +191,7 @@ export default function GroupChatScreen() {
 
         <View className="flex-row items-center gap-3">
           <View className="flex-1 relative">
-            <TextInput 
+            <TextInput
               className="w-full h-14 pl-4 pr-12 rounded-2xl border-[1.5px] border-ink-black bg-[#f9f8f3] font-body-md text-ink-black shadow-[2px_2px_0px_0px_#1A1A1A] focus:shadow-[4px_4px_0px_0px_#002da5]"
               placeholder="Type a message..."
               value={newMessage}
@@ -177,7 +201,7 @@ export default function GroupChatScreen() {
               <Ionicons name="happy-outline" size={24} color="#747687" />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handleSend}
             disabled={!newMessage.trim()}
             className={`w-14 h-14 rounded-2xl border-[1.5px] border-ink-black flex items-center justify-center shadow-[2px_2px_0px_0px_#1A1A1A] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${newMessage.trim() ? 'bg-primary' : 'bg-surface-variant'}`}

@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import BASE_URL from '../../config/apiConfig';
+import { useEffect, useState } from 'react';
+import {
+  FaCalendarAlt,
+  FaCommentDots,
+  FaHeadset,
+  FaPhone,
+  FaSearch,
+  FaUser,
+  FaVideo,
+} from 'react-icons/fa';
 import CounsellorCard from '../../components/counsellor/CounsellorCard';
+import BASE_URL from '../../config/apiConfig';
 import styles from './ApprovedCounsellors.module.css';
-import { FaSearch, FaVideo, FaPhone, FaCommentDots, FaUser, FaClock, FaCalendarAlt, FaHeadset } from 'react-icons/fa';
 
 const ApprovedCounsellors = () => {
   const [counsellors, setCounsellors] = useState([]);
@@ -38,17 +46,16 @@ const ApprovedCounsellors = () => {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.dashboardLayout}>
-        
         {/* Main Content Area */}
         <div className={styles.mainContent}>
           <div className={styles.headerArea}>
             <h1 className={styles.pageTitle}>Find your Specialist</h1>
-            
+
             <div className={styles.searchBar}>
               <FaSearch className={styles.searchIcon} />
-              <input 
-                type="text" 
-                placeholder="Search by name, specialty, or condition" 
+              <input
+                type="text"
+                placeholder="Search by name, specialty, or condition"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -72,13 +79,13 @@ const ApprovedCounsellors = () => {
 
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>Available Professionals</h3>
-            
+
             {loading ? (
-               <p className={styles.status}>Loading professionals...</p>
+              <p className={styles.status}>Loading professionals...</p>
             ) : error ? (
-               <p className={styles.status}>{error}</p>
+              <p className={styles.status}>{error}</p>
             ) : counsellors.length === 0 ? (
-               <p className={styles.status}>No professionals found.</p>
+              <p className={styles.status}>No professionals found.</p>
             ) : (
               <div className={styles.counsellorList}>
                 {counsellors
@@ -87,7 +94,8 @@ const ApprovedCounsellors = () => {
                     const searchLower = searchTerm.toLowerCase();
                     return (
                       (c.name && c.name.toLowerCase().includes(searchLower)) ||
-                      (c.specializations && c.specializations.toLowerCase().includes(searchLower)) ||
+                      (c.specializations &&
+                        c.specializations.toLowerCase().includes(searchLower)) ||
                       (c.certifications && c.certifications.toLowerCase().includes(searchLower)) ||
                       (c.city && c.city.toLowerCase().includes(searchLower)) ||
                       (c.state && c.state.toLowerCase().includes(searchLower))
@@ -99,14 +107,10 @@ const ApprovedCounsellors = () => {
               </div>
             )}
           </div>
-
-
-
         </div>
 
         {/* Right Sidebar */}
         <div className={styles.sidebar}>
-          
           <div className={styles.widgetYellow}>
             <h3 className={styles.widgetTitle}>Next Session</h3>
             <div className={styles.sessionDetails}>
@@ -121,30 +125,32 @@ const ApprovedCounsellors = () => {
                 <FaCalendarAlt /> Tomorrow, Oct 2, 10:00 AM
               </div>
             </div>
-            
+
             <div className={styles.widgetButtons}>
               <button className={styles.btnSolid}>Join Meeting</button>
               <button className={styles.btnOutline}>Reschedule</button>
             </div>
 
             <div className={styles.tipBox}>
-              <strong>Preparation Tip:</strong> Take 5 deep breaths before joining the call to center yourself.
+              <strong>Preparation Tip:</strong> Take 5 deep breaths before joining the call to
+              center yourself.
             </div>
           </div>
 
           <div className={styles.widgetBlue}>
-            <div className={styles.helpIcon}><FaHeadset /></div>
+            <div className={styles.helpIcon}>
+              <FaHeadset />
+            </div>
             <h3 className={styles.widgetTitle}>Need Help?</h3>
             <p>Having trouble finding the right specialist?</p>
-            <a href="#" className={styles.helpLink}>Talk to Support →</a>
+            <a href="#" className={styles.helpLink}>
+              Talk to Support →
+            </a>
           </div>
-
         </div>
-        
       </div>
     </div>
   );
 };
 
 export default ApprovedCounsellors;
-

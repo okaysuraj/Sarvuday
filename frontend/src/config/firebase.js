@@ -20,8 +20,8 @@ export const signInWithGoogle = async () => {
     const idToken = await result.user.getIdToken();
     return idToken;
   } catch (error) {
-    console.error("Google Sign-In Error:", error);
+    console.error('Google Sign-In Error:', error);
   }
 };
 
-export { auth, app };
+export { app, auth };

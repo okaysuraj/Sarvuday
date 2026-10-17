@@ -1,9 +1,9 @@
 // src/components/chat/ChatInput.jsx
 // Production chat input with typing indicator support.
 
-import React, { useState } from 'react';
-import styles from './ChatInput.module.css';
+import { useState } from 'react';
 import { FaArrowUp } from 'react-icons/fa';
+import styles from './ChatInput.module.css';
 
 const ChatInput = ({ onSend, onTyping }) => {
   const [input, setInput] = useState('');
@@ -12,8 +12,11 @@ const ChatInput = ({ onSend, onTyping }) => {
   const handleSubmit = async () => {
     if (!input.trim() || sending) return;
     setSending(true);
-    try { if (await onSend(input.trim()) !== false) setInput(''); }
-    finally { setSending(false); }
+    try {
+      if ((await onSend(input.trim())) !== false) setInput('');
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -39,7 +42,12 @@ const ChatInput = ({ onSend, onTyping }) => {
             }
           }}
         />
-        <button className={styles.sendButton} onClick={handleSubmit} disabled={sending || !input.trim()} aria-label="Send message">
+        <button
+          className={styles.sendButton}
+          onClick={handleSubmit}
+          disabled={sending || !input.trim()}
+          aria-label="Send message"
+        >
           <FaArrowUp />
         </button>
       </div>

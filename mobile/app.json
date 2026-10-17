@@ -46,9 +46,6 @@
           "imageWidth": 120
         }
       ],
-      "expo-image",
-      "expo-status-bar",
-      "expo-web-browser",
       "expo-secure-store",
       [
         "@stripe/stripe-react-native",

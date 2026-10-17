@@ -1,56 +1,52 @@
-# Welcome to your Expo app 👋
+# Mobile application
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Expo SDK 57 and React Native power the Android and iOS client. Both platforms use the shared FastAPI backend.
 
-## Get started
+## Setup
 
-1. Install dependencies
+Use Node.js 22.13 or later. Create `.env` with an API address reachable from the phone and the public Firebase application configuration:
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```dotenv
+EXPO_PUBLIC_API_URL=https://your-api-host.example
+EXPO_PUBLIC_FIREBASE_API_KEY=
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+EXPO_PUBLIC_FIREBASE_APP_ID=
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+```bash
+npm ci
+npm start
+```
 
-### Other setup steps
+Daily video and Stripe payments contain native code. Use a native development build for those features, for example `npx expo run:android`. Production settings belong in `app.json` and `eas.json`.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Source layout
 
-## Learn more
+- `src/app/`: Expo Router URLs, layouts and access guards. Small re-export files preserve existing deep links.
+- `src/components/screens/`: Shared administration, tracking, directory, payment and exercise views.
+- `PatientRecords.tsx`, `SupportGroups.tsx`, `StressTriggers.tsx`: Separate counsellor records, community groups and journal summaries by feature.
+- `src/components/dashboard/`: Patient, therapist and administrator dashboards.
+- `src/components/booking/`, `calls/`, `chat/`: Booking, platform payments, video and messaging flows.
+- `src/components/common/Screen.tsx`: Shared page, action, card and request-state UI.
+- `src/api/`: Authenticated request client and feature-specific API operations.
+- `src/store/authStore.ts`: Authentication state and platform-appropriate persistence.
+- `src/hooks/use-api-resource.ts`: Focus-aware data loading, cancellation and retry.
 
-To learn more about developing your project with Expo, look at the following resources:
+Profile requests select the API route for the current account role. Assessment submissions use the backend's `responses` request field and display its `final_score`, `max_score` and `result` fields. The API validates answers against the published catalog before saving scores.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Files ending in `.native.ts` or `.native.tsx` provide device implementations. Their plain `.ts` or `.tsx` siblings provide browser fallbacks. Keep both when changing Firebase, payments or calls.
 
-## Join the community
+## Check and export
 
-Join our community of developers creating universal apps.
+```bash
+npm run typecheck
+npm run export:android
+npm run export:ios
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Exports go into `dist/android` and `dist/ios`. Use EAS for signed store builds. The optional `npm run web` command runs the Expo browser client; the separate `frontend/` directory contains the main web application.
+
+Refer to the [Expo SDK 57 documentation](https://docs.expo.dev/versions/v57.0.0/) when changing native configuration or framework APIs.

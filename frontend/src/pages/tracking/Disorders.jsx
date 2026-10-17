@@ -1,7 +1,7 @@
 // src/pages/Disorders.jsx
 
-import  { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import BASE_URL from '../../config/apiConfig';
 import styles from './Disorders.module.css';
 
@@ -61,17 +61,29 @@ const Disorders = () => {
 
         <div className={styles.section}>
           <strong>Symptoms:</strong>
-          <ul>{disorder.symptoms.map((s, i) => <li key={i}>{s}</li>)}</ul>
+          <ul>
+            {disorder.symptoms.map((s, i) => (
+              <li key={i}>{s}</li>
+            ))}
+          </ul>
         </div>
 
         <div className={styles.section}>
           <strong>Preventions:</strong>
-          <ul>{disorder.preventions.map((p, i) => <li key={i}>{p}</li>)}</ul>
+          <ul>
+            {disorder.preventions.map((p, i) => (
+              <li key={i}>{p}</li>
+            ))}
+          </ul>
         </div>
 
         <div className={styles.section}>
           <strong>Treatments:</strong>
-          <ul>{disorder.treatments.map((t, i) => <li key={i}>{t}</li>)}</ul>
+          <ul>
+            {disorder.treatments.map((t, i) => (
+              <li key={i}>{t}</li>
+            ))}
+          </ul>
         </div>
 
         <div className={styles.advice}>
@@ -83,4 +95,3 @@ const Disorders = () => {
 };
 
 export default Disorders;
-

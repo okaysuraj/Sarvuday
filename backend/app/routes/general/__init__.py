@@ -1,7 +1,8 @@
-# app/routes/general/__init__.py
+"""init   endpoints and access checks."""
 
 from fastapi import APIRouter
-from . import disorders, counsellors
+
+from . import counsellors, disorders
 
 general_router = APIRouter()
 

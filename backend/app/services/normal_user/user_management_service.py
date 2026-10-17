@@ -1,25 +1,32 @@
-# app/services/normal_user/user_management_service.py
+"""User management service business logic and persistence."""
+
+from datetime import datetime, timezone
+from typing import Optional
 
 from fastapi import HTTPException, UploadFile
-from typing import Optional
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
-from datetime import datetime, timedelta, timezone
+
 from app.models import (
-    NormalUser,
+    Appointment,
     ChatSession,
     CounsellingSession,
-    Appointment,
+    NormalUser,
 )
-from app.utils.constants import AppointmentStatusEnum
-from app.schemas import (
+from app.schemas.normal_users_schemas import (
+    CounsellingSessionResponse,
+    DashboardOverviewResponse,
     NormalUserBase,
     UserUpdateRequest,
     UserUpdateResponse,
-    DashboardOverviewResponse,
-    CounsellingSessionResponse
 )
-from app.utils.file_utils import replace_uploaded_file, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE_BYTES
+from app.utils.constants import AppointmentStatusEnum
+from app.utils.file_utils import (
+    ALLOWED_IMAGE_TYPES,
+    MAX_FILE_SIZE_BYTES,
+    replace_uploaded_file,
+)
+
 
 class UserManagementService:
     def __init__(self, db: AsyncSession):
@@ -37,18 +44,25 @@ class UserManagementService:
 
         # Get upcoming appointments
         upcoming_appointments = await self.db.execute(
-            select(CounsellingSession).join(Appointment, Appointment.session_id == CounsellingSession.session_id).where(
+            select(CounsellingSession)
+            .join(Appointment, Appointment.session_id == CounsellingSession.session_id)
+            .where(
                 CounsellingSession.user_id == user_id,
-                Appointment.status.in_([AppointmentStatusEnum.pending, AppointmentStatusEnum.confirmed]),
-                CounsellingSession.session_scheduled_at > datetime.now(timezone.utc).replace(tzinfo=None)
-            ).order_by(CounsellingSession.session_scheduled_at).limit(50)
+                Appointment.status.in_(
+                    [AppointmentStatusEnum.pending, AppointmentStatusEnum.confirmed]
+                ),
+                CounsellingSession.session_scheduled_at
+                > datetime.now(timezone.utc).replace(tzinfo=None),
+            )
+            .order_by(CounsellingSession.session_scheduled_at)
+            .limit(50)
         )
 
         # Total sessions attended
         total_sessions = await self.db.execute(
             select(func.count()).where(
                 CounsellingSession.user_id == user_id,
-                CounsellingSession.video_session_completed.is_(True)
+                CounsellingSession.video_session_completed.is_(True),
             )
         )
 
@@ -65,9 +79,11 @@ class UserManagementService:
             total_sessions=total_sessions.scalar() or 0,
             total_messages=total_messages.scalar() or 0,
             last_active=user.last_login_at,
-            upcoming_sessions=[CounsellingSessionResponse.model_validate(session) for session in upcoming_appointments.scalars()],
+            upcoming_sessions=[
+                CounsellingSessionResponse.model_validate(session)
+                for session in upcoming_appointments.scalars()
+            ],
         )
-
 
     async def get_user_profile(self, user_id: str) -> NormalUserBase:
         """Get user profile data"""
@@ -78,7 +94,7 @@ class UserManagementService:
         self,
         user_id: str,
         update_data: UserUpdateRequest,
-        profile_pic: Optional[UploadFile] = None
+        profile_pic: Optional[UploadFile] = None,
     ) -> UserUpdateResponse:
         user = await self._get_user(user_id)
 
@@ -90,7 +106,7 @@ class UserManagementService:
                 subdir="profile_pictures",
                 allowed_types=ALLOWED_IMAGE_TYPES,
                 label="profile picture",
-                max_size=MAX_FILE_SIZE_BYTES
+                max_size=MAX_FILE_SIZE_BYTES,
             )
             update_data.profile_pic = new_path
 
@@ -103,11 +119,14 @@ class UserManagementService:
 
         return UserUpdateResponse(
             message="Data Updated successfully",
-            user=NormalUserBase.model_validate(user)
+            user=NormalUserBase.model_validate(user),
         )
 
     async def delete_account(self, user_id: str) -> bool:
-        raise HTTPException(status_code=503, detail="Account erasure is unavailable until cross-store retention and audit workflows are configured.")
+        raise HTTPException(
+            status_code=503,
+            detail="Account erasure is unavailable until cross-store retention and audit workflows are configured.",
+        )
 
     async def _get_user(self, user_id: str) -> NormalUser:
         """Internal method to get user or raise 404"""

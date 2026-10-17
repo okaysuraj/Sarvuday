@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { CustomButton } from '../../components/CustomButton';
-import { CustomInput } from '../../components/CustomInput';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useAuthStore } from '../../store/authStore';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { authApi } from '../../api/auth';
+import { CustomButton } from '../../components/forms/CustomButton';
+import { CustomInput } from '../../components/forms/CustomInput';
+import { useAuthStore } from '../../store/authStore';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const login = useAuthStore(state => state.login);
-  
+  const login = useAuthStore((state) => state.login);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +22,7 @@ export default function LoginScreen() {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-    
+
     setIsLoading(true);
     try {
       // API call to backend
@@ -30,22 +30,30 @@ export default function LoginScreen() {
       if (!response.backendData.user_id || !response.backendData.access_token) {
         throw new Error('The server returned an incomplete sign-in response.');
       }
-      
+
       // Store user info and token from backend
       login(
-        { 
-          uid: response.firebaseUser.uid, 
+        {
+          uid: response.firebaseUser.uid,
           user_id: response.backendData.user_id,
           email: response.firebaseUser.email,
           user_type: response.backendData.user_type,
-          role: response.backendData.user_type === 'counsellor' ? 'therapist' : response.backendData.user_type === 'admin' ? 'admin' : 'patient'
-        }, 
-        response.backendData.access_token
+          role:
+            response.backendData.user_type === 'counsellor'
+              ? 'therapist'
+              : response.backendData.user_type === 'admin'
+                ? 'admin'
+                : 'patient',
+        },
+        response.backendData.access_token,
       );
-      
+
       router.replace('/');
     } catch (error: any) {
-      Alert.alert('Login Failed', error?.response?.data?.detail || error.message || 'Invalid credentials or server error.');
+      Alert.alert(
+        'Login Failed',
+        error?.response?.data?.detail || error.message || 'Invalid credentials or server error.',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -82,15 +90,18 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               className="absolute right-4 top-[38px] p-2"
               onPress={() => setShowPassword(!showPassword)}
             >
-              <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color="#747687" />
+              <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#747687" />
             </TouchableOpacity>
           </View>
-          
-          <TouchableOpacity onPress={() => router.push('/(auth)/forgot-password')} className="self-end mt-2">
+
+          <TouchableOpacity
+            onPress={() => router.push('/(auth)/forgot-password')}
+            className="self-end mt-2"
+          >
             <Text className="text-primary font-label-md text-sm font-bold">Forgot Password?</Text>
           </TouchableOpacity>
         </View>

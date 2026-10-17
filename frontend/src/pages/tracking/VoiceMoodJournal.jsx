@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
-import { toast } from 'react-toastify';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axiosInstance from '../../utils/axiosInstance';
 
 const VoiceMoodJournal = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -17,21 +17,21 @@ const VoiceMoodJournal = () => {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-      
+
       recognitionRef.current.onresult = (event) => {
         let currentTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
           currentTranscript += event.results[i][0].transcript;
         }
-        setTranscript(prev => prev + currentTranscript);
+        setTranscript((prev) => prev + currentTranscript);
       };
-      
+
       recognitionRef.current.onerror = (event) => {
         console.error('Speech recognition error', event.error);
         setIsRecording(false);
       };
     }
-    
+
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
@@ -47,12 +47,16 @@ const VoiceMoodJournal = () => {
       }, 1000);
       try {
         recognitionRef.current?.start();
-      } catch { /* Recognition may already be stopped or started. */ }
+      } catch {
+        /* Recognition may already be stopped or started. */
+      }
     } else {
       clearInterval(interval);
       try {
         recognitionRef.current?.stop();
-      } catch { /* Recognition may already be stopped or started. */ }
+      } catch {
+        /* Recognition may already be stopped or started. */
+      }
     }
     return () => clearInterval(interval);
   }, [isRecording]);
@@ -73,7 +77,7 @@ const VoiceMoodJournal = () => {
     setIsSaving(true);
     try {
       await axiosInstance.post('/user/tracking/journal', {
-        text: `[Voice Note] ${transcript}`
+        text: `[Voice Note] ${transcript}`,
       });
       toast.success('Voice journal saved successfully!');
       navigate('/journal');
@@ -86,20 +90,24 @@ const VoiceMoodJournal = () => {
   };
 
   const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
 
   return (
     <div className="flex-1 pb-24">
-      
-
       {/* Header Section */}
       <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h2 className="font-display-lg text-4xl md:text-display-lg text-ink-black mb-2">Voice Journal</h2>
-          <p className="font-body-lg text-body-lg text-on-surface-variant">Speak your mind freely. We're listening.</p>
+          <h2 className="font-display-lg text-4xl md:text-display-lg text-ink-black mb-2">
+            Voice Journal
+          </h2>
+          <p className="font-body-lg text-body-lg text-on-surface-variant">
+            Speak your mind freely. We're listening.
+          </p>
         </div>
         <div className="flex items-center gap-4">
           <button className="w-12 h-12 rounded-full border-outline bg-surface-container-lowest flex items-center justify-center shadow-subtle active:scale-[0.98]">
@@ -114,26 +122,30 @@ const VoiceMoodJournal = () => {
           {/* Background decorative elements */}
           <div className="absolute top-8 left-8 w-16 h-16 rounded-full border-outline bg-surface opacity-50 z-0"></div>
           <div className="absolute bottom-12 right-12 w-24 h-24 border-outline bg-secondary-fixed opacity-50 z-0"></div>
-          
+
           <div className="z-10 flex flex-col items-center w-full">
-            <p className="font-headline-sm text-xl text-on-surface-variant mb-6">{isRecording ? 'Recording...' : (time > 0 ? 'Paused' : 'Ready')}</p>
-            <div className="font-display-lg text-5xl md:text-display-lg text-primary mb-6 tracking-wider">{formatTime(time)}</div>
-            
+            <p className="font-headline-sm text-xl text-on-surface-variant mb-6">
+              {isRecording ? 'Recording...' : time > 0 ? 'Paused' : 'Ready'}
+            </p>
+            <div className="font-display-lg text-5xl md:text-display-lg text-primary mb-6 tracking-wider">
+              {formatTime(time)}
+            </div>
+
             {transcript && (
               <div className="w-full max-w-md p-4 mb-6 bg-surface-container-lowest rounded-xl border-[1px] border-outline max-h-32 overflow-y-auto italic">
                 {transcript}
               </div>
             )}
-            
+
             {/* Visualizer */}
             <div className="flex items-end justify-center h-32 mb-12 w-full max-w-md gap-1">
               {[0.1, 0.3, 0.5, 0.2, 0.4, 0.6, 0.3, 0.1, 0.5, 0.2].map((delay, i) => (
-                <div 
-                  key={i} 
-                  className="wave-bar" 
+                <div
+                  key={i}
+                  className="wave-bar"
                   style={{
                     animationDelay: `${delay}s`,
-                    animationPlayState: isRecording ? 'running' : 'paused'
+                    animationPlayState: isRecording ? 'running' : 'paused',
                   }}
                 ></div>
               ))}
@@ -141,20 +153,27 @@ const VoiceMoodJournal = () => {
 
             {/* Controls */}
             <div className="flex flex-wrap justify-center items-center gap-6">
-              <button 
+              <button
                 onClick={toggleRecording}
                 className="w-16 h-16 rounded-full border-outline bg-surface-container-lowest flex items-center justify-center shadow-subtle transition-transform active:scale-[0.98]"
               >
-                <span className="material-symbols-outlined text-ink-black text-3xl">{isRecording ? 'pause' : 'mic'}</span>
+                <span className="material-symbols-outlined text-ink-black text-3xl">
+                  {isRecording ? 'pause' : 'mic'}
+                </span>
               </button>
-              <button 
+              <button
                 onClick={handleStop}
                 disabled={!isRecording && time === 0}
                 className={`w-20 h-20 rounded-full border-outline flex items-center justify-center shadow-subtle transition-transform active:scale-[0.98] ${!isRecording && time === 0 ? 'bg-surface-variant opacity-50' : 'bg-primary '}`}
               >
-                <span className="material-symbols-outlined text-on-primary text-4xl" style={{fontVariationSettings: "'FILL' 1"}}>stop</span>
+                <span
+                  className="material-symbols-outlined text-on-primary text-4xl"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  stop
+                </span>
               </button>
-              <button 
+              <button
                 onClick={handleSave}
                 disabled={isSaving || time === 0}
                 className={`h-16 rounded-full border-outline flex items-center justify-center shadow-subtle transition-transform active:scale-[0.98] font-label-bold text-label-bold px-6 ${isSaving || time === 0 ? 'bg-surface-variant text-on-surface-variant opacity-50' : 'bg-secondary-container text-on-secondary-container '}`}
@@ -187,20 +206,27 @@ const VoiceMoodJournal = () => {
               </li>
             </ul>
           </div>
-          
+
           <div className="bg-surface border-outline rounded-xl p-6 shadow-subtle flex-1 flex flex-col justify-between hover:scale-[1.02] transition-transform">
             <div>
-              <h4 className="font-label-bold text-ink-black mb-2 uppercase tracking-wider text-xs">Current Tag</h4>
+              <h4 className="font-label-bold text-ink-black mb-2 uppercase tracking-wider text-xs">
+                Current Tag
+              </h4>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-outline bg-surface-container-lowest text-ink-black font-label-md">
-                <span className="material-symbols-outlined text-sm" style={{fontVariationSettings: "'FILL' 1"}}>favorite</span>
+                <span
+                  className="material-symbols-outlined text-sm"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  favorite
+                </span>
                 Anxiety
               </div>
             </div>
             <div className="mt-8 relative h-32 w-full border-outline rounded-xl bg-surface-container-lowest overflow-hidden">
-              <img 
-                className="absolute inset-0 w-full h-full object-cover" 
-                alt="Stylized illustration" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuByUSNudtV1yi1Y_MThDv9TuAngrDYpz_EsyZFfU6hHhgcdT3uEvYQDZ8oHPjYqn3-n-VvSIOYJQLdSsuizijeu80S5Cw0GwVWOx_FzBXzyYQPij1avzgkgR65ThihRH_LYI64gd2tEzbWB2yMyIvTtQSjG50vqdnUo7iCm7OXEpLuHk4BpFuDqD6aBHTT0ymRp4uUpYtHHB38ypXiKaci1NlgvpYV2gpDqEJdAhjEMjZmxLG_IhDeuUA" 
+              <img
+                className="absolute inset-0 w-full h-full object-cover"
+                alt="Stylized illustration"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuByUSNudtV1yi1Y_MThDv9TuAngrDYpz_EsyZFfU6hHhgcdT3uEvYQDZ8oHPjYqn3-n-VvSIOYJQLdSsuizijeu80S5Cw0GwVWOx_FzBXzyYQPij1avzgkgR65ThihRH_LYI64gd2tEzbWB2yMyIvTtQSjG50vqdnUo7iCm7OXEpLuHk4BpFuDqD6aBHTT0ymRp4uUpYtHHB38ypXiKaci1NlgvpYV2gpDqEJdAhjEMjZmxLG_IhDeuUA"
               />
             </div>
           </div>

@@ -1,12 +1,13 @@
+import { dashboardPath, useSession } from '../../utils/session';
 // src/pages/chat/Chat.jsx
 // Production chat page for user-counsellor messaging.
 
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import styles from './Chat.module.css';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ChatSidebar from '../../components/chat/ChatSidebar';
 import ChatWindow from '../../components/chat/ChatWindow';
+import styles from './Chat.module.css';
 
 const Chat = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
@@ -14,30 +15,15 @@ const Chat = () => {
   const location = useLocation();
   const preSelectedRoomId = location.state?.selectedRoomId;
 
-  // Decode user_id from JWT
-  const getUserId = () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.sub;
-    } catch { return null; }
-  };
-
-  const currentUserId = getUserId();
+  const session = useSession();
+  const currentUserId = session?.userId;
 
   return (
     <div className={styles.fullPageContainer}>
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
-          <button 
-            onClick={() => {
-              const userType = localStorage.getItem('userType');
-              if (userType && userType.toLowerCase() === 'counsellor') {
-                navigate('/counsellor-dashboard/home');
-              } else {
-                navigate('/normal-user-dashboard/home');
-              }
-            }}
+          <button
+            onClick={() => navigate(dashboardPath(session?.userType))}
             className={styles.backBtn}
             title="Back to Dashboard"
           >

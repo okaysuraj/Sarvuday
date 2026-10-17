@@ -1,1 +1,1 @@
-export { RecordedTherapistSearch as default } from '../../components/counsellor/RecordedCounsellors';
+export { TherapistSearchView as default } from '../../components/counsellor/CounsellorDirectory';

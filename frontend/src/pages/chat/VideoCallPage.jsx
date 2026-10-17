@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import BASE_URL from '../../config/apiConfig';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import VideoCall from '../../components/counselling/VideoCall';
+import BASE_URL from '../../config/apiConfig';
 import styles from './VideoCallPage.module.css';
 
 const VideoCallPage = () => {
@@ -18,15 +18,17 @@ const VideoCallPage = () => {
       try {
         const token = localStorage.getItem('accessToken');
         const res = await axios.get(`${BASE_URL}/user/sessions/join/${sessionId}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         setCallData({
           url: res.data.video_url,
-          token: res.data.token
+          token: res.data.token,
         });
       } catch (err) {
         console.error('Failed to join session:', err);
-        const errMsg = err.response?.data?.detail || 'Failed to join session. It may be expired or not started yet.';
+        const errMsg =
+          err.response?.data?.detail ||
+          'Failed to join session. It may be expired or not started yet.';
         setError(errMsg);
         toast.error(errMsg);
       } finally {

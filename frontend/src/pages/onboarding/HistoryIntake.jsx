@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { saveOnboarding } from '../../utils/onboarding';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const HistoryIntake = () => {
@@ -6,7 +7,7 @@ const HistoryIntake = () => {
   const [formData, setFormData] = useState({
     diagnoses: [],
     therapyStatus: '',
-    additionalNotes: ''
+    additionalNotes: '',
   });
 
   const diagnosesOptions = [
@@ -16,18 +17,18 @@ const HistoryIntake = () => {
     { id: 'adhd', label: 'ADHD' },
     { id: 'bipolar', label: 'Bipolar Disorder' },
     { id: 'ocd', label: 'OCD' },
-    { id: 'none', label: 'None of the above', isNone: true }
+    { id: 'none', label: 'None of the above', isNone: true },
   ];
 
   const toggleDiagnosis = (id, isNone) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       let newDiagnoses = [...prev.diagnoses];
       if (isNone) {
         newDiagnoses = newDiagnoses.includes('none') ? [] : ['none'];
       } else {
-        newDiagnoses = newDiagnoses.filter(d => d !== 'none');
+        newDiagnoses = newDiagnoses.filter((d) => d !== 'none');
         if (newDiagnoses.includes(id)) {
-          newDiagnoses = newDiagnoses.filter(d => d !== id);
+          newDiagnoses = newDiagnoses.filter((d) => d !== id);
         } else {
           newDiagnoses.push(id);
         }
@@ -37,11 +38,9 @@ const HistoryIntake = () => {
   };
 
   const handleNext = () => {
-    const existingData = JSON.parse(localStorage.getItem('onboardingData') || '{}');
-    localStorage.setItem('onboardingData', JSON.stringify({
-      ...existingData,
-      mental_health_history: JSON.stringify(formData)
-    }));
+    saveOnboarding({
+      mental_health_history: JSON.stringify(formData),
+    });
     navigate('/onboarding/consent');
   };
 
@@ -51,12 +50,13 @@ const HistoryIntake = () => {
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased selection:bg-surface selection:text-ink-black">
-      
-
       {/* TopAppBar */}
       <header className="bg-background text-primary font-headline-sm text-headline-sm w-full top-0 sticky border-b border-outline flex justify-between items-center px-margin-desktop py-4 z-50">
         <div className="flex items-center gap-4">
-          <button onClick={handlePrevious} className="hover:opacity-80 transition-opacity active:translate-x-[2px] active:translate-y-[2px] flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors">
+          <button
+            onClick={handlePrevious}
+            className="hover:opacity-80 transition-opacity active:translate-x-[2px] active:translate-y-[2px] flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors"
+          >
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
           <span className="font-headline-md text-headline-md text-primary font-bold">SarvUday</span>
@@ -65,7 +65,10 @@ const HistoryIntake = () => {
         <div className="hidden md:flex items-center gap-3">
           <span className="font-label-bold text-label-bold text-ink-black">Step 7 of 8</span>
           <div className="w-32 h-3 bg-surface-container-highest neo-border rounded-full overflow-hidden flex">
-            <div className="h-full bg-accent-sage neo-border-l-0 border-t-0 border-b-0 border-r-[1.5px]" style={{ width: '87.5%' }}></div>
+            <div
+              className="h-full bg-accent-sage neo-border-l-0 border-t-0 border-b-0 border-r-[1.5px]"
+              style={{ width: '87.5%' }}
+            ></div>
           </div>
         </div>
       </header>
@@ -76,25 +79,33 @@ const HistoryIntake = () => {
           {/* Decorative Elements */}
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-surface rounded-full neo-border opacity-50 pointer-events-none hidden md:block"></div>
           <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-secondary-fixed rounded-full neo-border opacity-50 pointer-events-none hidden md:block"></div>
-          
+
           <div className="relative z-10 flex flex-col gap-stack-md">
             <div className="text-center mb-stack-sm">
-              <h1 className="font-display-lg text-display-lg text-ink-black mb-2">Mental Health History</h1>
-              <p className="font-body-lg text-body-lg text-on-surface-variant">Help us understand your background so we can better tailor your experience.</p>
+              <h1 className="font-display-lg text-display-lg text-ink-black mb-2">
+                Mental Health History
+              </h1>
+              <p className="font-body-lg text-body-lg text-on-surface-variant">
+                Help us understand your background so we can better tailor your experience.
+              </p>
             </div>
 
             <form className="flex flex-col gap-stack-lg" onSubmit={(e) => e.preventDefault()}>
               {/* Question 1: Diagnoses */}
               <section className="flex flex-col gap-stack-sm">
-                <label className="font-headline-sm text-headline-sm text-ink-black">Have you ever been diagnosed with any of the following?</label>
-                <p className="font-label-md text-label-md text-on-surface-variant -mt-2 mb-2">Select all that apply.</p>
+                <label className="font-headline-sm text-headline-sm text-ink-black">
+                  Have you ever been diagnosed with any of the following?
+                </label>
+                <p className="font-label-md text-label-md text-on-surface-variant -mt-2 mb-2">
+                  Select all that apply.
+                </p>
                 <div className="flex flex-wrap gap-3">
-                  {diagnosesOptions.map(option => (
+                  {diagnosesOptions.map((option) => (
                     <button
                       key={option.id}
                       type="button"
                       onClick={() => toggleDiagnosis(option.id, option.isNone)}
-                      className={`chip-checkbox-label cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded-full neo-border font-label-bold text-label-bold transition-all select-none ${formData.diagnoses.includes(option.id) ? 'selected' : (option.isNone ? 'bg-accent-sage text-ink-black' : '')}`}
+                      className={`chip-checkbox-label cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded-full neo-border font-label-bold text-label-bold transition-all select-none ${formData.diagnoses.includes(option.id) ? 'selected' : option.isNone ? 'bg-accent-sage text-ink-black' : ''}`}
                     >
                       {option.label}
                     </button>
@@ -107,7 +118,9 @@ const HistoryIntake = () => {
 
               {/* Question 2: Therapy Status */}
               <section className="flex flex-col gap-stack-sm">
-                <label className="font-headline-sm text-headline-sm text-ink-black">Are you currently seeing a therapist or counselor?</label>
+                <label className="font-headline-sm text-headline-sm text-ink-black">
+                  Are you currently seeing a therapist or counselor?
+                </label>
                 <div className="grid grid-cols-2 gap-gutter mt-2">
                   <div className="relative h-16">
                     <button
@@ -132,14 +145,27 @@ const HistoryIntake = () => {
 
               {/* Question 3: Additional Notes */}
               <section className="flex flex-col gap-stack-sm">
-                <label className="font-headline-sm text-headline-sm text-ink-black" htmlFor="additional-notes">Anything else you'd like us to know? <span className="text-on-surface-variant font-body-md text-body-md font-normal">(Optional)</span></label>
-                <textarea 
-                  className="w-full bg-[#f9f8f3] rounded-xl neo-border p-4 font-body-md text-body-md text-ink-black placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-0 focus:shadow-subtle transition-shadow resize-none" 
-                  id="additional-notes" 
+                <label
+                  className="font-headline-sm text-headline-sm text-ink-black"
+                  htmlFor="additional-notes"
+                >
+                  Anything else you'd like us to know?{' '}
+                  <span className="text-on-surface-variant font-body-md text-body-md font-normal">
+                    (Optional)
+                  </span>
+                </label>
+                <textarea
+                  className="w-full bg-[#f9f8f3] rounded-xl neo-border p-4 font-body-md text-body-md text-ink-black placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-0 focus:shadow-subtle transition-shadow resize-none"
+                  id="additional-notes"
                   name="additionalNotes"
                   value={formData.additionalNotes}
-                  onChange={(e) => setFormData({ ...formData, additionalNotes: e.target.value })}
-                  placeholder="Feel free to share any other relevant context..." 
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      additionalNotes: e.target.value,
+                    })
+                  }
+                  placeholder="Feel free to share any other relevant context..."
                   rows="3"
                 ></textarea>
               </section>
@@ -149,10 +175,18 @@ const HistoryIntake = () => {
 
         {/* Navigation Buttons */}
         <div className="w-full max-w-3xl mt-stack-md flex justify-between items-center">
-          <button onClick={handlePrevious} className="interactive-btn px-6 py-3 bg-surface-container-highest text-ink-black font-label-bold text-label-bold rounded-full neo-border shadow-subtle transition-transform" type="button">
+          <button
+            onClick={handlePrevious}
+            className="interactive-btn px-6 py-3 bg-surface-container-highest text-ink-black font-label-bold text-label-bold rounded-full neo-border shadow-subtle transition-transform"
+            type="button"
+          >
             Previous
           </button>
-          <button onClick={handleNext} className="interactive-btn px-8 py-3 bg-primary text-on-primary font-label-bold text-label-bold rounded-full neo-border shadow-subtle transition-transform flex items-center gap-2" type="button">
+          <button
+            onClick={handleNext}
+            className="interactive-btn px-8 py-3 bg-primary text-on-primary font-label-bold text-label-bold rounded-full neo-border shadow-subtle transition-transform flex items-center gap-2"
+            type="button"
+          >
             Continue
             <span className="material-symbols-outlined text-lg">arrow_forward</span>
           </button>

@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { CustomButton } from '../../components/CustomButton';
-import { CustomInput } from '../../components/CustomInput';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { authApi } from '../../api/auth';
+import { CustomButton } from '../../components/forms/CustomButton';
+import { CustomInput } from '../../components/forms/CustomInput';
 
 import { useAuthStore } from '../../store/authStore';
 
 export default function SignUpScreen() {
   const router = useRouter();
   const { role } = useLocalSearchParams<{ role: string }>();
-  const login = useAuthStore(state => state.login);
-  
+  const login = useAuthStore((state) => state.login);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,24 +29,29 @@ export default function SignUpScreen() {
     setIsLoading(true);
     try {
       const userType = role === 'therapist' ? 'therapist' : 'patient';
-      const response = await authApi.signUp({ name, email, password, user_type: userType });
+      const response = await authApi.signUp({
+        name,
+        email,
+        password,
+        user_type: userType,
+      });
       if (!response.backendData.user_id || !response.backendData.access_token) {
         throw new Error('The server returned an incomplete registration response.');
       }
-      
+
       // Store user info and token from backend
       login(
-        { 
-          uid: response.firebaseUser.uid, 
+        {
+          uid: response.firebaseUser.uid,
           user_id: response.backendData.user_id,
           name: name.trim(),
           email: response.firebaseUser.email,
           user_type: response.backendData.user_type,
-          role: response.backendData.user_type === 'counsellor' ? 'therapist' : 'patient'
-        }, 
-        response.backendData.access_token
+          role: response.backendData.user_type === 'counsellor' ? 'therapist' : 'patient',
+        },
+        response.backendData.access_token,
       );
-      
+
       // Go to intake profile for patients, or dashboard for therapists
       if (userType === 'patient') {
         router.replace('/intake' as any);
@@ -54,7 +59,10 @@ export default function SignUpScreen() {
         router.replace('/');
       }
     } catch (error: any) {
-      Alert.alert('Sign Up Failed', error?.response?.data?.detail || error.message || 'Something went wrong. Please try again.');
+      Alert.alert(
+        'Sign Up Failed',
+        error?.response?.data?.detail || error.message || 'Something went wrong. Please try again.',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -97,19 +105,25 @@ export default function SignUpScreen() {
               value={password}
               onChangeText={setPassword}
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               className="absolute right-4 top-[38px] p-2"
               onPress={() => setShowPassword(!showPassword)}
             >
-              <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color="#747687" />
+              <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#747687" />
             </TouchableOpacity>
           </View>
         </View>
 
         <View className="flex-row items-start mb-8 pr-4">
-          <Ionicons name="information-circle-outline" size={20} color="#747687" className="mt-1 mr-2" />
+          <Ionicons
+            name="information-circle-outline"
+            size={20}
+            color="#747687"
+            className="mt-1 mr-2"
+          />
           <Text className="font-body-md text-on-surface-variant text-xs leading-5 flex-1">
-            By signing up, you agree to our Terms of Service, Privacy Policy, and Data Usage Guidelines.
+            By signing up, you agree to our Terms of Service, Privacy Policy, and Data Usage
+            Guidelines.
           </Text>
         </View>
 
@@ -121,7 +135,9 @@ export default function SignUpScreen() {
         />
 
         <View className="flex-row justify-center items-center mt-auto">
-          <Text className="text-on-surface-variant font-body-md mr-1">Already have an account?</Text>
+          <Text className="text-on-surface-variant font-body-md mr-1">
+            Already have an account?
+          </Text>
           <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
             <Text className="text-primary font-label-bold font-bold">Sign in</Text>
           </TouchableOpacity>

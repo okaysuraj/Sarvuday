@@ -1,14 +1,44 @@
-﻿venv/
-__pycache__/
+# Local configuration, credentials and editor state
 .env
-**/.env
-**/.env.*
-**/.pytest_cache/
-**/.vscode/
-**/.idea/
-**/.DS_Store
+.env.*
+*.local
+.vscode/
+.idea/
+.DS_Store
+*.pem
+*.key
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+
+# Installed dependencies and language caches
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.tsbuildinfo
+
+# Generated bundles and development artifacts
+dist/
+dist-ssr/
+dist-audit-*/
+web-build/
+.expo/
+expo-env.d.ts
+logs/
+*.log
+test-results/
+playwright-report/
+
+# Native projects are generated from the Expo configuration
+mobile/android/
+mobile/ios/
+mobile/.kotlin/
+
+# Independent AI service checkout and local agent skills
 Huggingface_Repo/
 skills/
-mobile/dist-audit-*/
-frontend/test-results/
-frontend/playwright-report/

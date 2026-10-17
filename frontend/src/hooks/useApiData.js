@@ -5,7 +5,7 @@ import axiosInstance from '../utils/axiosInstance';
 export default function useApiData(url) {
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState({ data: null, loading: true, error: '' });
-  const retry = useCallback(() => setAttempt(value => value + 1), []);
+  const retry = useCallback(() => setAttempt((value) => value + 1), []);
   useEffect(() => {
     const controller = new AbortController();
     if (!url) {
@@ -13,12 +13,18 @@ export default function useApiData(url) {
       return () => controller.abort();
     }
     setState({ data: null, loading: true, error: '' });
-    axiosInstance.get(url, { signal: controller.signal, silent: true })
+    axiosInstance
+      .get(url, { signal: controller.signal, silent: true })
       .then(({ data }) => {
         if (!controller.signal.aborted) setState({ data, loading: false, error: '' });
       })
-      .catch(error => {
-        if (!controller.signal.aborted) setState({ data: null, loading: false, error: error.userMessage || 'Unable to load this information.' });
+      .catch((error) => {
+        if (!controller.signal.aborted)
+          setState({
+            data: null,
+            loading: false,
+            error: error.userMessage || 'Unable to load this information.',
+          });
       });
     return () => controller.abort();
   }, [url, attempt]);

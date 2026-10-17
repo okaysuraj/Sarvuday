@@ -1,19 +1,24 @@
+"""Creators business logic and persistence."""
+
 from datetime import datetime, timezone
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from app.models import Appointment, CounsellorAvailability
+from app.schemas.appointments_schemas import (
+    AppointmentBase,
+    CounsellorAppointmentView,
+    CreateAppointmentRequest,
+    NormalUserAppointmentView,
+    SessionAppointmentView,
+)
+from app.services.counselling_services.counselling_service import (
+    CounsellingSessionService,
+)
 from app.utils.constants import AppointmentStatusEnum, CounsellorAvailabilityStatusEnum
 from app.utils.unique_id_generation import generate_appointment_id
-from app.schemas import (
-    CreateAppointmentRequest,
-    AppointmentBase,
-    SessionAppointmentView,
-    NormalUserAppointmentView,
-    CounsellorAppointmentView
-)
-from app.services.counselling_services.counselling_service import CounsellingSessionService
 
 
 async def create_appointment_record(
@@ -21,15 +26,14 @@ async def create_appointment_record(
     user_id: str,
     slot: CounsellorAvailability,
     booking_data: CreateAppointmentRequest,
-    payment_id: str | None
+    payment_id: str | None,
 ) -> AppointmentBase:
     appointment_id = generate_appointment_id()
-    
+
     session = await CounsellingSessionService(db).create_counselling_session(
         user_id=user_id,
         counsellor_id=booking_data.counsellor_id,
-        appointment_id=appointment_id,
-        availability_slot=slot
+        availability_slot=slot,
     )
 
     appointment = Appointment(
@@ -41,7 +45,7 @@ async def create_appointment_record(
         created_at=datetime.now(timezone.utc),
         user_id=user_id,
         counsellor_id=slot.counsellor_id,
-        payment_id=payment_id
+        payment_id=payment_id,
     )
 
     # Update slot status
@@ -56,10 +60,7 @@ async def create_appointment_record(
     # Query with relationships (appointment is now persistent)
     result = await db.execute(
         select(Appointment)
-        .options(
-            selectinload(Appointment.user),
-            selectinload(Appointment.counsellor)
-        )
+        .options(selectinload(Appointment.user), selectinload(Appointment.counsellor))
         .where(Appointment.appointment_id == appointment_id)
     )
     full_appointment = result.scalar_one()
@@ -73,6 +74,7 @@ async def create_appointment_record(
         created_at=full_appointment.created_at,
         session=SessionAppointmentView.model_validate(session),
         user=NormalUserAppointmentView.model_validate(full_appointment.user),
-        counsellor=CounsellorAppointmentView.model_validate(full_appointment.counsellor)
+        counsellor=CounsellorAppointmentView.model_validate(
+            full_appointment.counsellor
+        ),
     )
-

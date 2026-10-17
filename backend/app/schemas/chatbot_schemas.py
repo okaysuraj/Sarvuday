@@ -1,11 +1,14 @@
-# app/schemas/chatbot_schemas.py
+"""Request validation and response models for chatbot."""
 
-from pydantic import BaseModel
-from typing import List, Optional, Dict
 from datetime import datetime
+from typing import Dict, List, Optional
+
+from pydantic import BaseModel, Field
+
 
 class ChatSessionCreateRequest(BaseModel):
-    title: Optional[str] = None
+    title: Optional[str] = Field(default=None, min_length=1, max_length=255)
+
 
 class ChatSessionResponse(BaseModel):
     session_id: str
@@ -15,34 +18,38 @@ class ChatSessionResponse(BaseModel):
     is_crisis: bool = False
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
+
 
 class ChatSessionListResponse(BaseModel):
     total_count: int
     chat_sessions: List[ChatSessionResponse]
 
+
 class ChatRequest(BaseModel):
-    user_input: str
+    user_input: str = Field(min_length=1, max_length=10000)
+
 
 class ChatResponse(BaseModel):
     response: str
 
+
 class UpdateTitleRequest(BaseModel):
-    title: str
+    title: str = Field(min_length=1, max_length=255)
+
 
 class UpdateTitleResponse(BaseModel):
     message: str
     title: str
+
 
 class ConversationMessage(BaseModel):
     user: str
     assistant: str
     timestamp: datetime
 
+
 class ChatHistoryResponse(BaseModel):
     user_id: str
     session_id: str
     conversation_history: List[ConversationMessage]
-
-

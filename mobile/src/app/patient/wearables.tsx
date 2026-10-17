@@ -1,1 +1,1 @@
-export { RecordedBiofeedback as default } from '../../components/screens/RecordedScreens';
+export { BiofeedbackScreen as default } from '../../components/screens/ProgressScreens';

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import axiosInstance from '../../utils/axiosInstance';
 
 const DailyJournal = () => {
   const [entry, setEntry] = useState('');
   const [recentEntries, setRecentEntries] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   useEffect(() => {
     fetchRecentEntries();
   }, []);
@@ -25,7 +25,7 @@ const DailyJournal = () => {
       toast.warning('Please write something before saving.');
       return;
     }
-    
+
     setIsSaving(true);
     try {
       await axiosInstance.post('/user/tracking/journal', { text: entry });
@@ -40,9 +40,10 @@ const DailyJournal = () => {
     }
   };
 
-  
   const today = new Date().toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric'
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
   return (
@@ -50,19 +51,23 @@ const DailyJournal = () => {
       {/* Header Section */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <p className="font-label-bold text-label-bold text-primary mb-2 uppercase tracking-widest">Daily Reflection</p>
+          <p className="font-label-bold text-label-bold text-primary mb-2 uppercase tracking-widest">
+            Daily Reflection
+          </p>
           <h2 className="font-display-lg text-display-lg text-ink-black">{today}</h2>
         </div>
         <div className="flex gap-4">
           <button className="bg-surface-container-lowest border-outline p-3 rounded-xl shadow-subtle hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all text-ink-black">
             <span className="material-symbols-outlined">bookmark_add</span>
           </button>
-          <button 
+          <button
             onClick={handleSaveEntry}
             disabled={isSaving}
             className="bg-primary text-on-primary font-label-bold text-label-bold px-6 py-3 rounded-xl border-outline shadow-subtle hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 flex items-center gap-2"
           >
-            {isSaving ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : null}
+            {isSaving ? (
+              <span className="material-symbols-outlined animate-spin">progress_activity</span>
+            ) : null}
             {isSaving ? 'Saving...' : 'Save Entry'}
           </button>
         </div>
@@ -70,7 +75,6 @@ const DailyJournal = () => {
 
       {/* Bento Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-        
         {/* Main Reflection Area (8 columns) */}
         <div className="lg:col-span-8 flex flex-col gap-stack-md h-full">
           {/* Prompt Card (Yellow Sticker) */}
@@ -81,16 +85,21 @@ const DailyJournal = () => {
             <div className="flex items-start gap-4 mt-2">
               <span className="material-symbols-outlined text-4xl text-ink-black">lightbulb</span>
               <div>
-                <h3 className="font-headline-sm text-headline-sm text-ink-black mb-2">What is one small victory you experienced today, and how did it make you feel?</h3>
-                <p className="font-body-md text-body-md text-on-surface-variant">Even the tiniest steps forward are worth celebrating. Focus on the positive momentum.</p>
+                <h3 className="font-headline-sm text-headline-sm text-ink-black mb-2">
+                  What is one small victory you experienced today, and how did it make you feel?
+                </h3>
+                <p className="font-body-md text-body-md text-on-surface-variant">
+                  Even the tiniest steps forward are worth celebrating. Focus on the positive
+                  momentum.
+                </p>
               </div>
             </div>
           </div>
 
           {/* Text Area Card */}
           <div className="bg-surface-container-lowest border-outline rounded-xl p-container-padding shadow-subtle flex-grow flex flex-col min-h-[400px]">
-            <textarea 
-              className="w-full h-full min-h-[400px] resize-none border-none focus:ring-0 font-body-lg text-body-lg text-ink-black placeholder:text-outline-variant bg-transparent outline-none" 
+            <textarea
+              className="w-full h-full min-h-[400px] resize-none border-none focus:ring-0 font-body-lg text-body-lg text-ink-black placeholder:text-outline-variant bg-transparent outline-none"
               placeholder="Start typing your reflection here... Let your thoughts flow freely without judgment."
               value={entry}
               onChange={(e) => setEntry(e.target.value)}
@@ -107,10 +116,18 @@ const DailyJournal = () => {
               Today's Mood
             </h4>
             <div className="flex flex-wrap gap-2">
-              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Calm</button>
-              <button className="bg-primary border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-on-primary transition-colors translate-x-[1px] translate-y-[1px] shadow-none">Grateful</button>
-              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Productive</button>
-              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">Anxious</button>
+              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">
+                Calm
+              </button>
+              <button className="bg-primary border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-on-primary transition-colors translate-x-[1px] translate-y-[1px] shadow-none">
+                Grateful
+              </button>
+              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">
+                Productive
+              </button>
+              <button className="bg-surface-container-lowest border-outline px-4 py-2 rounded-full font-label-bold text-label-bold text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none">
+                Anxious
+              </button>
               <button className="bg-surface-container-lowest border-outline p-2 rounded-full text-ink-black hover:bg-primary hover:text-on-primary transition-colors shadow-subtle hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none flex items-center justify-center">
                 <span className="material-symbols-outlined text-sm">add</span>
               </button>
@@ -124,23 +141,39 @@ const DailyJournal = () => {
                 <span className="material-symbols-outlined">history</span>
                 Recent
               </h4>
-              <a className="font-label-bold text-label-bold text-primary hover:underline" href="#">View All</a>
+              <a className="font-label-bold text-label-bold text-primary hover:underline" href="#">
+                View All
+              </a>
             </div>
             <div className="flex flex-col gap-4 overflow-y-auto max-h-[300px] hide-scrollbar pr-2">
               {recentEntries.length === 0 ? (
-                <p className="font-body-md text-on-surface-variant text-center py-4">No recent entries yet.</p>
+                <p className="font-body-md text-on-surface-variant text-center py-4">
+                  No recent entries yet.
+                </p>
               ) : (
                 recentEntries.map((journal) => {
                   const dateObj = new Date(journal.created_at);
-                  const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                  
+                  const dateStr = dateObj.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  });
+
                   return (
-                    <div key={journal.id} className="bg-surface-container-lowest border-outline rounded-xl p-4 cursor-pointer hover:shadow-subtle transition-all">
+                    <div
+                      key={journal.id}
+                      className="bg-surface-container-lowest border-outline rounded-xl p-4 cursor-pointer hover:shadow-subtle transition-all"
+                    >
                       <div className="flex justify-between items-start mb-2">
-                        <span className="font-label-bold text-label-bold text-ink-black">{dateStr}</span>
-                        <span className="material-symbols-outlined text-sm text-outline">history_edu</span>
+                        <span className="font-label-bold text-label-bold text-ink-black">
+                          {dateStr}
+                        </span>
+                        <span className="material-symbols-outlined text-sm text-outline">
+                          history_edu
+                        </span>
                       </div>
-                      <p className="font-body-md text-body-md text-on-surface-variant line-clamp-3">{journal.content}</p>
+                      <p className="font-body-md text-body-md text-on-surface-variant line-clamp-3">
+                        {journal.content}
+                      </p>
                     </div>
                   );
                 })

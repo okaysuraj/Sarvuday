@@ -1,1 +1,1 @@
-export { RecordedProgress as default } from '../../components/screens/RecordedScreens';
+export { ProgressScreen as default } from '../../components/screens/ProgressScreens';

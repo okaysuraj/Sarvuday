@@ -1,7 +1,13 @@
-from sqlalchemy import Column, String, Boolean, Enum as SQLEnum, Text, Index
+"""Relational records and relationships for chat."""
+
 from enum import Enum
+
+from sqlalchemy import Boolean, Column, Index, String, Text
+from sqlalchemy import Enum as SQLEnum
+
 from app.database.postgres import Base
 from app.models.base import BaseMixin
+
 
 class MessageType(str, Enum):
     text = "text"
@@ -9,14 +15,19 @@ class MessageType(str, Enum):
     file = "file"
     system = "system"
 
+
 class DirectMessage(Base, BaseMixin):
     __tablename__ = "direct_messages"
-    __table_args__ = (Index('ix_messages_room_created', 'room_id', 'created_at'),)
+    __table_args__ = (Index("ix_messages_room_created", "room_id", "created_at"),)
 
     message_id = Column(String(50), primary_key=True, index=True)
     room_id = Column(String(100), index=True, nullable=False)
     sender_id = Column(String(50), index=True, nullable=False)
     sender_type = Column(String(50), nullable=False)
     content = Column(Text, nullable=False)
-    message_type = Column(SQLEnum(MessageType, name="messagetype"), default=MessageType.text, nullable=False)
+    message_type = Column(
+        SQLEnum(MessageType, name="messagetype"),
+        default=MessageType.text,
+        nullable=False,
+    )
     is_read = Column(Boolean, default=False, nullable=False)

@@ -47,7 +47,9 @@
   color: var(--color-on-surface-variant);
   padding: 6px;
   border-radius: var(--radius-sm);
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .backBtn:hover {

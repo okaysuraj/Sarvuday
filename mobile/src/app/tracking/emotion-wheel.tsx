@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { CustomButton } from '../../components/CustomButton';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { trackingApi } from '../../api/tracking';
+import { CustomButton } from '../../components/forms/CustomButton';
 
 const EMOTIONS = [
-  'Joyful', 'Content', 'Proud', 'Accepted', 'Powerful', 'Peaceful',
-  'Anxious', 'Overwhelmed', 'Scared', 'Insecure',
-  'Angry', 'Frustrated', 'Annoyed', 'Bitter',
-  'Sad', 'Lonely', 'Guilty', 'Disappointed',
-  'Surprised', 'Confused', 'Amazed', 'Excited'
+  'Joyful',
+  'Content',
+  'Proud',
+  'Accepted',
+  'Powerful',
+  'Peaceful',
+  'Anxious',
+  'Overwhelmed',
+  'Scared',
+  'Insecure',
+  'Angry',
+  'Frustrated',
+  'Annoyed',
+  'Bitter',
+  'Sad',
+  'Lonely',
+  'Guilty',
+  'Disappointed',
+  'Surprised',
+  'Confused',
+  'Amazed',
+  'Excited',
 ];
 
 export default function EmotionWheelScreen() {
@@ -22,7 +39,7 @@ export default function EmotionWheelScreen() {
 
   const toggleEmotion = (emotion: string) => {
     if (selectedEmotions.includes(emotion)) {
-      setSelectedEmotions(selectedEmotions.filter(e => e !== emotion));
+      setSelectedEmotions(selectedEmotions.filter((e) => e !== emotion));
     } else {
       if (selectedEmotions.length < 3) {
         setSelectedEmotions([...selectedEmotions, emotion]);
@@ -33,10 +50,10 @@ export default function EmotionWheelScreen() {
   const handleNext = () => {
     router.push({
       pathname: '/tracking/journal',
-      params: { 
+      params: {
         moodIndex: moodIndex,
-        emotions: selectedEmotions.join(',')
-      }
+        emotions: selectedEmotions.join(','),
+      },
     });
   };
 
@@ -46,12 +63,12 @@ export default function EmotionWheelScreen() {
       if (moodIndex !== undefined) {
         await trackingApi.logMood({
           moodIndex: Number(moodIndex),
-          notes: selectedEmotions.length > 0 ? selectedEmotions.join(', ') : undefined
+          notes: selectedEmotions.length > 0 ? selectedEmotions.join(', ') : undefined,
         });
       }
       router.push('/(tabs)');
     } catch (e) {
-      Alert.alert("Error", "Failed to save mood");
+      Alert.alert('Error', 'Failed to save mood');
     } finally {
       setIsSkipping(false);
     }
@@ -77,17 +94,21 @@ export default function EmotionWheelScreen() {
         </Text>
 
         <View className="flex-row flex-wrap gap-3 mb-8">
-          {EMOTIONS.map(emotion => {
+          {EMOTIONS.map((emotion) => {
             const isSelected = selectedEmotions.includes(emotion);
             return (
               <TouchableOpacity
                 key={emotion}
                 onPress={() => toggleEmotion(emotion)}
                 className={`px-4 py-3 rounded-full border-2 ${
-                  isSelected ? 'bg-primary border-primary' : 'bg-surface-container-highest border-outline-variant'
+                  isSelected
+                    ? 'bg-primary border-primary'
+                    : 'bg-surface-container-highest border-outline-variant'
                 }`}
               >
-                <Text className={`font-label-bold text-sm ${isSelected ? 'text-on-primary' : 'text-on-surface'}`}>
+                <Text
+                  className={`font-label-bold text-sm ${isSelected ? 'text-on-primary' : 'text-on-surface'}`}
+                >
                   {emotion}
                 </Text>
               </TouchableOpacity>
@@ -103,13 +124,10 @@ export default function EmotionWheelScreen() {
       </ScrollView>
 
       <View className="p-6 border-t border-surface-variant bg-surface">
-        <CustomButton 
-          title="Continue to Journal"
-          onPress={handleNext}
-        />
+        <CustomButton title="Continue to Journal" onPress={handleNext} />
         <TouchableOpacity onPress={handleSkip} disabled={isSkipping} className="mt-4 items-center">
           <Text className="font-label-bold text-primary font-bold text-sm">
-            {isSkipping ? "Saving..." : "Skip Journaling"}
+            {isSkipping ? 'Saving...' : 'Skip Journaling'}
           </Text>
         </TouchableOpacity>
       </View>

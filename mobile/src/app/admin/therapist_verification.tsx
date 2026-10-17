@@ -1,1 +1,1 @@
-export { RecordedCounsellors as default } from '../../components/screens/RecordedAdministration';
+export { CounsellorRecordsScreen as default } from '../../components/screens/AdministrationScreens';

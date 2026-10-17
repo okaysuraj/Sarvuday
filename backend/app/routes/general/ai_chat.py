@@ -1,25 +1,28 @@
-# app/routes/general/ai_chat.py
-# 
+"""Ai chat endpoints and access checks."""
+
+#
 # Proxy routes that map the frontend's /ai/* endpoints to the existing
 # chatbot service which lives at /user/chatbot/*.
 # The frontend's AIChat.jsx calls these endpoints directly.
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import List, Optional
 
-from app.database import get_db
-from app.models import NormalUser, Counsellor
-from app.utils.oauth import ensure_normal_user
-from app.services.chatbot.chatbot_service import ChatBotService
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel, Field
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.config import settings
+from app.database.postgres import get_db
+from app.models import Counsellor, NormalUser
+from app.services.chatbot.chatbot_service import ChatBotService
+from app.utils.oauth import ensure_normal_user
 
 router = APIRouter()
 
 
 # ---------- Request/Response models for the AI endpoints ----------
+
 
 class AIChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=10000)
@@ -44,6 +47,7 @@ class AIMatchResponse(BaseModel):
 
 # ---------- Routes ----------
 
+
 @router.get(
     "/sessions",
     status_code=status.HTTP_200_OK,
@@ -58,7 +62,7 @@ async def list_ai_sessions(
     service = ChatBotService(db)
     result = await service.list_sessions(current_user.user_id, limit)
     # The frontend expects a flat list of session objects
-    return result.chat_sessions if hasattr(result, "chat_sessions") else result
+    return result.chat_sessions
 
 
 @router.get(
@@ -81,18 +85,16 @@ async def get_ai_chat_history(
     result = await service.get_chat_history(current_user.user_id, session_id)
     # Frontend expects a flat list of {role, content} messages
     flat_messages = []
-    
-    history = result.conversation_history if hasattr(result, "conversation_history") else []
-    for turn in history:
-        # turn is a ConversationMessage object, or dict if fallback
-        user_msg = getattr(turn, "user", None) or (turn.get("user") if isinstance(turn, dict) else None)
-        asst_msg = getattr(turn, "assistant", None) or (turn.get("assistant") if isinstance(turn, dict) else None)
-        
+
+    for turn in result.conversation_history:
+        user_msg = turn.user
+        asst_msg = turn.assistant
+
         if user_msg:
             flat_messages.append({"role": "user", "content": user_msg})
         if asst_msg:
             flat_messages.append({"role": "assistant", "content": asst_msg})
-            
+
     return flat_messages
 
 
@@ -117,7 +119,7 @@ async def ai_chat(
     session_id = payload.session_id
     if not session_id:
         new_session = await service.create_session(current_user.user_id, None)
-        session_id = new_session.session_id if hasattr(new_session, "session_id") else new_session["session_id"]
+        session_id = new_session.session_id
 
     # Run inference
     chatbot_model = settings.chatbot_model
@@ -132,18 +134,17 @@ async def ai_chat(
             user_input=payload.message,
         )
 
-        reply = result.response if hasattr(result, "response") else str(result)
-        is_crisis = result.is_crisis if hasattr(result, "is_crisis") else None
-
         return AIChatResponse(
-            reply=reply,
-            is_crisis=is_crisis,
+            reply=result.response,
+            is_crisis=None,
             session_id=session_id,
         )
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=503, detail="The AI service is temporarily unavailable") from exc
+        raise HTTPException(
+            status_code=503, detail="The AI service is temporarily unavailable"
+        ) from exc
 
 
 @router.delete(
@@ -176,7 +177,7 @@ async def match_counsellor(
     """
     # Fetch approved counsellors
     result = await db.execute(
-        select(Counsellor).where(Counsellor.is_approved == True).limit(5)
+        select(Counsellor).where(Counsellor.is_approved.is_(True)).limit(5)
     )
     counsellors = result.scalars().all()
 
@@ -190,7 +191,7 @@ async def match_counsellor(
 
         # Simple word overlap scoring
         concern_words = {concern.strip().lower() for concern in user_concerns}
-        spec_words = set(spec_lower.split(","))
+        spec_words = {value.strip() for value in spec_lower.split(",") if value.strip()}
         overlap = len(concern_words & spec_words) if concern_words and spec_words else 0
 
         if overlap > 0:
@@ -200,11 +201,13 @@ async def match_counsellor(
         else:
             score = "Fair"
 
-        matches.append(AIMatchedCounsellor(
-            name=c.name,
-            specialization=specialization,
-            match_score=score,
-        ))
+        matches.append(
+            AIMatchedCounsellor(
+                name=c.name,
+                specialization=specialization,
+                match_score=score,
+            )
+        )
 
     # Sort by match score priority
     priority = {"High": 0, "Good": 1, "Fair": 2}

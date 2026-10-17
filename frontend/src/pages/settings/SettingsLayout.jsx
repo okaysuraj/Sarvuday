@@ -1,30 +1,35 @@
-import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 
 const SettingsLayout = () => {
   return (
     <div className="flex-1 min-h-screen bg-background">
-      
-      
       {/* Settings Navigation Tabs */}
       <div className="px-4 md:px-margin-desktop py-6 border-b border-outline sticky top-0 z-30 bg-background/95 backdrop-blur-sm">
-        <h2 className="font-display-lg text-3xl md:text-display-lg text-ink-black mb-6">Settings</h2>
+        <h2 className="font-display-lg text-3xl md:text-display-lg text-ink-black mb-6">
+          Settings
+        </h2>
         <div className="flex flex-wrap gap-2 md:gap-4">
-          <NavLink 
-            to="/settings/privacy" 
-            className={({ isActive }) => `px-6 py-2 rounded-full font-label-bold transition-all ${isActive ? 'active-tab shadow-subtle' : 'inactive-tab'}`}
+          <NavLink
+            to="/settings/privacy"
+            className={({ isActive }) =>
+              `px-6 py-2 rounded-full font-label-bold transition-all ${isActive ? 'active-tab shadow-subtle' : 'inactive-tab'}`
+            }
           >
             Privacy & Security
           </NavLink>
-          <NavLink 
-            to="/settings/reminders" 
-            className={({ isActive }) => `px-6 py-2 rounded-full font-label-bold transition-all ${isActive ? 'active-tab shadow-subtle' : 'inactive-tab'}`}
+          <NavLink
+            to="/settings/reminders"
+            className={({ isActive }) =>
+              `px-6 py-2 rounded-full font-label-bold transition-all ${isActive ? 'active-tab shadow-subtle' : 'inactive-tab'}`
+            }
           >
             Notifications & Reminders
           </NavLink>
-          <NavLink 
-            to="/settings/data" 
-            className={({ isActive }) => `px-6 py-2 rounded-full font-label-bold transition-all ${isActive ? 'active-tab shadow-subtle' : 'inactive-tab'}`}
+          <NavLink
+            to="/settings/data"
+            className={({ isActive }) =>
+              `px-6 py-2 rounded-full font-label-bold transition-all ${isActive ? 'active-tab shadow-subtle' : 'inactive-tab'}`
+            }
           >
             Account & Data
           </NavLink>

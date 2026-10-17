@@ -1,1 +1,1 @@
-export { RecordedStressTriggers as default } from '../../components/screens/RecordedExercises';
+export { StressTriggers as default } from '../../components/screens/StressTriggers';

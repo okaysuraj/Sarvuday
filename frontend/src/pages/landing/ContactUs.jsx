@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 
@@ -7,54 +7,54 @@ const ContactUs = () => {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
-  
+
   const [status, setStatus] = useState({
     submitted: false,
     success: false,
-    message: ''
+    message: '',
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       setStatus({
         submitted: true,
         success: false,
-        message: 'Sending your inquiry...'
+        message: 'Sending your inquiry...',
       });
-      
+
       await axiosInstance.post('/contact', formData);
-      
+
       setStatus({
         submitted: true,
         success: true,
-        message: 'Thank you. Your message has been received.'
+        message: 'Thank you. Your message has been received.',
       });
-      
+
       setFormData({
         name: '',
         email: '',
         subject: '',
-        message: ''
+        message: '',
       });
-      
     } catch (error) {
       console.error('Error sending message:', error);
       setStatus({
         submitted: true,
         success: false,
-        message: 'There was a problem sending your message. Please try again or email support directly.'
+        message:
+          'There was a problem sending your message. Please try again or email support directly.',
       });
     }
   };
@@ -72,18 +72,24 @@ const ContactUs = () => {
             Get in Touch with SarvUday
           </h1>
           <p className="text-sm sm:text-base text-[#6E6D7A] leading-relaxed">
-            Have questions about clinical appointments, technical support, or partnership inquiries? Fill out the form below or reach our team.
+            Have questions about clinical appointments, technical support, or partnership inquiries?
+            Fill out the form below or reach our team.
           </p>
         </div>
 
         {/* Emergency Callout Card */}
         <div className="bg-[#FDEBEC] border-[#F6D0D2] rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <span className="material-symbols-rounded text-[#8F2B26] text-xl mt-0.5">emergency</span>
+            <span className="material-symbols-rounded text-[#8F2B26] text-xl mt-0.5">
+              emergency
+            </span>
             <div>
-              <span className="text-xs font-semibold text-[#8F2B26] uppercase tracking-wider block">Crisis Notice</span>
+              <span className="text-xs font-semibold text-[#8F2B26] uppercase tracking-wider block">
+                Crisis Notice
+              </span>
               <p className="text-xs sm:text-sm text-[#8F2B26]/90 mt-0.5">
-                This contact form is for non-emergency inquiries only. If you are in acute distress, please call or text <strong>988</strong> immediately.
+                This contact form is for non-emergency inquiries only. If you are in acute distress,
+                please call or text <strong>988</strong> immediately.
               </p>
             </div>
           </div>
@@ -100,16 +106,20 @@ const ContactUs = () => {
           {/* Contact Form (7 cols) */}
           <div className="lg:col-span-7 bg-white border-[#EAEAEA] rounded-2xl p-7 sm:p-9 shadow-sm">
             <h2 className="text-xl font-semibold text-[#121214] mb-6">Send an Inquiry</h2>
-            
+
             {status.submitted && (
-              <div className={`p-4 rounded-xl mb-6 text-xs sm:text-sm ${status.success ? 'bg-[#EDF3EC] text-[#244B36] border-[#D5E5D4]' : 'bg-[#FDEBEC] text-[#8F2B26] border-[#F6D0D2]'}`}>
+              <div
+                className={`p-4 rounded-xl mb-6 text-xs sm:text-sm ${status.success ? 'bg-[#EDF3EC] text-[#244B36] border-[#D5E5D4]' : 'bg-[#FDEBEC] text-[#8F2B26] border-[#F6D0D2]'}`}
+              >
                 {status.message}
               </div>
             )}
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#121214]" htmlFor="name">Your Name</label>
+                <label className="text-xs font-medium text-[#121214]" htmlFor="name">
+                  Your Name
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -121,9 +131,11 @@ const ContactUs = () => {
                   className="w-full h-11 bg-white border-[#EAEAEA] rounded-lg px-3.5 text-sm text-[#121214] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#18181B] focus:ring-2 focus:ring-black/[0.05] transition-all"
                 />
               </div>
-              
+
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#121214]" htmlFor="email">Email Address</label>
+                <label className="text-xs font-medium text-[#121214]" htmlFor="email">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -135,9 +147,11 @@ const ContactUs = () => {
                   className="w-full h-11 bg-white border-[#EAEAEA] rounded-lg px-3.5 text-sm text-[#121214] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#18181B] focus:ring-2 focus:ring-black/[0.05] transition-all"
                 />
               </div>
-              
+
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#121214]" htmlFor="subject">Subject</label>
+                <label className="text-xs font-medium text-[#121214]" htmlFor="subject">
+                  Subject
+                </label>
                 <select
                   id="subject"
                   name="subject"
@@ -153,9 +167,11 @@ const ContactUs = () => {
                   <option value="Feedback">Feedback or Partnership</option>
                 </select>
               </div>
-              
+
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#121214]" htmlFor="message">Your Message</label>
+                <label className="text-xs font-medium text-[#121214]" htmlFor="message">
+                  Your Message
+                </label>
                 <textarea
                   id="message"
                   name="message"
@@ -167,9 +183,9 @@ const ContactUs = () => {
                   className="w-full p-3.5 bg-white border-[#EAEAEA] rounded-lg text-sm text-[#121214] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#18181B] focus:ring-2 focus:ring-black/[0.05] transition-all resize-none"
                 ></textarea>
               </div>
-              
-              <button 
-                type="submit" 
+
+              <button
+                type="submit"
                 className="w-full h-11 bg-[#18181B] text-white rounded-lg text-sm font-medium hover:bg-[#27272A] active:scale-[0.98] transition-all shadow-sm"
                 disabled={status.submitted && status.success}
               >
@@ -177,23 +193,31 @@ const ContactUs = () => {
               </button>
             </form>
           </div>
-          
+
           {/* Contact Details (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
             <div className="bg-white border-[#EAEAEA] rounded-2xl p-6 shadow-sm space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">Direct Email</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">
+                Direct Email
+              </span>
               <p className="text-sm font-medium text-[#121214]">support@sarvuday.com</p>
-              <p className="text-xs text-[#71717A]">General inquiries &amp; confidential feedback</p>
+              <p className="text-xs text-[#71717A]">
+                General inquiries &amp; confidential feedback
+              </p>
             </div>
-            
+
             <div className="bg-white border-[#EAEAEA] rounded-2xl p-6 shadow-sm space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">Helpline Phone</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">
+                Helpline Phone
+              </span>
               <p className="text-sm font-medium text-[#121214]">+91 9876543210 / +91 9965402768</p>
               <p className="text-xs text-[#71717A]">Monday – Friday, 9:00 AM – 6:00 PM IST</p>
             </div>
-            
+
             <div className="bg-white border-[#EAEAEA] rounded-2xl p-6 shadow-sm space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">Location</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">
+                Location
+              </span>
               <p className="text-sm font-medium text-[#121214]">SarvUday Digital Care</p>
               <p className="text-xs text-[#71717A]">Guwahati, Assam, India</p>
             </div>

@@ -1,1 +1,1 @@
-export { RecordedAdminDashboard as default } from '../../components/screens/RecordedScreens';
+export { AdminDashboard as default } from '../../components/dashboard/AdminDashboard';

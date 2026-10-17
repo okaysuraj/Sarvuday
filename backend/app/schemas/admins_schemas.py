@@ -1,14 +1,17 @@
-# app/schemas/admins_schemas.py
+"""Request validation and response models for admins."""
 
-from pydantic import BaseModel, EmailStr, Field, Json
-from typing import Optional, List, Literal
 from datetime import datetime
-from app.utils.constants import GenderEnum, UserTypeEnum, AdminRoleEnum
+from typing import Any, List, Literal, Optional
+
+from pydantic import BaseModel, EmailStr, Field
+
 from app.schemas.counsellors_schemas import CounsellorBase
+from app.schemas.pagination import Pagination
+from app.utils.constants import AdminRoleEnum, GenderEnum, UserTypeEnum
 
 # Reusable sort types
 AdminSortBy = Literal["created_at", "name", "role"]
-SortOrder = Literal["asc", "desc"]
+
 
 # Shared base schema
 class AdminBase(BaseModel):
@@ -25,8 +28,8 @@ class AdminBase(BaseModel):
     is_approved: bool = True
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
+
 
 # Schema for creating an admin
 class AdminCreate(BaseModel):
@@ -37,8 +40,8 @@ class AdminCreate(BaseModel):
     gender: GenderEnum
     role: AdminRoleEnum = AdminRoleEnum.moderator
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
+
 
 # Simple response wrappers
 class AdminCreateResponse(BaseModel):
@@ -46,17 +49,20 @@ class AdminCreateResponse(BaseModel):
     message: str
     user: AdminBase
 
+
 class AdminUpdateRequest(BaseModel):
     name: Optional[str] = None
     phone_number: Optional[str] = Field(default=None, min_length=10, max_length=15)
     profile_pic: Optional[str] = None
 
+
 class AdminUpdateResponse(BaseModel):
     message: str
     admin: AdminBase
 
+
 # Filter and pagination for list endpoints
-class AdminFilterQuery(BaseModel):
+class AdminFilterQuery(Pagination):
     user_id: Optional[str] = None
     name: Optional[str] = None
     email: Optional[str] = None
@@ -66,40 +72,42 @@ class AdminFilterQuery(BaseModel):
     is_email_verified: Optional[bool] = None
     is_phone_verified: Optional[bool] = None
     is_approved: Optional[bool] = None
-    is_deleted: Optional[bool] = None
 
-    sort_by: Optional[AdminSortBy] = "created_at"
-    sort_order: Optional[SortOrder] = "desc"
-    limit: Optional[int] = 10
-    offset: Optional[int] = 0
+    sort_by: AdminSortBy = "created_at"
+
 
 class AdminListResponse(BaseModel):
     total: int
     admins: List[AdminBase]
+
 
 # Counsellor approval responses
 class ApproveCounsellorResponse(BaseModel):
     message: str
     counsellor: CounsellorBase
 
+
 class DisapprovalCounsellorResponse(BaseModel):
     message: str
     counsellor: CounsellorBase
 
+
 # Platform-wide analytics schemas
 class PlatformAnalytics(BaseModel):
-    admin: Optional[Json] = None
-    normal_users: Optional[Json] = None
-    counsellors: Optional[Json] = None
-    mongodb_analytics: Optional[Json] = None
+    admin: dict[str, int]
+    normal_users: dict[str, int]
+    counsellors: dict[str, int]
+    content_analytics: dict[str, int]
+
 
 class UserAnalytics(BaseModel):
-    demographics: Optional[Json] = None
-    behavior: Optional[Json] = None
-    trends: Optional[Json] = None
+    demographics: dict[str, dict[str, int]]
+    behavior: dict[str, int | None]
+    trends: dict[str, dict[str, int]]
+
 
 class CounsellorAnalytics(BaseModel):
-    status: Optional[int] = None
-    performance: Optional[Json] = None
-    sessions: Optional[int] = None
-    specialties: Optional[str] = None
+    status: dict[str, int]
+    performance: dict[str, Any]
+    sessions: int
+    specialties: dict[str, int]

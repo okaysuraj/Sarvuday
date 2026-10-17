@@ -1,7 +1,15 @@
-# app/routes/counsellor/__init__.py
+"""init   endpoints and access checks."""
 
 from fastapi import APIRouter
-from . import counselling_sessions, dashboard, availability, appointments, payments, prescriptions
+
+from . import (
+    appointments,
+    availability,
+    counselling_sessions,
+    dashboard,
+    payments,
+    prescriptions,
+)
 
 counsellor_router = APIRouter()
 

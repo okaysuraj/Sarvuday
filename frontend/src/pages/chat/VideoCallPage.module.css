@@ -47,7 +47,7 @@
 }
 
 .loader::before {
-  content: "";
+  content: '';
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -98,7 +98,9 @@
   font-weight: 500;
   font-size: 0.85rem;
   font-family: var(--font-body);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
 .backBtn:hover {

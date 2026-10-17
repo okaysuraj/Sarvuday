@@ -1,46 +1,48 @@
-# Sarvuday Frontend - User Interface
+# Web application
 
-This is the frontend application for the Sarvuday mental health and counselling platform. It provides tailored dashboards for normal users, professional counsellors, and administrators.
+React and Vite build the browser client. The API and Firebase handle authentication; protected pages also check the current account role.
 
-## 🚀 Features & Capabilities
+## Setup
 
-- **Role-Based Routing**: Secure, isolated navigation experiences depending on the authenticated user's role (Admin, Counsellor, User).
-- **Real-Time Communication**: Integrated WebSocket-based chat system (`Chat.jsx`) embedded directly into dashboards for uninterrupted care.
-- **WebRTC Integration**: Built-in support for Peer-to-Peer data channels and signaling (`sdp_offer`, `ice_candidate`) for potential audio/video telehealth sessions.
-- **Appointment Management**: Interactive UI components for browsing counsellor availability and booking sessions.
-- **Responsive Design**: Custom CSS modules engineered for fluid layouts across desktop and mobile browsers.
+Create `.env` with `VITE_API_BASE_URL` and the public Firebase web configuration:
 
-## 🛠️ Technology Stack
+```dotenv
+VITE_API_BASE_URL=http://127.0.0.1:8000
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+```
 
-- **Framework**: React 18+
-- **Build Tool**: Vite (for rapid HMR and optimized production bundles)
-- **Routing**: React Router DOM (v6)
-- **HTTP Client**: Axios (configured with interceptors for JWT token injection)
-- **State Management**: React Hooks (useState, useEffect, useContext)
-- **Styling**: Vanilla CSS Modules (avoiding heavy UI frameworks to maintain fine-grained control and performance)
+```bash
+npm ci
+npm run dev
+```
 
-## 🏃‍♂️ Running Locally
+The development server listens on port 5180. Configure the backend to allow that origin.
 
-1. Ensure you have Node.js installed.
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Copy `.env.example` to `.env` and fill in the environment variables (VITE_API_BASE_URL pointing to the backend API, and Firebase configuration keys).
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+## Source layout
 
-## 🏗️ Project Structure
+- `src/routes.js`: Lazy page imports, URLs and page-specific role requirements.
+- `src/layouts/`: Public and authenticated page shells.
+- `src/pages/`: Route-level page composition.
+- `src/components/`: Reusable feature views and UI components.
+- `src/hooks/useApiData.js`: Cancelable data loading and retry behavior.
+- `src/utils/axiosInstance.js`: API address, bearer headers and shared error handling.
+- `src/utils/session.js`: Token decoding for navigation, role-based destinations and session clearing.
+- `src/utils/onboarding.js`: Tab-scoped intake drafts and safe recovery from malformed saved JSON.
+- `src/utils/healthMetrics.js`: Calculations using recorded wellbeing measurements.
 
-- `/src/assets` - Static media, SVGs, and images.
-- `/src/components` - Reusable UI building blocks (Auth, Chat, Dashboards, Layouts).
-- `/src/pages` - Top-level route components (Dashboards, Login, Registration).
-- `/src/config` - Global configuration and API URL definitions.
+## Check and build
 
-## 🔮 Future Enhancements
+```bash
+npm run lint
+npm run build
+npm run preview
+```
 
-- **Push Notifications**: Integration with Service Workers for browser-based push notifications when new messages or appointments arrive.
-- **PWA Support**: Upgrading the React app to a Progressive Web App for offline capabilities and app-like mobile experience.
-- **Enhanced Telehealth UI**: Dedicated screen layouts for active video calls with screen-sharing and whiteboard features.
+Vite writes the production app to `dist/`. Netlify uses the root `netlify.toml` for build settings and browser-route fallbacks. Configure production environment variables before building; Vite embeds public values in the bundle.
+
+The backend verifies token signatures and authorizes data access. Browser role checks only control navigation. Logging out clears the API session and intake draft even when Firebase sign-out fails.

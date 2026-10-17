@@ -1,1 +1,1 @@
-export { RecordedUsers as default } from '../../components/screens/RecordedAdministration';
+export { UserDirectoryScreen as default } from '../../components/screens/AdministrationScreens';

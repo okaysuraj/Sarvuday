@@ -1,21 +1,43 @@
-# app/models/users/normal_user.py
+"""Relational records and relationships for normal user."""
 
-from sqlalchemy import Column, String, Boolean, Enum as SqlEnum, Text, Integer, TIMESTAMP, DateTime, Index, JSON
+from sqlalchemy import (
+    JSON,
+    TIMESTAMP,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+)
+from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import relationship
+
 from app.database.postgres import Base
 from app.models.base import BaseMixin
 from app.utils.constants import GenderEnum, UserTypeEnum
 
+
 class NormalUser(Base, BaseMixin):
     """Platform user seeking mental health support"""
+
     __tablename__ = "normal_users"
     __table_args__ = (
-        Index('idx_normal_user_id', 'user_id'),
-        Index('idx_normal_user_email', 'email'),
-        {}
+        Index("idx_normal_user_id", "user_id"),
+        Index("idx_normal_user_email", "email"),
+        {},
     )
 
-    user_id = Column(String(20), primary_key=True, index=True, unique=True, nullable=False)
+    user_id = Column(
+        String(20),
+        ForeignKey("accounts.user_id", name="fk_normal_user_account"),
+        primary_key=True,
+        index=True,
+        unique=True,
+        nullable=False,
+    )
     email = Column(String(255), unique=True, nullable=True)
     phone_number = Column(String(15), unique=True)
     hashed_password = Column(String(255))
@@ -47,7 +69,7 @@ class NormalUser(Base, BaseMixin):
     emergency_contact_phone = Column(String(15))
     emergency_contact_relation = Column(String(100))
     accessibility_preferences = Column(Text)
-    
+
     # Onboarding Form Specific
     age_range = Column(String(50))
     symptoms = Column(Text)
@@ -61,10 +83,12 @@ class NormalUser(Base, BaseMixin):
     total_sessions_attended = Column(Integer, default=0)
 
     # Relationships
-    chat_sessions = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
+    chat_sessions = relationship(
+        "ChatSession", back_populates="user", cascade="all, delete-orphan"
+    )
     appointments = relationship("Appointment", back_populates="user")
     counselling_sessions = relationship("CounsellingSession", back_populates="user")
     prescription = relationship("Prescription", back_populates="user")
-    
+
     payments = relationship("UserPayment", back_populates="user")
     refunds = relationship("UserRefund", back_populates="user")

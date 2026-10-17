@@ -1,3 +1,5 @@
-import { RecordedMeditation } from '../../components/tracking/RecordedTracking';
+import { MeditationView } from '../../components/tracking/TrackingViews';
 
-export default function Page() { return <RecordedMeditation  />; }
+export default function Page() {
+  return <MeditationView />;
+}

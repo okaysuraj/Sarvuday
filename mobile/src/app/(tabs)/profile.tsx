@@ -1,7 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import useAuthStore from '../../store/authStore';
 
 export default function ProfileScreen() {
@@ -17,8 +16,10 @@ export default function ProfileScreen() {
     <View className="flex-1 bg-background">
       {/* Editorial Header */}
       <View className="flex-row justify-between items-center px-5 pt-12 pb-4 bg-background border-b border-outline">
-        <Text className="text-on-surface font-semibold text-base tracking-tight">Account & Settings</Text>
-        <TouchableOpacity 
+        <Text className="text-on-surface font-semibold text-base tracking-tight">
+          Account & Settings
+        </Text>
+        <TouchableOpacity
           onPress={handleLogout}
           className="px-3 py-1 rounded-lg border border-outline bg-surface"
         >
@@ -27,7 +28,6 @@ export default function ProfileScreen() {
       </View>
 
       <ScrollView className="flex-1 px-5 py-6" contentContainerStyle={{ paddingBottom: 100 }}>
-        
         {/* Profile Card */}
         <View className="bg-surface border border-outline rounded-2xl p-6 mb-6 flex-row items-center gap-4">
           <View className="w-16 h-16 rounded-full border border-outline bg-secondary-container items-center justify-center">
@@ -54,7 +54,7 @@ export default function ProfileScreen() {
         </Text>
 
         <View className="bg-surface border border-outline rounded-2xl overflow-hidden mb-6">
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => router.push('/profile/edit')}
             className="p-4 flex-row items-center justify-between border-b border-outline"
           >
@@ -67,7 +67,7 @@ export default function ProfileScreen() {
             <Ionicons name="chevron-forward" size={16} color="#8E8D9A" />
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => router.push('/(tabs)/wallet')}
             className="p-4 flex-row items-center justify-between border-b border-outline"
           >
@@ -80,9 +80,7 @@ export default function ProfileScreen() {
             <Ionicons name="chevron-forward" size={16} color="#8E8D9A" />
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            className="p-4 flex-row items-center justify-between"
-          >
+          <TouchableOpacity className="p-4 flex-row items-center justify-between">
             <View className="flex-row items-center gap-3">
               <View className="w-8 h-8 rounded-lg bg-surface-container items-center justify-center">
                 <Ionicons name="shield-checkmark-outline" size={16} color="#18181B" />
@@ -100,10 +98,10 @@ export default function ProfileScreen() {
             <Text className="text-xs font-semibold text-error">Crisis Hotline Notice</Text>
           </View>
           <Text className="text-[11px] text-on-surface-variant leading-relaxed">
-            Need urgent assistance? Reach out to the national mental health crisis helpline by calling or texting 988 anytime.
+            Need urgent assistance? Reach out to the national mental health crisis helpline by
+            calling or texting 988 anytime.
           </Text>
         </View>
-
       </ScrollView>
     </View>
   );

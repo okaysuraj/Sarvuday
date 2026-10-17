@@ -1,1 +1,1 @@
-export { RecordedExerciseDetail as default } from '../../components/screens/RecordedExercises';
+export { ExerciseDetail as default } from '../../components/screens/ExerciseScreens';

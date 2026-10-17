@@ -1,26 +1,31 @@
-# app/models/payments/user_refund.py
+"""Relational records and relationships for user refund."""
 
-from sqlalchemy import Column, String, Enum as SqlEnum, ForeignKey, TIMESTAMP, Index, DECIMAL, JSON, Text
+from sqlalchemy import DECIMAL, JSON, TIMESTAMP, Column, ForeignKey, Index, String, Text
+from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import relationship
+
 from app.database.postgres import Base
 from app.models.base import BaseMixin
 from app.utils.constants import PaymentMethodEnum
 
+
 class UserRefund(Base, BaseMixin):
     __tablename__ = "user_refunds"
     __table_args__ = (
-        Index('idx_refund_id', 'refund_id'),
-        Index('idx_refund_transaction_id', 'transaction_id'),
-        {}
+        Index("idx_refund_id", "refund_id"),
+        Index("idx_refund_transaction_id", "transaction_id"),
+        {},
     )
 
     refund_id = Column(String(20), primary_key=True, nullable=False)
     user_id = Column(String(20), ForeignKey("normal_users.user_id"), nullable=True)
-    payment_id = Column(String(20), ForeignKey("user_payments.payment_id"), nullable=True)
+    payment_id = Column(
+        String(20), ForeignKey("user_payments.payment_id"), nullable=True
+    )
 
     refund_amount = Column(DECIMAL(10, 2), nullable=True)
     refund_method = Column(SqlEnum(PaymentMethodEnum), nullable=False)
-    currency = Column(String(10), default='INR')
+    currency = Column(String(10), default="INR")
 
     transaction_id = Column(String(255), nullable=False)
     refund_date = Column(TIMESTAMP(timezone=True), nullable=True)

@@ -1,39 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
-import sarvudayLogo from "../../assets/sarvuday_logo.png";
+import { dashboardPath, useSession } from '../../utils/session';
+import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import sarvudayLogo from '../../assets/sarvuday_logo.png';
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState(null);
+  const session = useSession();
+  const isLoggedIn = !!session;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    setIsLoggedIn(!!token);
-
-    if (token) {
-      const storedUserType = localStorage.getItem("userType");
-      setUserType(storedUserType || "normal_user");
-    }
-  }, []);
-
-  const getDashboardUrl = () => {
-    switch (userType) {
-      case "counsellor":
-        return "/counsellor-dashboard";
-      case "admin":
-        return "/admin-dashboard";
-      default:
-        return "/normal-user-dashboard";
-    }
-  };
+  const getDashboardUrl = () => dashboardPath(session?.userType);
 
   const navLinks = [
-    { label: "Therapists", path: "/therapists" },
-    { label: "AI Companion", path: "/ai-chat" },
-    { label: "Track Mood", path: "/mood-tracker" },
-    { label: "Assessments", path: "/assessments" },
-    { label: "Community", path: "/community" },
+    { label: 'Therapists', path: '/therapists' },
+    { label: 'AI Companion', path: '/ai-chat' },
+    { label: 'Track Mood', path: '/mood-tracker' },
+    { label: 'Assessments', path: '/assessments' },
+    { label: 'Community', path: '/community' },
   ];
 
   return (
@@ -64,8 +45,8 @@ const Header = () => {
                 className={({ isActive }) =>
                   `px-3.5 py-1.5 text-[14px] rounded-lg transition-colors font-medium ${
                     isActive
-                      ? "text-[#121214] bg-black/[0.04]"
-                      : "text-[#6E6D7A] hover:text-[#121214] hover:bg-black/[0.02]"
+                      ? 'text-[#121214] bg-black/[0.04]'
+                      : 'text-[#6E6D7A] hover:text-[#121214] hover:bg-black/[0.02]'
                   }`
                 }
               >
@@ -118,7 +99,7 @@ const Header = () => {
             className="md:hidden p-2 rounded-lg text-[#121214] hover:bg-black/[0.04] transition-colors"
           >
             <span className="material-symbols-rounded text-2xl">
-              {mobileMenuOpen ? "close" : "menu"}
+              {mobileMenuOpen ? 'close' : 'menu'}
             </span>
           </button>
         </div>
@@ -136,13 +117,15 @@ const Header = () => {
                 className={({ isActive }) =>
                   `px-3 py-2 text-[15px] rounded-lg transition-colors font-medium flex items-center justify-between ${
                     isActive
-                      ? "text-[#121214] bg-black/[0.05]"
-                      : "text-[#6E6D7A] hover:text-[#121214]"
+                      ? 'text-[#121214] bg-black/[0.05]'
+                      : 'text-[#6E6D7A] hover:text-[#121214]'
                   }`
                 }
               >
                 <span>{link.label}</span>
-                <span className="material-symbols-rounded text-sm text-[#A1A1AA]">chevron_right</span>
+                <span className="material-symbols-rounded text-sm text-[#A1A1AA]">
+                  chevron_right
+                </span>
               </NavLink>
             ))}
           </div>

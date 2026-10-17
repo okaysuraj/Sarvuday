@@ -1,3 +1,5 @@
-import { RecordedCorrelation } from '../../components/tracking/RecordedTracking';
+import { CorrelationView } from '../../components/tracking/TrackingViews';
 
-export default function Page() { return <RecordedCorrelation  />; }
+export default function Page() {
+  return <CorrelationView />;
+}

@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Switch, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { CustomButton } from '../../components/CustomButton';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { communityApi } from '../../api/community';
 
 export default function CreatePostScreen() {
   const router = useRouter();
   const { groupId } = useLocalSearchParams();
-  
+
   const [content, setContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [hasTriggerWarning, setHasTriggerWarning] = useState(false);
@@ -22,10 +30,10 @@ export default function CreatePostScreen() {
         content,
         is_anonymous: isAnonymous,
         has_trigger_warning: hasTriggerWarning,
-        group_id: groupId ? String(groupId) : undefined
+        group_id: groupId ? String(groupId) : undefined,
       });
       Alert.alert('Posted', 'Your message has been shared with the community.', [
-        { text: 'OK', onPress: () => router.back() }
+        { text: 'OK', onPress: () => router.back() },
       ]);
     } catch (e) {
       console.error('Failed to create post', e);
@@ -44,18 +52,23 @@ export default function CreatePostScreen() {
         <Text className="font-headline-md text-on-surface font-bold text-xl ml-2 flex-1">
           Create Post
         </Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={handleSubmit}
           disabled={!content.trim() || isLoading}
           className={`px-4 py-2 rounded-full ${content.trim() ? 'bg-primary' : 'bg-surface-variant'}`}
         >
-          <Text className={`font-label-bold ${content.trim() ? 'text-on-primary' : 'text-on-surface-variant'}`}>
+          <Text
+            className={`font-label-bold ${content.trim() ? 'text-on-primary' : 'text-on-surface-variant'}`}
+          >
             Share
           </Text>
         </TouchableOpacity>
       </View>
 
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1"
+      >
         <View className="flex-1 p-6">
           <TextInput
             className="flex-1 font-body-md text-on-surface text-lg min-h-[200px]"
@@ -76,8 +89,12 @@ export default function CreatePostScreen() {
                 <Ionicons name="eye-off" size={20} color="#1b1b20" />
               </View>
               <View>
-                <Text className="font-headline-md text-on-surface font-bold text-base">Post Anonymously</Text>
-                <Text className="font-body-md text-on-surface-variant text-xs">Hide your name and avatar</Text>
+                <Text className="font-headline-md text-on-surface font-bold text-base">
+                  Post Anonymously
+                </Text>
+                <Text className="font-body-md text-on-surface-variant text-xs">
+                  Hide your name and avatar
+                </Text>
               </View>
             </View>
             <Switch
@@ -94,8 +111,12 @@ export default function CreatePostScreen() {
                 <Ionicons name="warning" size={20} color="#ba1a1a" />
               </View>
               <View>
-                <Text className="font-headline-md text-on-surface font-bold text-base">Add Trigger Warning</Text>
-                <Text className="font-body-md text-on-surface-variant text-xs">Blur content for sensitive readers</Text>
+                <Text className="font-headline-md text-on-surface font-bold text-base">
+                  Add Trigger Warning
+                </Text>
+                <Text className="font-body-md text-on-surface-variant text-xs">
+                  Blur content for sensitive readers
+                </Text>
               </View>
             </View>
             <Switch

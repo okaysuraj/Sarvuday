@@ -1,1 +1,1 @@
-export { RecordedWallet as default } from '../../components/screens/RecordedScreens';
+export { WalletScreen as default } from '../../components/screens/PaymentScreens';

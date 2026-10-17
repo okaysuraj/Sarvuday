@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { communityApi } from '../../api/community';
 import { format, parseISO } from 'date-fns';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { communityApi } from '../../api/community';
 
 export default function CommunityFeedScreen() {
-  const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
+  const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const router = useRouter();
 
   const [posts, setPosts] = useState<any[]>([]);
@@ -39,12 +39,16 @@ export default function CommunityFeedScreen() {
     try {
       await communityApi.interactWithPost(postId, action);
       // Optimistic update
-      setPosts(currentPosts => 
-        currentPosts.map(p => 
-          p.id === postId 
-            ? { ...p, [action === 'hug' ? 'hugs' : 'relates']: p[action === 'hug' ? 'hugs' : 'relates'] + 1 }
-            : p
-        )
+      setPosts((currentPosts) =>
+        currentPosts.map((p) =>
+          p.id === postId
+            ? {
+                ...p,
+                [action === 'hug' ? 'hugs' : 'relates']:
+                  p[action === 'hug' ? 'hugs' : 'relates'] + 1,
+              }
+            : p,
+        ),
       );
     } catch (e) {
       console.error('Failed to interact', e);
@@ -57,7 +61,10 @@ export default function CommunityFeedScreen() {
         <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 justify-center">
           <Ionicons name="arrow-back" size={24} color="#1b1b20" />
         </TouchableOpacity>
-        <Text className="font-headline-md text-on-surface font-bold text-xl ml-2 flex-1" numberOfLines={1}>
+        <Text
+          className="font-headline-md text-on-surface font-bold text-xl ml-2 flex-1"
+          numberOfLines={1}
+        >
           {name || 'Community Feed'}
         </Text>
       </View>
@@ -68,15 +75,19 @@ export default function CommunityFeedScreen() {
         </View>
       ) : (
         <ScrollView className="flex-1 bg-surface-container-highest">
-          {posts.map(post => {
+          {posts.map((post) => {
             const isRevealed = revealedPosts.includes(post.id) || !post.has_trigger_warning;
-            
+
             return (
               <View key={post.id} className="bg-surface p-4 mb-2 border-b border-surface-variant">
                 <View className="flex-row justify-between items-center mb-3">
                   <View className="flex-row items-center">
                     <View className="w-10 h-10 rounded-full bg-surface-variant items-center justify-center mr-3">
-                      <Ionicons name={post.is_anonymous ? "eye-off" : "person"} size={20} color="#747687" />
+                      <Ionicons
+                        name={post.is_anonymous ? 'eye-off' : 'person'}
+                        size={20}
+                        color="#747687"
+                      />
                     </View>
                     <View>
                       <Text className="font-headline-md text-on-surface font-bold">
@@ -95,11 +106,13 @@ export default function CommunityFeedScreen() {
                 {!isRevealed ? (
                   <View className="bg-error-container p-4 rounded-xl border border-error mb-4 items-center">
                     <Ionicons name="warning" size={24} color="#ba1a1a" className="mb-2" />
-                    <Text className="font-headline-md text-on-error-container font-bold mb-1">Content Warning</Text>
+                    <Text className="font-headline-md text-on-error-container font-bold mb-1">
+                      Content Warning
+                    </Text>
                     <Text className="font-body-md text-on-error-container text-sm text-center mb-4">
                       This post has a trigger warning.
                     </Text>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => toggleReveal(post.id)}
                       className="bg-error px-4 py-2 rounded-lg"
                     >
@@ -113,16 +126,27 @@ export default function CommunityFeedScreen() {
                 )}
 
                 <View className="flex-row items-center gap-6">
-                  <TouchableOpacity className="flex-row items-center" onPress={() => handleInteract(post.id, 'hug')}>
+                  <TouchableOpacity
+                    className="flex-row items-center"
+                    onPress={() => handleInteract(post.id, 'hug')}
+                  >
                     <Ionicons name="heart-outline" size={20} color="#747687" className="mr-1" />
                     <Text className="font-label-bold text-on-surface-variant">{post.hugs}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity className="flex-row items-center" onPress={() => handleInteract(post.id, 'relate')}>
+                  <TouchableOpacity
+                    className="flex-row items-center"
+                    onPress={() => handleInteract(post.id, 'relate')}
+                  >
                     <Ionicons name="sync" size={20} color="#747687" className="mr-1" />
                     <Text className="font-label-bold text-on-surface-variant">{post.relates}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity className="flex-row items-center ml-auto">
-                    <Ionicons name="chatbubble-outline" size={20} color="#747687" className="mr-1" />
+                    <Ionicons
+                      name="chatbubble-outline"
+                      size={20}
+                      color="#747687"
+                      className="mr-1"
+                    />
                     <Text className="font-label-bold text-on-surface-variant">0</Text>
                   </TouchableOpacity>
                 </View>
@@ -133,7 +157,7 @@ export default function CommunityFeedScreen() {
       )}
 
       {/* Floating Action Button */}
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={() => router.push(`/community/create?groupId=${id}`)}
         className="absolute bottom-6 right-6 w-14 h-14 rounded-full bg-primary items-center justify-center shadow-lg"
       >

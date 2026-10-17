@@ -1,54 +1,52 @@
-# app/services/chatbot/chatbot_inference.py
+"""Build model messages once for complete and streamed assistant replies."""
 
-# chatbot_inference.py
+import logging
+from collections.abc import AsyncIterator
+
+from fastapi import HTTPException
 from openai import AsyncOpenAI
-from typing import List, Dict
-from app.config import settings
-from typing import AsyncGenerator
 
-# Initialize the OpenAI-compatible client (LM Studio)
+from app.config import settings
+
+logger = logging.getLogger(__name__)
 client = AsyncOpenAI(
-    base_url=settings.chatbot_base_url,
-    api_key=settings.chatbot_api_key
+    base_url=settings.chatbot_base_url, api_key=settings.chatbot_api_key
 )
+UNAVAILABLE_MESSAGE = "The assistant is temporarily unavailable. Please try again."
+
+
+def build_messages(
+    system_prompt: str, user_input: str, history: list[dict[str, str]] | None
+):
+    messages = [{"role": "system", "content": system_prompt}]
+    for entry in history or []:
+        messages.extend(
+            [
+                {"role": "user", "content": entry["user"]},
+                {"role": "assistant", "content": entry["assistant"]},
+            ]
+        )
+    messages.append({"role": "user", "content": user_input})
+    return messages
+
 
 async def get_chatbot_response(
     model_name: str,
     temperature: float,
     chatbot_system_prompt: str,
     user_input: str,
-    history_context: List[Dict[str, str]] = [],
+    history_context: list[dict[str, str]] | None = None,
 ) -> str:
-    """
-    Send the user input and conversation history to the LLM and return its response.
-    """
     try:
-        # Convert history_context to OpenAI message format
-        messages = [{"role": "system", "content": chatbot_system_prompt}]
-        
-        # Check if conversation history is not empty and add it to the messages
-        if history_context and len(history_context) > 0:
-            for entry in history_context:
-                messages.append({"role": "user", "content": entry["user"]})
-                messages.append({"role": "assistant", "content": entry["assistant"]})
-        
-        # Add the current user input
-        messages.append({"role": "user", "content": user_input})
-
-        # Call the OpenAI-compatible API
         completion = await client.chat.completions.create(
             model=model_name,
-            messages=messages,
+            messages=build_messages(chatbot_system_prompt, user_input, history_context),
             temperature=temperature,
         )
-        
-        # Extract the assistant's response
-        response = completion.choices[0].message.content
-
-        return response.strip()
-
-    except Exception as e:
-        return f"Error generating response: {str(e)}"
+        return (completion.choices[0].message.content or "").strip()
+    except Exception:
+        logger.exception("Assistant completion failed")
+        raise HTTPException(status_code=503, detail=UNAVAILABLE_MESSAGE)
 
 
 async def stream_chatbot_response(
@@ -56,32 +54,18 @@ async def stream_chatbot_response(
     temperature: float,
     chatbot_system_prompt: str,
     user_input: str,
-    history_context: List[Dict[str, str]] = [],
-) -> AsyncGenerator[str, None]:
+    history_context: list[dict[str, str]] | None = None,
+) -> AsyncIterator[str]:
     try:
-        messages = [{"role": "system", "content": chatbot_system_prompt}]
-
-        if history_context:
-            for entry in history_context:
-                messages.append({"role": "user", "content": entry["user"]})
-                messages.append({"role": "assistant", "content": entry["assistant"]})
-
-        messages.append({"role": "user", "content": user_input})
-
-        response = await client.chat.completions.create(
+        stream = await client.chat.completions.create(
             model=model_name,
-            messages=messages,
+            messages=build_messages(chatbot_system_prompt, user_input, history_context),
             temperature=temperature,
             stream=True,
         )
-
-        # Streaming the tokens one by one
-        async for chunk in response:
-            if chunk.choices[0].delta.content:
+        async for chunk in stream:
+            if chunk.choices and chunk.choices[0].delta.content:
                 yield chunk.choices[0].delta.content
-
-    except Exception as e:
-        yield f"\n[Error generating response: {str(e)}]"
-
-
-
+    except Exception:
+        logger.exception("Assistant stream failed")
+        raise HTTPException(status_code=503, detail=UNAVAILABLE_MESSAGE)

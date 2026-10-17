@@ -1,3 +1,5 @@
-import { RecordedWearables } from '../../components/tracking/RecordedTracking';
+import { WearablesView } from '../../components/tracking/TrackingViews';
 
-export default function Page() { return <RecordedWearables  />; }
+export default function Page() {
+  return <WearablesView />;
+}

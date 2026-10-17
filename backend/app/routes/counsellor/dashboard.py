@@ -1,43 +1,62 @@
-# app/routes/counsellor/dashboard.py
+"""Dashboard endpoints and access checks."""
 
-from fastapi import APIRouter, Depends, status, UploadFile, File, Form
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import get_db
-from app.models import Counsellor
 from datetime import datetime
-from app.utils.oauth import ensure_counsellor_user
 from typing import Optional
-from app.utils.constants import GenderEnum
+
+from fastapi import APIRouter, Depends, File, Form, UploadFile, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.database.postgres import get_db
+from app.models import Counsellor
 from app.schemas.counsellors_schemas import (
     CounsellorBase,
+    CounsellorDashboardView,
     CounsellorUpdateRequest,
     CounsellorUpdateResponse,
-    CounsellorDashboardView
 )
-from app.services.counsellor.counsellor_management_service import CounsellorManagementService
-
+from app.services.counsellor.counsellor_management_service import (
+    CounsellorManagementService,
+)
+from app.utils.constants import GenderEnum
+from app.utils.oauth import ensure_counsellor_user
 
 router = APIRouter(prefix="/dashboard", tags=["Counsellor Dashboard"])
 
 
-@router.get("", response_model=CounsellorDashboardView, status_code=status.HTTP_200_OK, summary="Get counsellor dashboard. Counsellor Authentication required")
+@router.get(
+    "",
+    response_model=CounsellorDashboardView,
+    status_code=status.HTTP_200_OK,
+    summary="Get counsellor dashboard. Counsellor Authentication required",
+)
 async def get_dashboard(
     current_user: Counsellor = Depends(ensure_counsellor_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
-    return await CounsellorManagementService(db).get_dashboard_data(current_user.user_id)
+    return await CounsellorManagementService(db).get_dashboard_data(
+        current_user.user_id
+    )
 
 
-
-@router.get("/profile", response_model=CounsellorBase, status_code=status.HTTP_200_OK, summary="Get counsellor profile. Counsellor Authentication required")
+@router.get(
+    "/profile",
+    response_model=CounsellorBase,
+    status_code=status.HTTP_200_OK,
+    summary="Get counsellor profile. Counsellor Authentication required",
+)
 async def get_profile(
     current_user: Counsellor = Depends(ensure_counsellor_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     return await CounsellorManagementService(db).get_profile(current_user.user_id)
 
 
-@router.patch("/profile", response_model=CounsellorUpdateResponse, status_code=status.HTTP_200_OK, summary="Update profile. Counsellor Authentication required")
+@router.patch(
+    "/profile",
+    response_model=CounsellorUpdateResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Update profile. Counsellor Authentication required",
+)
 async def update_profile(
     name: Optional[str] = Form(None),
     phone_number: Optional[str] = Form(None),
@@ -62,12 +81,14 @@ async def update_profile(
     pincode: Optional[str] = Form(None),
     profile_pic: Optional[UploadFile] = File(None),
     current_user: Counsellor = Depends(ensure_counsellor_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     # Convert comma-separated lists to actual lists
     certifications_list = certifications.split(",") if certifications else None
     specializations_list = specializations.split(",") if specializations else None
-    education_qualifications_list = education_qualifications.split(",") if education_qualifications else None
+    education_qualifications_list = (
+        education_qualifications.split(",") if education_qualifications else None
+    )
     languages_list = languages.split(",") if languages else None
 
     # Prepare the update data without modifying the existing Pydantic model
@@ -99,10 +120,13 @@ async def update_profile(
     return await service.update_profile(current_user.user_id, update_data, profile_pic)
 
 
-@router.delete("/profile", status_code=status.HTTP_204_NO_CONTENT, summary="delete counsellor account. Counsellor Authentication required")
+@router.delete(
+    "/profile",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="delete counsellor account. Counsellor Authentication required",
+)
 async def delete_counsellor(
     current_user: Counsellor = Depends(ensure_counsellor_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     return await CounsellorManagementService(db).delete_account(current_user.user_id)
-

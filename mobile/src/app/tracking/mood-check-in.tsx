@@ -1,16 +1,41 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { CustomButton } from '../../components/CustomButton';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { CustomButton } from '../../components/forms/CustomButton';
 
 const MOODS = [
-  { label: 'Awful', emoji: '😫', color: 'bg-error-container', activeBorder: 'border-error' },
-  { label: 'Sad', emoji: '😔', color: 'bg-surface-variant', activeBorder: 'border-outline' },
-  { label: 'Neutral', emoji: '😐', color: 'bg-secondary-container', activeBorder: 'border-secondary' },
-  { label: 'Good', emoji: '😌', color: 'bg-primary-fixed', activeBorder: 'border-primary' },
-  { label: 'Great', emoji: '😊', color: 'bg-tertiary-fixed', activeBorder: 'border-tertiary' },
+  {
+    label: 'Awful',
+    emoji: '😫',
+    color: 'bg-error-container',
+    activeBorder: 'border-error',
+  },
+  {
+    label: 'Sad',
+    emoji: '😔',
+    color: 'bg-surface-variant',
+    activeBorder: 'border-outline',
+  },
+  {
+    label: 'Neutral',
+    emoji: '😐',
+    color: 'bg-secondary-container',
+    activeBorder: 'border-secondary',
+  },
+  {
+    label: 'Good',
+    emoji: '😌',
+    color: 'bg-primary-fixed',
+    activeBorder: 'border-primary',
+  },
+  {
+    label: 'Great',
+    emoji: '😊',
+    color: 'bg-tertiary-fixed',
+    activeBorder: 'border-tertiary',
+  },
 ];
 
 export default function MoodCheckInScreen() {
@@ -21,7 +46,7 @@ export default function MoodCheckInScreen() {
     if (selectedMood !== null) {
       router.push({
         pathname: '/tracking/emotion-wheel',
-        params: { moodIndex: selectedMood }
+        params: { moodIndex: selectedMood },
       });
     }
   };
@@ -47,19 +72,21 @@ export default function MoodCheckInScreen() {
 
         <View className="flex-row flex-wrap justify-center gap-6 mb-12">
           {MOODS.map((mood, idx) => (
-            <TouchableOpacity 
+            <TouchableOpacity
               key={idx}
               onPress={() => setSelectedMood(idx)}
               className="items-center"
             >
-              <View 
+              <View
                 className={`w-20 h-20 rounded-full items-center justify-center mb-2 border-4 ${
                   selectedMood === idx ? mood.activeBorder : 'border-transparent'
                 } ${mood.color}`}
               >
                 <Text className="text-4xl">{mood.emoji}</Text>
               </View>
-              <Text className={`font-label-bold text-sm ${selectedMood === idx ? 'text-on-surface font-bold' : 'text-on-surface-variant'}`}>
+              <Text
+                className={`font-label-bold text-sm ${selectedMood === idx ? 'text-on-surface font-bold' : 'text-on-surface-variant'}`}
+              >
                 {mood.label}
               </Text>
             </TouchableOpacity>
@@ -68,11 +95,7 @@ export default function MoodCheckInScreen() {
       </View>
 
       <View className="p-6 border-t border-surface-variant bg-surface">
-        <CustomButton 
-          title="Continue"
-          onPress={handleNext}
-          disabled={selectedMood === null}
-        />
+        <CustomButton title="Continue" onPress={handleNext} disabled={selectedMood === null} />
       </View>
     </SafeAreaView>
   );

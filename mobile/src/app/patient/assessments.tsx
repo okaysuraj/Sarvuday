@@ -1,62 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import { assessmentsApi, AssessmentQuestion, ScoreResponse } from '../../api/assessments';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { AssessmentResponse, assessmentsApi, ScoreResponse } from '../../api/assessments';
+import { RequestState } from '../../components/common/Screen';
+import { errorMessage, useApiResource } from '../../hooks/use-api-resource';
 
 export default function MobileAssessmentsScreen() {
   const router = useRouter();
 
   const [activeType, setActiveType] = useState<'phq9' | 'bdi' | 'hdrs'>('phq9');
-  const [questions, setQuestions] = useState<AssessmentQuestion[]>([]);
+  const state = useApiResource<AssessmentResponse>(`/assessments/${activeType}`);
+  const questions = state.data?.questions || [];
+  const loading = state.loading;
+  const [error, setError] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [qId: string]: number }>({});
-  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [scoreResult, setScoreResult] = useState<ScoreResponse | null>(null);
 
   useEffect(() => {
-    loadAssessment(activeType);
-  }, [activeType]);
-
-  const loadAssessment = async (type: 'phq9' | 'bdi' | 'hdrs') => {
-    setLoading(true);
     setScoreResult(null);
     setAnswers({});
     setCurrentIndex(0);
-    try {
-      const data = await assessmentsApi.getQuestions(type);
-      setQuestions(data.questions || []);
-    } catch (err) {
-      console.error('Error fetching assessment questions:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setError('');
+  }, [state.data]);
 
-  const handleSelectOption = (questionId: string, score: number) => {
-    setAnswers(prev => ({ ...prev, [questionId]: score }));
+  const handleSelectOption = (questionId: number, score: number) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: score }));
   };
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev) => prev + 1);
     } else {
       handleSubmit();
     }
   };
 
   const handleSubmit = async () => {
+    if (submitting) return;
     setSubmitting(true);
+    setError('');
     try {
       const formattedAnswers = Object.entries(answers).map(([qId, sc]) => ({
-        question_id: qId,
-        selected_option_score: sc
+        question_id: Number(qId),
+        selected_option_score: sc,
       }));
       const res = await assessmentsApi.submitScore(activeType, formattedAnswers);
       setScoreResult(res);
     } catch (err) {
-      console.error('Error submitting assessment score:', err);
+      setError(errorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -69,37 +63,39 @@ export default function MobileAssessmentsScreen() {
     <View className="flex-1 bg-background">
       {/* Editorial Header */}
       <View className="flex-row items-center px-4 pt-12 pb-3.5 border-b border-outline bg-background">
-        <TouchableOpacity 
-          onPress={() => router.back()} 
+        <TouchableOpacity
+          onPress={() => router.back()}
           className="w-8 h-8 rounded-full border border-outline bg-surface items-center justify-center mr-3"
         >
           <Ionicons name="arrow-back" size={16} color="#18181B" />
         </TouchableOpacity>
         <View className="flex-1">
           <Text className="text-on-surface font-semibold text-base">Clinical Check-in</Text>
-          <Text className="text-on-surface-variant text-xs">Standardized Psychological Screeners</Text>
+          <Text className="text-on-surface-variant text-xs">
+            Standardized Psychological Screeners
+          </Text>
         </View>
       </View>
 
+      <RequestState loading={false} error={state.error || error} retry={state.reload} />
       <ScrollView className="flex-1 px-5 py-6" contentContainerStyle={{ paddingBottom: 100 }}>
-        
         {/* Type Selector Ribbon */}
         <View className="flex-row gap-2 mb-6">
           {[
             { id: 'phq9', label: 'PHQ-9 (Mood)' },
             { id: 'bdi', label: 'BDI (Depression)' },
-            { id: 'hdrs', label: 'HDRS (Clinical)' }
+            { id: 'hdrs', label: 'HDRS (Clinical)' },
           ].map((item) => (
             <TouchableOpacity
               key={item.id}
               onPress={() => setActiveType(item.id as any)}
               className={`flex-1 py-2 rounded-xl border items-center ${
-                activeType === item.id 
-                  ? 'bg-primary border-primary' 
-                  : 'bg-surface border-outline'
+                activeType === item.id ? 'bg-primary border-primary' : 'bg-surface border-outline'
               }`}
             >
-              <Text className={`text-xs font-medium ${activeType === item.id ? 'text-white' : 'text-on-surface'}`}>
+              <Text
+                className={`text-xs font-medium ${activeType === item.id ? 'text-white' : 'text-on-surface'}`}
+              >
                 {item.label}
               </Text>
             </TouchableOpacity>
@@ -109,7 +105,9 @@ export default function MobileAssessmentsScreen() {
         {loading ? (
           <View className="py-20 items-center justify-center">
             <ActivityIndicator size="small" color="#18181B" />
-            <Text className="text-on-surface-variant text-xs mt-3">Loading diagnostic questions...</Text>
+            <Text className="text-on-surface-variant text-xs mt-3">
+              Loading diagnostic questions...
+            </Text>
           </View>
         ) : scoreResult ? (
           /* Score Result View */
@@ -122,24 +120,26 @@ export default function MobileAssessmentsScreen() {
               Assessment Outcome
             </Text>
             <Text className="text-2xl font-bold text-on-surface tracking-tight mb-2">
-              {scoreResult.severity || 'Mild Indicator'}
+              {scoreResult.result}
             </Text>
 
             <View className="p-4 rounded-xl bg-surface-container border border-outline my-4">
               <View className="flex-row justify-between items-center mb-1">
-                <Text className="text-xs text-on-surface-variant font-medium">Recorded Clinical Score</Text>
+                <Text className="text-xs text-on-surface-variant font-medium">
+                  Recorded Clinical Score
+                </Text>
                 <Text className="text-base font-bold text-on-surface">
-                  {scoreResult.score} / {scoreResult.max_score || 27}
+                  {scoreResult.final_score} / {scoreResult.max_score}
                 </Text>
               </View>
               <Text className="text-xs text-on-surface-variant mt-2 leading-relaxed">
-                {scoreResult.interpretation || 'Your score reflects current symptom intensity over the past two weeks. Share this summary with your therapist for personalized cognitive strategies.'}
+                This result summarizes your answers. Share it with a clinician for interpretation.
               </Text>
             </View>
 
             <View className="flex-row gap-3 mt-4">
               <TouchableOpacity
-                onPress={() => loadAssessment(activeType)}
+                onPress={state.reload}
                 className="flex-1 py-3 bg-surface-container border border-outline rounded-xl items-center"
               >
                 <Text className="text-xs font-semibold text-on-surface">Retake</Text>
@@ -166,9 +166,11 @@ export default function MobileAssessmentsScreen() {
 
             {/* Progress Bar */}
             <View className="h-1.5 w-full bg-surface-container rounded-full overflow-hidden mb-6">
-              <View 
-                className="h-full bg-primary rounded-full transition-all" 
-                style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+              <View
+                className="h-full bg-primary rounded-full transition-all"
+                style={{
+                  width: `${((currentIndex + 1) / questions.length) * 100}%`,
+                }}
               />
             </View>
 
@@ -181,27 +183,31 @@ export default function MobileAssessmentsScreen() {
 
             {/* Options */}
             <View className="flex-col gap-2.5 mb-8">
-              {(currentQ.options || [
-                { text: 'Not at all', score: 0 },
-                { text: 'Several days', score: 1 },
-                { text: 'More than half the days', score: 2 },
-                { text: 'Nearly every day', score: 3 }
-              ]).map((opt, oIdx) => {
+              {(
+                currentQ.options || [
+                  { text: 'Not at all', score: 0 },
+                  { text: 'Several days', score: 1 },
+                  { text: 'More than half the days', score: 2 },
+                  { text: 'Nearly every day', score: 3 },
+                ]
+              ).map((opt, oIdx) => {
                 const isSelected = answers[currentQ.id] === opt.score;
                 return (
                   <TouchableOpacity
                     key={oIdx}
                     onPress={() => handleSelectOption(currentQ.id, opt.score)}
                     className={`p-4 rounded-xl border flex-row items-center justify-between ${
-                      isSelected 
-                        ? 'bg-primary border-primary' 
-                        : 'bg-surface border-outline'
+                      isSelected ? 'bg-primary border-primary' : 'bg-surface border-outline'
                     }`}
                   >
-                    <Text className={`text-sm font-medium ${isSelected ? 'text-white' : 'text-on-surface'}`}>
+                    <Text
+                      className={`text-sm font-medium ${isSelected ? 'text-white' : 'text-on-surface'}`}
+                    >
                       {opt.text}
                     </Text>
-                    <View className={`w-4 h-4 rounded-full border items-center justify-center ${isSelected ? 'border-white bg-white' : 'border-outline'}`}>
+                    <View
+                      className={`w-4 h-4 rounded-full border items-center justify-center ${isSelected ? 'border-white bg-white' : 'border-outline'}`}
+                    >
                       {isSelected && <View className="w-2 h-2 rounded-full bg-primary" />}
                     </View>
                   </TouchableOpacity>
@@ -221,17 +227,20 @@ export default function MobileAssessmentsScreen() {
                 <ActivityIndicator size="small" color="#FFFFFF" />
               ) : (
                 <Text className="text-white text-xs font-semibold">
-                  {currentIndex === questions.length - 1 ? 'Complete Assessment' : 'Next Question →'}
+                  {currentIndex === questions.length - 1
+                    ? 'Complete Assessment'
+                    : 'Next Question →'}
                 </Text>
               )}
             </TouchableOpacity>
           </View>
         ) : (
           <View className="py-12 items-center">
-            <Text className="text-on-surface-variant text-xs">No questions loaded for this questionnaire.</Text>
+            <Text className="text-on-surface-variant text-xs">
+              No questions loaded for this questionnaire.
+            </Text>
           </View>
         )}
-
       </ScrollView>
     </View>
   );

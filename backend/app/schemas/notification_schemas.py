@@ -1,8 +1,9 @@
-# app/schemas/notification_schemas.py
+"""Request validation and response models for notification."""
+
+from datetime import datetime
+from typing import List
 
 from pydantic import BaseModel
-from typing import List, Optional
-from datetime import datetime
 
 
 class NotificationBase(BaseModel):
@@ -15,13 +16,11 @@ class NotificationBase(BaseModel):
     is_read: bool = False
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 class NotificationListResponse(BaseModel):
     notifications: List[NotificationBase]
     total: int = 0
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}

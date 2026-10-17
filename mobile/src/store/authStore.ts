@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 // Persist the bearer only in the OS-protected store. Web sessions stay in memory.
 const authStorage = {
@@ -62,8 +62,8 @@ export const useAuthStore = create<AuthState>()(
         if (state) state.setHasHydrated(true);
         else if (error) queueMicrotask(() => useAuthStore.setState({ hasHydrated: true }));
       },
-    }
-  )
+    },
+  ),
 );
 
 export default useAuthStore;

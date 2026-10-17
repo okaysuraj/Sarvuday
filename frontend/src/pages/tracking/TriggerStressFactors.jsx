@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../utils/axiosInstance';
 import { toast } from 'react-toastify';
+import axiosInstance from '../../utils/axiosInstance';
 
 const TriggerStressFactors = () => {
   const navigate = useNavigate();
@@ -11,10 +11,16 @@ const TriggerStressFactors = () => {
     if (!selectedTriggers.length || saving) return;
     setSaving(true);
     try {
-      await axiosInstance.post('/user/tracking/journal', { text: `Recorded stress triggers: ${selectedTriggers.join(', ')}`, triggers: selectedTriggers });
+      await axiosInstance.post('/user/tracking/journal', {
+        text: `Recorded stress triggers: ${selectedTriggers.join(', ')}`,
+        triggers: selectedTriggers,
+      });
       navigate('/stress/analysis');
-    } catch { toast.error('Your triggers could not be saved. Please try again.'); }
-    finally { setSaving(false); }
+    } catch {
+      toast.error('Your triggers could not be saved. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const triggers = [
@@ -25,24 +31,20 @@ const TriggerStressFactors = () => {
     { id: 'school', icon: 'school', label: 'School' },
     { id: 'social', icon: 'diversity_3', label: 'Social' },
     { id: 'housing', icon: 'home', label: 'Housing' },
-    { id: 'other', icon: 'more_horiz', label: 'Other' }
+    { id: 'other', icon: 'more_horiz', label: 'Other' },
   ];
 
   const toggleTrigger = (id) => {
-    setSelectedTriggers(prev => 
-      prev.includes(id) 
-        ? prev.filter(t => t !== id)
-        : [...prev, id]
+    setSelectedTriggers((prev) =>
+      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id],
     );
   };
 
   return (
     <div className="bg-background min-h-screen flex flex-col font-body-md text-on-surface">
-      
-
       {/* TopAppBar */}
       <header className="bg-background w-full top-0 sticky border-b border-outline flex justify-between items-center px-6 md:px-10 py-4 z-50">
-        <div 
+        <div
           onClick={() => navigate(-1)}
           className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity active:translate-x-[2px] active:translate-y-[2px]"
         >
@@ -63,25 +65,33 @@ const TriggerStressFactors = () => {
             <span>Triggers</span>
           </div>
           <div className="h-3 w-full bg-surface-container neo-border rounded-full overflow-hidden">
-            <div className="h-full bg-surface border-r-[1.5px] border-outline transition-all duration-500" style={{width: '75%'}}></div>
+            <div
+              className="h-full bg-surface border-r-[1.5px] border-outline transition-all duration-500"
+              style={{ width: '75%' }}
+            ></div>
           </div>
         </div>
 
         {/* Header */}
         <div className="text-center mb-12 max-w-2xl">
           <h1 className="font-display-lg text-4xl md:text-display-lg mb-3">What's on your mind?</h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant">Select the areas of life that are currently causing you the most stress or anxiety. You can choose more than one.</p>
+          <p className="font-body-lg text-body-lg text-on-surface-variant">
+            Select the areas of life that are currently causing you the most stress or anxiety. You
+            can choose more than one.
+          </p>
         </div>
 
         {/* Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl mb-12">
           {triggers.map((trigger) => (
-            <button 
+            <button
               key={trigger.id}
               onClick={() => toggleTrigger(trigger.id)}
               className={`trigger-card bg-surface-container-lowest neo-border rounded-xl p-6 md:p-8 flex flex-col items-center justify-center gap-3 aspect-square transition-all duration-200  hover:shadow-subtle ${selectedTriggers.includes(trigger.id) ? 'selected' : ''}`}
             >
-              <span className="material-symbols-outlined text-[40px] md:text-[48px] text-primary">{trigger.icon}</span>
+              <span className="material-symbols-outlined text-[40px] md:text-[48px] text-primary">
+                {trigger.icon}
+              </span>
               <span className="font-headline-sm text-lg md:text-xl">{trigger.label}</span>
             </button>
           ))}
@@ -89,14 +99,14 @@ const TriggerStressFactors = () => {
 
         {/* Navigation Buttons */}
         <div className="flex justify-between w-full max-w-4xl mt-auto pt-6">
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="bg-surface-container-lowest text-ink-black neo-border px-6 md:px-8 py-3 rounded-lg font-label-bold text-label-bold shadow-subtle transition-all duration-100 flex items-center gap-2"
           >
             <span className="material-symbols-outlined">arrow_back</span>
             Previous
           </button>
-          <button 
+          <button
             onClick={save}
             disabled={!selectedTriggers.length || saving}
             className="bg-primary text-on-primary neo-border px-6 md:px-8 py-3 rounded-lg font-label-bold text-label-bold shadow-subtle transition-all duration-100 flex items-center gap-2"

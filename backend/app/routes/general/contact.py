@@ -1,11 +1,13 @@
-# app/routes/general/contact.py
+"""Contact endpoints and access checks."""
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, EmailStr, Field
-from pymongo.errors import PyMongoError
-from app.database import get_mongo_db
 from datetime import datetime, timezone
 
+from fastapi import APIRouter, Depends, status
+from pydantic import BaseModel, EmailStr, Field
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.database.postgres import get_db
+from app.models.safety import ContactSubmission
 
 router = APIRouter()
 
@@ -28,20 +30,17 @@ class ContactFormResponse(BaseModel):
     status_code=status.HTTP_201_CREATED,
     summary="Submit a contact form",
 )
-async def submit_contact_form(payload: ContactFormRequest, mongo_db=Depends(get_mongo_db)):
-    """Save contact form submission to MongoDB."""
-    try:
-        await mongo_db.contact_submissions.insert_one({
-            "name": payload.name,
-            "email": payload.email,
-            "subject": payload.subject,
-            "message": payload.message,
-            "submitted_at": datetime.now(timezone.utc),
-            "is_resolved": False,
-        })
-        return ContactFormResponse(
-            status="success",
-            message="Thank you for contacting us. We will get back to you soon.",
+async def submit_contact_form(
+    payload: ContactFormRequest, db: AsyncSession = Depends(get_db)
+):
+    """Persist the request before acknowledging receipt."""
+    db.add(
+        ContactSubmission(
+            **payload.model_dump(), submitted_at=datetime.now(timezone.utc)
         )
-    except PyMongoError as exc:
-        raise HTTPException(status_code=503, detail="Contact service is unavailable") from exc
+    )
+    await db.commit()
+    return ContactFormResponse(
+        status="success",
+        message="Thank you for contacting us. We will get back to you soon.",
+    )

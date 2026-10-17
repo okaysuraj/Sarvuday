@@ -1,1 +1,1 @@
-export { RecordedGroups as default } from '../../components/screens/RecordedExercises';
+export { SupportGroups as default } from '../../components/screens/SupportGroups';

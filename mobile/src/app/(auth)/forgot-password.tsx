@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { CustomButton } from '../../components/CustomButton';
-import { CustomInput } from '../../components/CustomInput';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { authApi } from '../../api/auth';
+import { CustomButton } from '../../components/forms/CustomButton';
+import { CustomInput } from '../../components/forms/CustomInput';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function ForgotPasswordScreen() {
       Alert.alert('Error', 'Please enter your email');
       return;
     }
-    
+
     setIsLoading(true);
     try {
       await authApi.forgotPassword(email);
@@ -41,8 +41,8 @@ export default function ForgotPasswordScreen() {
           Forgot Password?
         </Text>
         <Text className="font-body-md text-on-surface-variant text-base mb-8">
-          {isSent 
-            ? "We've sent a password reset link to your email." 
+          {isSent
+            ? "We've sent a password reset link to your email."
             : "Enter your email address and we'll send you a link to reset your password."}
         </Text>
 
@@ -57,11 +57,7 @@ export default function ForgotPasswordScreen() {
               onChangeText={setEmail}
               containerClassName="mb-8"
             />
-            <CustomButton
-              title="Send Reset Link"
-              onPress={handleSendLink}
-              isLoading={isLoading}
-            />
+            <CustomButton title="Send Reset Link" onPress={handleSendLink} isLoading={isLoading} />
           </>
         ) : (
           <CustomButton

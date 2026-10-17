@@ -1,11 +1,12 @@
-# app/utils/unique_id_generation.py
+"""Shared unique id generation helpers used by API features."""
 
+import secrets
 import uuid
-from app.database import sync_disorders_collection as disorders_collection
 
 # -------------------------
 # Generic UUID4 Generator with Prefix
 # -------------------------
+
 
 def generate_prefixed_uuid(prefix: str, length: int = 8) -> str:
     """
@@ -17,6 +18,7 @@ def generate_prefixed_uuid(prefix: str, length: int = 8) -> str:
 # -------------------------
 # User ID Generator
 # -------------------------
+
 
 def generate_user_id(user_type: str) -> str:
     """
@@ -40,48 +42,35 @@ def generate_user_id(user_type: str) -> str:
 # Other Entity UUID4-Based Generators
 # -------------------------
 
+
 def generate_chat_session_id() -> str:
-    return generate_prefixed_uuid(f"CHAT", 12)
+    return generate_prefixed_uuid("CHAT", 12)
+
 
 def generate_available_slot_id() -> str:
-    return generate_prefixed_uuid(f"SLOT", 12)
+    return generate_prefixed_uuid("SLOT", 12)
+
 
 def generate_appointment_id() -> str:
-    return generate_prefixed_uuid(f"APT", 12)
+    return generate_prefixed_uuid("APT", 12)
+
 
 def generate_user_payment_id() -> str:
-    return generate_prefixed_uuid(f"PAY", 12)
+    return generate_prefixed_uuid("PAY", 12)
 
-def generate_user_refund_id() -> str:
-    return generate_prefixed_uuid(f"REF", 12)
-
-def generate_counsellor_payment_id() -> str:
-    return generate_prefixed_uuid(f"PAY", 12)
 
 def generate_counselling_session_id() -> str:
-    return generate_prefixed_uuid(f"CS", 12)
+    return generate_prefixed_uuid("CS", 12)
+
 
 def generate_prescription_id() -> str:
-    return generate_prefixed_uuid(f"PRE", 12)
+    return generate_prefixed_uuid("PRE", 12)
 
 
 # -------------------------
-# Disorder ID (Mongo auto-increment style — kept as-is)
+# Numeric catalog IDs must round-trip through JavaScript without losing precision.
 # -------------------------
 
-async def get_next_disorder_id() -> str:
-    """
-    Generate the next disorder ID in incremental manner.
-    Still uses Mongo auto-increment behavior for compatibility.
-    """
-    last_disorder = disorders_collection.find_one(
-        {}, sort=[("disorder_id", -1)]
-    )
 
-    if last_disorder and "disorder_id" in last_disorder:
-        try:
-            last_num = int(last_disorder["disorder_id"])
-            return str(last_num + 1)
-        except ValueError:
-            return "1"
-    return "1"
+def generate_disorder_id() -> int:
+    return secrets.randbelow(2**53 - 1) + 1

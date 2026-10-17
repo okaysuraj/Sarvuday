@@ -1,38 +1,57 @@
-# app/routes/normal_user/dashboard.py
+"""Dashboard endpoints and access checks."""
 
-from fastapi import APIRouter, Depends, status, UploadFile, File, Form
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import get_db
-from app.models import NormalUser
-from app.utils.oauth import ensure_normal_user
 from typing import Optional
-from app.utils.constants import GenderEnum
-from app.schemas import (
-    NormalUserBase, 
+
+from fastapi import APIRouter, Depends, File, Form, UploadFile, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.database.postgres import get_db
+from app.models import NormalUser
+from app.schemas.normal_users_schemas import (
+    DashboardOverviewResponse,
+    NormalUserBase,
     UserUpdateRequest,
     UserUpdateResponse,
-    DashboardOverviewResponse
 )
 from app.services.normal_user.user_management_service import UserManagementService
+from app.utils.constants import GenderEnum
+from app.utils.oauth import ensure_normal_user
 
 router = APIRouter(prefix="/dashboard", tags=["Normal User Dashboard"])
 
-@router.get("", response_model=DashboardOverviewResponse, status_code=status.HTTP_200_OK, summary="Get user dashboard overview. Normal User Authentication required")
+
+@router.get(
+    "",
+    response_model=DashboardOverviewResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get user dashboard overview. Normal User Authentication required",
+)
 async def get_dashboard(
     current_user: NormalUser = Depends(ensure_normal_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     return await UserManagementService(db).get_dashboard_overview(current_user.user_id)
 
 
-@router.get("/profile", response_model=NormalUserBase, status_code=status.HTTP_200_OK, summary="Get user profile. Normal User Authentication required")
+@router.get(
+    "/profile",
+    response_model=NormalUserBase,
+    status_code=status.HTTP_200_OK,
+    summary="Get user profile. Normal User Authentication required",
+)
 async def get_profile(
     current_user: NormalUser = Depends(ensure_normal_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     return await UserManagementService(db).get_user_profile(current_user.user_id)
 
-@router.patch("/profile", response_model=UserUpdateResponse, status_code=status.HTTP_200_OK, summary="Update user profile. Normal User Authentication required")
+
+@router.patch(
+    "/profile",
+    response_model=UserUpdateResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Update user profile. Normal User Authentication required",
+)
 async def update_profile(
     name: Optional[str] = Form(None),
     phone_number: Optional[str] = Form(None),
@@ -57,7 +76,7 @@ async def update_profile(
     bio: Optional[str] = Form(None),
     profile_pic: Optional[UploadFile] = File(None),
     current_user: NormalUser = Depends(ensure_normal_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     # Convert comma-separated to list
     langs = preferred_languages.split(",") if preferred_languages else None
@@ -86,8 +105,18 @@ async def update_profile(
         dob=dob,
         bio=bio,
     )
-    return await UserManagementService(db).update_user_profile(current_user.user_id, update_data, profile_pic)
+    return await UserManagementService(db).update_user_profile(
+        current_user.user_id, update_data, profile_pic
+    )
 
-@router.delete("/profile", status_code=status.HTTP_204_NO_CONTENT, summary="Delete Users Account. Normal User Authentication required")
-async def delete_account(current_user: NormalUser = Depends(ensure_normal_user), db: AsyncSession = Depends(get_db)):
+
+@router.delete(
+    "/profile",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete Users Account. Normal User Authentication required",
+)
+async def delete_account(
+    current_user: NormalUser = Depends(ensure_normal_user),
+    db: AsyncSession = Depends(get_db),
+):
     return await UserManagementService(db).delete_account(current_user.user_id)

@@ -1,19 +1,24 @@
-# app/services/auth/firebase_auth_service.py
+"""Firebase auth service business logic and persistence."""
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from datetime import datetime, timezone
-from fastapi import HTTPException, status
-from app.models import NormalUser, Counsellor, Admin
-from app.utils.unique_id_generation import generate_user_id
-from app.utils.constants import UserTypeEnum
-from app.schemas import FirebaseRegisterRequest, FirebaseLoginRequest, UserLoginResponse
-from firebase_admin import auth
+from datetime import datetime, timedelta, timezone
+
 import jwt
-from datetime import timedelta
-from app.config import settings
+from fastapi import HTTPException, status
+from firebase_admin import auth
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.concurrency import run_in_threadpool
+
+from app.config import settings
+from app.models import Admin, Counsellor, NormalUser
+from app.schemas.auth_schemas import (
+    FirebaseLoginRequest,
+    FirebaseRegisterRequest,
+    UserLoginResponse,
+)
+from app.utils.constants import UserTypeEnum
+from app.utils.unique_id_generation import generate_user_id
 
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 SECRET_KEY = settings.secret_key
@@ -22,7 +27,7 @@ ALGORITHM = settings.algorithm
 
 class FirebaseAuthService:
     """Handles Firebase-based authentication (email, phone, Google).
-    
+
     The frontend uses Firebase for all auth flows and sends the Firebase
     id_token to the backend for verification and JWT issuance.
     """
@@ -36,9 +41,13 @@ class FirebaseAuthService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def firebase_register(self, payload: FirebaseRegisterRequest) -> UserLoginResponse:
+    async def firebase_register(
+        self, payload: FirebaseRegisterRequest
+    ) -> UserLoginResponse:
         """Register a new user via Firebase ID token."""
-        decoded_token = await run_in_threadpool(self._verify_firebase_token, payload.id_token)
+        decoded_token = await run_in_threadpool(
+            self._verify_firebase_token, payload.id_token
+        )
 
         email = decoded_token.get("email")
         phone = decoded_token.get("phone_number")
@@ -47,7 +56,10 @@ class FirebaseAuthService:
         if not firebase_uid:
             raise HTTPException(status_code=401, detail="Invalid Firebase identity.")
         if not payload.terms_accepted or not payload.privacy_policy_accepted:
-            raise HTTPException(status_code=400, detail="Accept the terms and privacy policy to register.")
+            raise HTTPException(
+                status_code=400,
+                detail="Accept the terms and privacy policy to register.",
+            )
 
         if not email and not phone:
             raise HTTPException(
@@ -62,7 +74,9 @@ class FirebaseAuthService:
             )
 
         # Check if user already exists
-        existing = await self._find_user_by_firebase_uid(firebase_uid, payload.user_type)
+        existing = await self._find_user_by_firebase_uid(
+            firebase_uid, payload.user_type
+        )
         if existing:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
@@ -89,7 +103,9 @@ class FirebaseAuthService:
             gender=payload.gender,
             firebase_uid=firebase_uid,
             user_type=payload.user_type,
-            is_email_verified=bool(email and decoded_token.get("email_verified", False)),
+            is_email_verified=bool(
+                email and decoded_token.get("email_verified", False)
+            ),
             is_phone_verified=bool(phone),
             last_login_at=datetime.now(timezone.utc).replace(tzinfo=None),
         )
@@ -103,7 +119,9 @@ class FirebaseAuthService:
             await self.db.refresh(user)
         except IntegrityError:
             await self.db.rollback()
-            raise HTTPException(status_code=409, detail="An account with this identity already exists.")
+            raise HTTPException(
+                status_code=409, detail="An account with this identity already exists."
+            )
         except Exception:
             await self.db.rollback()
             raise
@@ -121,10 +139,12 @@ class FirebaseAuthService:
 
     async def firebase_login(self, payload: FirebaseLoginRequest) -> UserLoginResponse:
         """Authenticate a user via Firebase ID token.
-        
+
         Auto-detects user_type by searching all user tables if not provided.
         """
-        decoded_token = await run_in_threadpool(self._verify_firebase_token, payload.id_token)
+        decoded_token = await run_in_threadpool(
+            self._verify_firebase_token, payload.id_token
+        )
         firebase_uid = decoded_token.get("uid")
         email = decoded_token.get("email")
 
@@ -138,17 +158,27 @@ class FirebaseAuthService:
 
         if payload.user_type:
             # Look up in the specified table
-            user = await self._find_user_by_firebase_uid(firebase_uid, payload.user_type)
+            user = await self._find_user_by_firebase_uid(
+                firebase_uid, payload.user_type
+            )
             if not user:
                 user = await self._link_verified_email(decoded_token, payload.user_type)
         else:
             # Auto-detect: search all user tables
-            for user_type in [UserTypeEnum.normal_user, UserTypeEnum.counsellor, UserTypeEnum.admin]:
+            for user_type in [
+                UserTypeEnum.normal_user,
+                UserTypeEnum.counsellor,
+                UserTypeEnum.admin,
+            ]:
                 user = await self._find_user_by_firebase_uid(firebase_uid, user_type)
                 if user:
                     break
             if not user:
-                for user_type in [UserTypeEnum.normal_user, UserTypeEnum.counsellor, UserTypeEnum.admin]:
+                for user_type in [
+                    UserTypeEnum.normal_user,
+                    UserTypeEnum.counsellor,
+                    UserTypeEnum.admin,
+                ]:
                     user = await self._link_verified_email(decoded_token, user_type)
                     if user:
                         break
@@ -160,7 +190,9 @@ class FirebaseAuthService:
             )
 
         if user.user_type == UserTypeEnum.admin and not user.is_approved:
-            raise HTTPException(status_code=403, detail="Administrator access has not been approved.")
+            raise HTTPException(
+                status_code=403, detail="Administrator access has not been approved."
+            )
 
         # Update verification status and last login
         if email and decoded_token.get("email_verified", False):
@@ -195,9 +227,8 @@ class FirebaseAuthService:
             "email": user.email,
             "user_type": user.user_type.value,
             "iat": datetime.now(timezone.utc),
-            "exp": datetime.now(timezone.utc) + timedelta(
-                minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-            )
+            "exp": datetime.now(timezone.utc)
+            + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         }
         return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -226,14 +257,10 @@ class FirebaseAuthService:
 
     async def _find_user_by_firebase_uid(self, uid: str, user_type: UserTypeEnum):
         model = self.MODEL_MAP[user_type]
-        result = await self.db.execute(
-            select(model).where(model.firebase_uid == uid)
-        )
+        result = await self.db.execute(select(model).where(model.firebase_uid == uid))
         return result.scalars().first()
 
     async def _find_user_by_email(self, email: str, user_type: UserTypeEnum):
         model = self.MODEL_MAP[user_type]
-        result = await self.db.execute(
-            select(model).where(model.email == email)
-        )
+        result = await self.db.execute(select(model).where(model.email == email))
         return result.scalars().first()

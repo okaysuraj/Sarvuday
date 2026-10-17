@@ -1,8 +1,9 @@
+"""Request validation and response models for prescription."""
 
+from datetime import datetime
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import datetime
 
 
 class PrescriptionBase(BaseModel):
@@ -14,13 +15,14 @@ class PrescriptionBase(BaseModel):
     medications: Optional[List[dict]] = None
     recommendations: Optional[List[str]] = None
     created_at: datetime
-    
-    model_config = {"from_attributes": True} 
+
+    model_config = {"from_attributes": True}
+
 
 class PrescriptionListResponse(BaseModel):
     total_count: int
     prescriptions: List[PrescriptionBase]
-    
+
 
 class PrescriptionCreate(BaseModel):
     session_id: str
@@ -28,10 +30,15 @@ class PrescriptionCreate(BaseModel):
     diagnosis: str = Field(min_length=1, max_length=20000)
     medications: List[dict] = Field(
         ...,
-        example=[{"name": "Medication A", "dosage": "10mg", "frequency": "daily"}]
+        json_schema_extra={
+            "examples": [
+                [{"name": "Medication A", "dosage": "10mg", "frequency": "daily"}]
+            ]
+        },
     )
     recommendations: List[str] = Field(
         ...,
-        example=["Follow up in 2 weeks", "Get blood work done"]
+        json_schema_extra={
+            "examples": [["Follow up in 2 weeks", "Get blood work done"]]
+        },
     )
-

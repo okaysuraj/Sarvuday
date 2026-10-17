@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
 import DailyIframe from '@daily-co/daily-js';
-import styles from './VideoCall.module.css';
+import { useEffect, useRef, useState } from 'react';
 import { FaPhoneSlash } from 'react-icons/fa';
+import styles from './VideoCall.module.css';
 
 const VideoCall = ({ url, token, onLeave }) => {
   const callFrameRef = useRef(null);

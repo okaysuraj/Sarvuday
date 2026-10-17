@@ -1,60 +1,54 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
-import { auth } from "../config/firebase";
-import sarvudayLogo from "../assets/sarvuday_logo.png";
+import { clearSession, useSession } from '../utils/session';
+import { useState } from 'react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import sarvudayLogo from '../assets/sarvuday_logo.png';
+import { auth } from '../config/firebase';
 
 const DashboardLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [userType, setUserType] = useState("normal_user");
-
-  useEffect(() => {
-    const storedType = localStorage.getItem("userType");
-    if (storedType) {
-      setUserType(storedType);
-    }
-  }, []);
+  const userType = useSession()?.userType || 'normal_user';
 
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("userType");
-      navigate("/login");
     } catch (error) {
-      console.error("Logout error", error);
+      console.error('Logout error', error);
+    } finally {
+      clearSession();
+      navigate('/login');
     }
   };
 
   const patientNav = [
-    { label: "Dashboard", path: "/normal-user-dashboard", icon: "dashboard" },
-    { label: "AI Companion", path: "/ai-chat", icon: "smart_toy" },
-    { label: "Therapists", path: "/therapists", icon: "calendar_month" },
-    { label: "Mood Tracker", path: "/mood-tracker", icon: "mood" },
-    { label: "Daily Journal", path: "/journal", icon: "edit_note" },
-    { label: "My Records", path: "/my-records", icon: "assignment" },
-    { label: "Insights", path: "/insights", icon: "insights" },
-    { label: "Community", path: "/community", icon: "forum" },
+    { label: 'Dashboard', path: '/normal-user-dashboard', icon: 'dashboard' },
+    { label: 'AI Companion', path: '/ai-chat', icon: 'smart_toy' },
+    { label: 'Therapists', path: '/therapists', icon: 'calendar_month' },
+    { label: 'Mood Tracker', path: '/mood-tracker', icon: 'mood' },
+    { label: 'Daily Journal', path: '/journal', icon: 'edit_note' },
+    { label: 'My Records', path: '/my-records', icon: 'assignment' },
+    { label: 'Insights', path: '/insights', icon: 'insights' },
+    { label: 'Community', path: '/community', icon: 'forum' },
   ];
 
   const therapistNav = [
-    { label: "Patients", path: "/counsellor-dashboard", icon: "group" },
-    { label: "Schedule", path: "/schedule", icon: "calendar_today" },
-    { label: "Earnings", path: "/earnings", icon: "payments" },
-    { label: "Settings", path: "/settings", icon: "settings" },
+    { label: 'Patients', path: '/counsellor-dashboard', icon: 'group' },
+    { label: 'Schedule', path: '/schedule', icon: 'calendar_today' },
+    { label: 'Earnings', path: '/earnings', icon: 'payments' },
+    { label: 'Settings', path: '/settings', icon: 'settings' },
   ];
 
   const adminNav = [
-    { label: "Overview", path: "/admin-dashboard", icon: "dashboard" },
-    { label: "Users", path: "/admin/users", icon: "group" },
-    { label: "Moderation", path: "/admin/moderation", icon: "gavel" },
-    { label: "Analytics", path: "/admin/analytics", icon: "analytics" },
+    { label: 'Overview', path: '/admin-dashboard', icon: 'dashboard' },
+    { label: 'Users', path: '/admin/users', icon: 'group' },
+    { label: 'Moderation', path: '/admin/moderation', icon: 'gavel' },
+    { label: 'Analytics', path: '/admin/analytics', icon: 'analytics' },
   ];
 
   let navItems = patientNav;
-  if (userType === "counsellor") navItems = therapistNav;
-  if (userType === "admin") navItems = adminNav;
+  if (userType === 'counsellor') navItems = therapistNav;
+  if (userType === 'admin') navItems = adminNav;
 
   return (
     <div className="bg-[#FAF9F6] text-[#121214] min-h-screen flex flex-col md:flex-row antialiased selection:bg-[#18181B] selection:text-white">
@@ -71,25 +65,26 @@ const DashboardLayout = () => {
                 SarvUday
               </span>
               <span className="text-[10px] uppercase tracking-wider text-[#71717A] font-medium leading-none">
-                {userType.replace("_", " ")}
+                {userType.replace('_', ' ')}
               </span>
             </div>
           </Link>
-          
         </div>
 
         {/* Navigation Items */}
         <nav className="flex flex-col gap-1 flex-grow overflow-y-auto pr-1">
           {navItems.map((item, idx) => {
-            const isActive = location.pathname === item.path || (item.path !== '/normal-user-dashboard' && location.pathname.startsWith(item.path));
+            const isActive =
+              location.pathname === item.path ||
+              (item.path !== '/normal-user-dashboard' && location.pathname.startsWith(item.path));
             return (
               <Link
                 key={idx}
                 to={item.path}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-[14px] font-medium transition-all duration-150 ${
                   isActive
-                    ? "bg-[#18181B] text-white shadow-sm"
-                    : "text-[#6E6D7A] hover:text-[#121214] hover:bg-[#F5F4F0]"
+                    ? 'bg-[#18181B] text-white shadow-sm'
+                    : 'text-[#6E6D7A] hover:text-[#121214] hover:bg-[#F5F4F0]'
                 }`}
               >
                 <span
@@ -114,7 +109,6 @@ const DashboardLayout = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-[#8F2B26] animate-pulse"></span>
               Urgent support
             </span>
-            
           </Link>
 
           <Link
@@ -168,7 +162,6 @@ const DashboardLayout = () => {
               aria-label="Notifications"
             >
               <span className="material-symbols-rounded text-[20px]">notifications</span>
-              
             </Link>
 
             <Link
@@ -194,7 +187,11 @@ const DashboardLayout = () => {
                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#EAEAEA]">
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-lg bg-[#FAF9F6] border border-[#EAEAEA] p-0.5 flex items-center justify-center overflow-hidden">
-                      <img src={sarvudayLogo} alt="SarvUday" className="w-full h-full object-contain" />
+                      <img
+                        src={sarvudayLogo}
+                        alt="SarvUday"
+                        className="w-full h-full object-contain"
+                      />
                     </div>
                     <span className="font-semibold text-base">SarvUday</span>
                   </div>
@@ -214,7 +211,9 @@ const DashboardLayout = () => {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#121214] hover:bg-[#F5F4F0]"
                     >
-                      <span className="material-symbols-rounded text-lg text-[#71717A]">{item.icon}</span>
+                      <span className="material-symbols-rounded text-lg text-[#71717A]">
+                        {item.icon}
+                      </span>
                       <span>{item.label}</span>
                     </Link>
                   ))}
@@ -259,7 +258,7 @@ const DashboardLayout = () => {
               key={idx}
               to={item.path}
               className={`flex flex-col items-center justify-center flex-1 py-1 text-xs transition-colors ${
-                isActive ? "text-[#121214] font-medium" : "text-[#71717A] hover:text-[#121214]"
+                isActive ? 'text-[#121214] font-medium' : 'text-[#71717A] hover:text-[#121214]'
               }`}
             >
               <span

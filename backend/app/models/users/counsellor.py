@@ -1,26 +1,46 @@
-# app/models/users/counsellor.py
+"""Relational records and relationships for counsellor."""
 
 from sqlalchemy import (
-    Column, String, Boolean, Enum as SqlEnum, Text, Integer,
-    ForeignKey, TIMESTAMP, DateTime, Index, DECIMAL, JSON
+    DECIMAL,
+    JSON,
+    TIMESTAMP,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
 )
+from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import relationship
+
 from app.database.postgres import Base
 from app.models.base import BaseMixin
 from app.utils.constants import GenderEnum, UserTypeEnum
 
+
 class Counsellor(Base, BaseMixin):
     """Represents a licensed mental health counsellor on the platform."""
+
     __tablename__ = "counsellors"
     __table_args__ = (
-        Index('idx_counsellor_id', 'user_id'),
-        Index('idx_counsellor_email', 'email'),
-        Index('idx_approved_counsellor', 'is_approved'),
-        {}
+        Index("idx_counsellor_id", "user_id"),
+        Index("idx_counsellor_email", "email"),
+        Index("idx_approved_counsellor", "is_approved"),
+        {},
     )
 
     # Unique platform ID
-    user_id = Column(String(20), primary_key=True, nullable=False, unique=True, index=True)
+    user_id = Column(
+        String(20),
+        ForeignKey("accounts.user_id", name="fk_counsellor_account"),
+        primary_key=True,
+        nullable=False,
+        unique=True,
+        index=True,
+    )
 
     # Authentication
     email = Column(String(255), nullable=True, unique=True)
@@ -77,7 +97,13 @@ class Counsellor(Base, BaseMixin):
 
     # Relationships
     approver = relationship("Admin", back_populates="approved_counsellors")
-    availability = relationship("CounsellorAvailability", back_populates="counsellor", cascade="all, delete-orphan")
+    availability = relationship(
+        "CounsellorAvailability",
+        back_populates="counsellor",
+        cascade="all, delete-orphan",
+    )
     appointments = relationship("Appointment", back_populates="counsellor")
     payments = relationship("CounsellorPayment", back_populates="counsellor")
-    counselling_sessions = relationship("CounsellingSession", back_populates="counsellor")
+    counselling_sessions = relationship(
+        "CounsellingSession", back_populates="counsellor"
+    )

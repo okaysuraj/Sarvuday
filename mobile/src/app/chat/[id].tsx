@@ -1,1 +1,1 @@
-export { default } from '../../components/chat/RecordedConversation';
+export { default } from '../../components/chat/Conversation';

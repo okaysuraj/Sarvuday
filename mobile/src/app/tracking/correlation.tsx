@@ -1,1 +1,1 @@
-export { RecordedCorrelation as default } from '../../components/screens/RecordedScreens';
+export { SleepMoodScreen as default } from '../../components/screens/ProgressScreens';

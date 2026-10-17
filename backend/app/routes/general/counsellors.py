@@ -1,12 +1,16 @@
-from datetime import datetime, timezone
+"""Counsellors endpoints and access checks."""
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
-from pymongo.errors import DuplicateKeyError, PyMongoError
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import get_db, get_mongo_db
+
+from app.models.community import CounsellorReview
+from app.schemas.records import record_fields
+from app.database.postgres import get_db
 from app.models import Appointment, NormalUser
-from app.schemas import CounsellorListWebView, CounsellorWebView
+from app.schemas.counsellors_schemas import CounsellorListWebView, CounsellorWebView
 from app.services.general import CounsellorService
 from app.utils.constants import AppointmentStatusEnum
 from app.utils.oauth import ensure_normal_user
@@ -25,18 +29,30 @@ async def get_counsellor(counsellor_id: str, db: AsyncSession = Depends(get_db))
 
 
 @router.get("/{counsellor_id}/reviews")
-async def get_counsellor_reviews(counsellor_id: str, limit: int = Query(50, ge=1, le=100),
-                                  offset: int = Query(0, ge=0), mongo_db=Depends(get_mongo_db)):
-    try:
-        # Historical unverified/seeding rows need provenance review before publication.
-        records = await mongo_db.counsellor_reviews.find(
-            {"counsellor_id": counsellor_id, "verified_appointment": True}
-        ).sort("created_at", -1).skip(offset).limit(limit).to_list(length=limit)
-        return [{"id": str(record["_id"]), "author": record["author"], "rating": record["rating"],
-                 "content": record["content"], "helpfulCount": record.get("helpfulCount", 0),
-                 "created_at": record["created_at"].isoformat()} for record in records]
-    except PyMongoError as exc:
-        raise HTTPException(status_code=503, detail="Reviews are unavailable") from exc
+async def get_counsellor_reviews(
+    counsellor_id: str,
+    limit: int = Query(50, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    db: AsyncSession = Depends(get_db),
+):
+    # Unverified historical rows remain private until provenance is reviewed.
+    records = await db.scalars(
+        select(CounsellorReview)
+        .where(
+            CounsellorReview.counsellor_id == counsellor_id,
+            CounsellorReview.verified_appointment.is_(True),
+        )
+        .order_by(CounsellorReview.created_at.desc(), CounsellorReview.id.desc())
+        .offset(offset)
+        .limit(limit)
+    )
+    return [
+        {
+            **record_fields(row, "id", "author", "rating", "content", "created_at"),
+            "helpfulCount": row.helpful_count,
+        }
+        for row in records
+    ]
 
 
 class ReviewCreate(BaseModel):
@@ -46,25 +62,48 @@ class ReviewCreate(BaseModel):
 
 
 @router.post("/{counsellor_id}/reviews", status_code=status.HTTP_201_CREATED)
-async def submit_counsellor_review(counsellor_id: str, payload: ReviewCreate,
-                                    current_user: NormalUser = Depends(ensure_normal_user),
-                                    db: AsyncSession = Depends(get_db), mongo_db=Depends(get_mongo_db)):
-    appointment = (await db.execute(select(Appointment).where(
-        Appointment.appointment_id == payload.appointment_id,
-        Appointment.user_id == current_user.user_id,
-        Appointment.counsellor_id == counsellor_id,
-        Appointment.status == AppointmentStatusEnum.completed,
-    ))).scalar_one_or_none()
+async def submit_counsellor_review(
+    counsellor_id: str,
+    payload: ReviewCreate,
+    current_user: NormalUser = Depends(ensure_normal_user),
+    db: AsyncSession = Depends(get_db),
+):
+    appointment = (
+        await db.execute(
+            select(Appointment).where(
+                Appointment.appointment_id == payload.appointment_id,
+                Appointment.user_id == current_user.user_id,
+                Appointment.counsellor_id == counsellor_id,
+                Appointment.status == AppointmentStatusEnum.completed,
+            )
+        )
+    ).scalar_one_or_none()
     if appointment is None:
-        raise HTTPException(status_code=403, detail="A completed appointment is required to review this counsellor")
-    record = {"counsellor_id": counsellor_id, "user_id": current_user.user_id,
-              "appointment_id": appointment.appointment_id, "verified_appointment": True,
-              "author": current_user.name, "rating": payload.rating, "content": payload.content,
-              "helpfulCount": 0, "created_at": datetime.now(timezone.utc)}
+        raise HTTPException(
+            status_code=403,
+            detail="A completed appointment is required to review this counsellor",
+        )
+    record = CounsellorReview(
+        counsellor_id=counsellor_id,
+        user_id=current_user.user_id,
+        appointment_id=appointment.appointment_id,
+        verified_appointment=True,
+        author=current_user.name,
+        rating=payload.rating,
+        content=payload.content,
+    )
+    db.add(record)
     try:
-        result = await mongo_db.counsellor_reviews.insert_one(record)
-        return {"status": "success", "id": str(result.inserted_id), "message": "Review submitted successfully"}
-    except DuplicateKeyError as exc:
-        raise HTTPException(status_code=409, detail="This appointment already has a review") from exc
-    except PyMongoError as exc:
-        raise HTTPException(status_code=503, detail="Reviews are unavailable") from exc
+        await db.commit()
+    except IntegrityError as exc:
+        await db.rollback()
+        if getattr(exc.orig, "sqlstate", None) == "23505":
+            raise HTTPException(
+                status_code=409, detail="This appointment already has a review"
+            ) from exc
+        raise
+    return {
+        "status": "success",
+        "id": record.id,
+        "message": "Review submitted successfully",
+    }

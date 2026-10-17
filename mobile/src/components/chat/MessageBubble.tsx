@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import React from 'react';
+import { Text, View } from 'react-native';
 
 export interface MessageProps {
   id: string;
@@ -11,7 +11,7 @@ export interface MessageProps {
 
 export const MessageBubble: React.FC<{ message: MessageProps }> = ({ message }) => {
   const isUser = message.sender === 'user';
-  
+
   return (
     <View className={`w-full flex-row ${isUser ? 'justify-end' : 'justify-start'} mb-3`}>
       {!isUser && (
@@ -23,19 +23,19 @@ export const MessageBubble: React.FC<{ message: MessageProps }> = ({ message }) 
           )}
         </View>
       )}
-      
-      <View 
+
+      <View
         className={`max-w-[78%] px-4 py-3 rounded-2xl ${
-          isUser 
-            ? 'bg-primary rounded-br-sm' 
-            : 'bg-surface border border-outline rounded-bl-sm'
+          isUser ? 'bg-primary rounded-br-sm' : 'bg-surface border border-outline rounded-bl-sm'
         }`}
       >
         <Text className={`text-sm leading-relaxed ${isUser ? 'text-white' : 'text-on-surface'}`}>
           {message.text}
         </Text>
         {message.timestamp ? (
-          <Text className={`text-[10px] mt-1 text-right ${isUser ? 'text-white/60' : 'text-on-surface-variant'}`}>
+          <Text
+            className={`text-[10px] mt-1 text-right ${isUser ? 'text-white/60' : 'text-on-surface-variant'}`}
+          >
             {message.timestamp}
           </Text>
         ) : null}

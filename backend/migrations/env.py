@@ -1,21 +1,30 @@
-"""Migrations use DATABASE_URL; no Firebase or MongoDB connectivity is required."""
+"""Migrations use DATABASE_URL; no Firebase connectivity is required."""
+
 from alembic import context
 from sqlalchemy import create_engine, pool
-from app.database.postgres import Base, POSTGRES_SYNC_URL
-import app.models  # register the complete metadata
+
+import app.models  # noqa: F401 -- register the complete metadata
+from app.database.postgres import POSTGRES_SYNC_URL, Base
 
 config = context.config
 target_metadata = Base.metadata
 
 if context.is_offline_mode():
-    context.configure(url=POSTGRES_SYNC_URL, target_metadata=target_metadata,
-                      literal_binds=True, dialect_opts={"paramstyle": "named"},
-                      compare_type=True)
+    context.configure(
+        url=POSTGRES_SYNC_URL,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+        compare_type=True,
+    )
     with context.begin_transaction():
         context.run_migrations()
 else:
+
     def run_migrations(connection):
-        context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
+        context.configure(
+            connection=connection, target_metadata=target_metadata, compare_type=True
+        )
         with context.begin_transaction():
             context.run_migrations()
 

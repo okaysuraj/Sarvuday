@@ -1,3 +1,5 @@
-import { RecordedStress } from '../../components/tracking/RecordedTracking';
+import { StressView } from '../../components/tracking/TrackingViews';
 
-export default function Page() { return <RecordedStress  />; }
+export default function Page() {
+  return <StressView />;
+}

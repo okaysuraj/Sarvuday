@@ -1,1 +1,1 @@
-export { RecordedExerciseLibrary as default } from '../../components/screens/RecordedExercises';
+export { ExerciseLibrary as default } from '../../components/screens/ExerciseScreens';

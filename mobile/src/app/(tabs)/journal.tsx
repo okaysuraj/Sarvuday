@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRouter } from 'expo-router';
-import { trackingApi } from '../../api/tracking';
 import { format } from 'date-fns';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { trackingApi } from '../../api/tracking';
 
 export default function JournalListScreen() {
   const router = useRouter();
@@ -38,9 +38,11 @@ export default function JournalListScreen() {
       {/* Header */}
       <View className="flex-row justify-between items-center px-6 py-4 w-full border-b-[1.5px] border-ink-black bg-background z-50">
         <View className="w-10" />
-        <Text className="font-headline-sm text-primary font-bold text-xl uppercase tracking-tighter">My Journal</Text>
+        <Text className="font-headline-sm text-primary font-bold text-xl uppercase tracking-tighter">
+          My Journal
+        </Text>
         <TouchableOpacity className="w-10 h-10 rounded-full border-[1.5px] border-ink-black bg-secondary-fixed flex items-center justify-center">
-           <Ionicons name="person" size={24} color="#1A1A1A" />
+          <Ionicons name="person" size={24} color="#1A1A1A" />
         </TouchableOpacity>
       </View>
 
@@ -55,9 +57,9 @@ export default function JournalListScreen() {
           </View>
         ) : (
           <View className="flex-col gap-4">
-            {entries.map(entry => (
-              <View 
-                key={entry.id} 
+            {entries.map((entry) => (
+              <View
+                key={entry.id}
                 className="bg-surface-container-lowest border-[1.5px] border-ink-black rounded-2xl p-6 shadow-[4px_4px_0px_0px_#1A1A1A]"
               >
                 <View className="flex-row justify-between items-start mb-4">
@@ -79,7 +81,7 @@ export default function JournalListScreen() {
 
       {/* Floating Action Button */}
       <View className="absolute bottom-6 right-6">
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => router.push('/journal/new')}
           className="w-16 h-16 bg-primary rounded-full border-[1.5px] border-ink-black shadow-[4px_4px_0px_0px_#1A1A1A] flex items-center justify-center active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
         >

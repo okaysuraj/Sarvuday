@@ -1,1 +1,1 @@
-export { EarningsDashboard as default } from '../../components/dashboard/RecordedDashboards';
+export { EarningsDashboard as default } from '../../components/dashboard/DashboardViews';

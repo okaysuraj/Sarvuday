@@ -1,1 +1,1 @@
-export { RecordedTherapists as default } from '../../components/screens/RecordedScreens';
+export { TherapistDirectory as default } from '../../components/screens/TherapistDirectory';

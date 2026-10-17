@@ -1,1 +1,1 @@
-export { RecordedPatientDashboard as default } from '../../components/screens/RecordedScreens';
+export { PatientDashboard as default } from '../../components/dashboard/PatientDashboard';

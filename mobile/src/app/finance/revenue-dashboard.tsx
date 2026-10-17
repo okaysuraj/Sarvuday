@@ -1,1 +1,1 @@
-export { RecordedEarnings as default } from '../../components/screens/RecordedScreens';
+export { EarningsScreen as default } from '../../components/screens/PaymentScreens';

@@ -1,68 +1,36 @@
-# app/services/chatbot/chatbot_context.py
+"""Keep recent conversation pairs within an approximate model context budget."""
 
-from typing import List, Dict
 from app.config import settings
 
-max_total_tokens = settings.max_total_tokens
-chatbot_system_prompt = settings.chatbot_system_prompt
+
 def count_tokens(text: str) -> int:
-    """
-    Counts the number of tokens in a given string using a lightweight character-based approximation.
-    (Approx 4 characters per token). This removes the heavy transformers dependency.
-    """
-    try:
-        if not isinstance(text, str):
-            print(f"Warning: Non-string input received. Converting to string: {text} ({type(text)})")
-            text = str(text)
-
-        return len(text) // 4
-
-    except Exception as e:
-        print(f"Tokenizer error. Input: {text}\nException: {e}")
-        raise
+    """Estimate one token per four characters without loading a tokenizer model."""
+    return len(str(text)) // 4
 
 
-def truncate_context(messages: List[Dict[str, str]], max_tokens: int) -> List[Dict[str, str]]:
-    """
-    Trims the list of messages (with 'user' and 'assistant' keys) from the most recent backward
-    to fit within the max token limit. Returns a list of messages that do not exceed the token budget.
-    """
-    trimmed_messages = []
-    total_tokens = 0
-
-    for msg in reversed(messages):  # Iterate from latest to oldest
-        user_tokens = count_tokens(msg.get("user", ""))
-        assistant_tokens = count_tokens(msg.get("assistant", ""))
-
-        # Check if adding this message exceeds the token limit
-        if total_tokens + user_tokens + assistant_tokens > max_tokens:
+def truncate_context(
+    messages: list[dict[str, str]], max_tokens: int
+) -> list[dict[str, str]]:
+    recent = []
+    total = 0
+    for message in reversed(messages):
+        size = count_tokens(message.get("user", "")) + count_tokens(
+            message.get("assistant", "")
+        )
+        if total + size > max_tokens:
             break
-
-        # Prepend the message to maintain chronological order
-        trimmed_messages.insert(0, msg)
-        total_tokens += user_tokens + assistant_tokens
-
-    return trimmed_messages
+        recent.append(message)
+        total += size
+    # Reverse once instead of repeatedly inserting at the start of a growing list.
+    return list(reversed(recent))
 
 
-def build_context_within_token_limit(user_input: str, history: List[Dict[str, str]]) -> List[Dict[str, str]]:
-    """
-    Combines system prompt with trimmed conversation history under token budget.
-    """
-    user_input_token_count = count_tokens(user_input)
-    system_prompt_token_count = count_tokens(chatbot_system_prompt)
-    buffer_tokens = 50  # Buffer for safety
-    tokens_consumed = user_input_token_count + system_prompt_token_count + buffer_tokens
-
-    if tokens_consumed > max_total_tokens:
+def build_context_within_token_limit(
+    user_input: str, history: list[dict[str, str]]
+) -> list[dict[str, str]]:
+    reserved = (
+        count_tokens(user_input) + count_tokens(settings.chatbot_system_prompt) + 50
+    )
+    if reserved > settings.max_total_tokens:
         raise ValueError("User input exceeds maximum token limit.")
-
-    # Calculate the remaining token budget for the conversation history
-    token_budget = max_total_tokens - tokens_consumed
-    if token_budget < 0:
-        token_budget = 0
-
-    # Trim the conversation history to fit within the token budget
-    trimmed_history = truncate_context(history, token_budget)
-
-    return trimmed_history
+    return truncate_context(history, settings.max_total_tokens - reserved)

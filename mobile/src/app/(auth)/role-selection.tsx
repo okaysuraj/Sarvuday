@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { CustomButton } from '../../components/CustomButton';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { CustomButton } from '../../components/forms/CustomButton';
 
 export default function RoleSelectionScreen() {
   const router = useRouter();
@@ -11,7 +11,10 @@ export default function RoleSelectionScreen() {
 
   const handleContinue = () => {
     if (selectedRole) {
-      router.push({ pathname: '/(auth)/sign-up', params: { role: selectedRole } });
+      router.push({
+        pathname: '/(auth)/sign-up',
+        params: { role: selectedRole },
+      });
     }
   };
 
@@ -33,15 +36,21 @@ export default function RoleSelectionScreen() {
           <TouchableOpacity
             onPress={() => setSelectedRole('patient')}
             className={`p-6 rounded-xl border-2 ${
-              selectedRole === 'patient' ? 'border-primary bg-primary-fixed' : 'border-outline-variant bg-surface-container-highest'
+              selectedRole === 'patient'
+                ? 'border-primary bg-primary-fixed'
+                : 'border-outline-variant bg-surface-container-highest'
             } flex-row items-center`}
           >
             <View className="w-12 h-12 rounded-full bg-primary-fixed-dim items-center justify-center mr-4">
-               <Ionicons name="person" size={24} color="#002da5" />
+              <Ionicons name="person" size={24} color="#002da5" />
             </View>
             <View className="flex-1">
-              <Text className="font-headline-md font-bold text-lg text-on-surface">I'm looking for help</Text>
-              <Text className="font-body-md text-on-surface-variant text-sm mt-1">Patient / User</Text>
+              <Text className="font-headline-md font-bold text-lg text-on-surface">
+                I'm looking for help
+              </Text>
+              <Text className="font-body-md text-on-surface-variant text-sm mt-1">
+                Patient / User
+              </Text>
             </View>
             {selectedRole === 'patient' && (
               <Ionicons name="checkmark-circle" size={24} color="#002da5" />
@@ -51,15 +60,21 @@ export default function RoleSelectionScreen() {
           <TouchableOpacity
             onPress={() => setSelectedRole('therapist')}
             className={`p-6 rounded-xl border-2 ${
-              selectedRole === 'therapist' ? 'border-primary bg-primary-fixed' : 'border-outline-variant bg-surface-container-highest'
+              selectedRole === 'therapist'
+                ? 'border-primary bg-primary-fixed'
+                : 'border-outline-variant bg-surface-container-highest'
             } flex-row items-center`}
           >
             <View className="w-12 h-12 rounded-full bg-tertiary-fixed-dim items-center justify-center mr-4">
-               <Ionicons name="medical" size={24} color="#5a3039" />
+              <Ionicons name="medical" size={24} color="#5a3039" />
             </View>
             <View className="flex-1">
-              <Text className="font-headline-md font-bold text-lg text-on-surface">I'm a Therapist</Text>
-              <Text className="font-body-md text-on-surface-variant text-sm mt-1">Provide care and support</Text>
+              <Text className="font-headline-md font-bold text-lg text-on-surface">
+                I'm a Therapist
+              </Text>
+              <Text className="font-body-md text-on-surface-variant text-sm mt-1">
+                Provide care and support
+              </Text>
             </View>
             {selectedRole === 'therapist' && (
               <Ionicons name="checkmark-circle" size={24} color="#002da5" />

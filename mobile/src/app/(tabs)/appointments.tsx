@@ -1,1 +1,1 @@
-export { default } from '../../components/screens/RecordedAppointments';
+export { default } from '../../components/screens/AppointmentsScreen';

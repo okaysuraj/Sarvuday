@@ -1,1 +1,1 @@
-export { RecordedModeration as default } from '../../components/screens/RecordedAdministration';
+export { ModerationScreen as default } from '../../components/screens/AdministrationScreens';

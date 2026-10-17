@@ -1,9 +1,12 @@
-# app/schemas/appointment_schemas.py
+"""Request validation and response models for appointments."""
+
+from datetime import datetime
+from typing import List, Optional
 
 from pydantic import BaseModel
-from typing import Optional, List
-from datetime import datetime
-from app.utils.constants import AppointmentStatusEnum, PaymentStatusEnum, GenderEnum
+
+from app.schemas.dates import UTCDateTime
+from app.utils.constants import AppointmentStatusEnum, GenderEnum, PaymentStatusEnum
 
 
 # NormalUser Base View for Appointments
@@ -13,31 +16,31 @@ class NormalUserAppointmentView(BaseModel):
     gender: Optional[GenderEnum] = None
     profile_pic: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
+
 
 class CounsellorAppointmentView(BaseModel):
     user_id: str
     name: str
     gender: Optional[GenderEnum] = None
     profile_pic: Optional[str] = None
-    
+
     # Platform engagement
     average_rating: float = 0.0
     total_reviews: int = 0
     is_featured: bool = False
-    
-    class Config:
-        from_attributes = True
+
+    model_config = {"from_attributes": True}
+
 
 class SessionAppointmentView(BaseModel):
     session_id: str
-    session_scheduled_at: datetime
-    session_expires_at: datetime
-    
-    class Config:
-        from_attributes = True
-        
+    session_scheduled_at: UTCDateTime
+    session_expires_at: UTCDateTime
+
+    model_config = {"from_attributes": True}
+
+
 class AppointmentBase(BaseModel):
     appointment_id: str
     status: AppointmentStatusEnum
@@ -49,27 +52,25 @@ class AppointmentBase(BaseModel):
     user: NormalUserAppointmentView
     counsellor: CounsellorAppointmentView
 
-    class Config:
-        from_attributes = True
-        
+    model_config = {"from_attributes": True}
+
+
 class CreateAppointmentRequest(BaseModel):
     counsellor_id: str
     availability_slot_id: str
     reason: Optional[str] = None
     payment_id: Optional[str] = None
 
+
 class CreateAppointmentResponse(BaseModel):
     message: str
     appointment: AppointmentBase
-    
+
+
 class AppointmentListResponse(BaseModel):
     total_count: int
     appointments: List[AppointmentBase]
 
-class UpdateAppointmentRequest(BaseModel):
-    appointment_id: str
-    payment_id: str
-    status: Optional[AppointmentStatusEnum] = None
 
 class CancelAppointmentResponse(BaseModel):
     message: str
@@ -77,14 +78,3 @@ class CancelAppointmentResponse(BaseModel):
     cancelled_at: datetime
     refund_status: str = PaymentStatusEnum.pending
     refund_payment_id: Optional[str] = None
-
-class AppointmentFilterQuery(BaseModel):
-    user_id: Optional[str] = None
-    counsellor_id: Optional[str] = None
-    status: Optional[AppointmentStatusEnum] = None
-    from_date: Optional[datetime] = None
-    to_date: Optional[datetime] = None
-    include_past: bool = False
-    include_cancelled: bool = False
-    limit: Optional[int] = 10
-    offset: Optional[int] = 0

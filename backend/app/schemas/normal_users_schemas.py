@@ -1,12 +1,16 @@
-# app/schemas/normal_users_schemas.py
+"""Request validation and response models for normal users."""
+
+from datetime import datetime
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, List, Literal
-from datetime import datetime
+
+from app.schemas.dates import UTCDateTime
+from app.schemas.pagination import Pagination
 from app.utils.constants import GenderEnum, UserTypeEnum
 
 UserSortBy = Literal["created_at", "name", "last_login_at"]
-SortOrder = Literal["asc", "desc"]
+
 
 class NormalUserBase(BaseModel):
     user_type: UserTypeEnum = UserTypeEnum.normal_user
@@ -41,12 +45,12 @@ class NormalUserBase(BaseModel):
     is_phone_verified: bool = False
     terms_accepted: bool = False
     privacy_policy_accepted: bool = False
-    last_login_at: Optional[datetime]
+    last_login_at: Optional[UTCDateTime]
     total_sessions_attended: int = 0
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
+
 
 class UserUpdateRequest(BaseModel):
     name: Optional[str] = None
@@ -73,11 +77,13 @@ class UserUpdateRequest(BaseModel):
     mental_health_history: Optional[str] = None
     therapy_goals: Optional[str] = None
 
+
 class UserUpdateResponse(BaseModel):
     message: str
     user: NormalUserBase
 
-class UserFilterQuery(BaseModel):
+
+class UserFilterQuery(Pagination):
     user_id: Optional[str] = None
     name: Optional[str] = None
     email: Optional[str] = None
@@ -86,41 +92,47 @@ class UserFilterQuery(BaseModel):
     is_email_verified: Optional[bool] = None
     is_phone_verified: Optional[bool] = None
     preferred_languages: Optional[List[str]] = None
-    primary_concerns: Optional[List[str]] = None
     country: Optional[str] = None
     state: Optional[str] = None
     city: Optional[str] = None
 
-    sort_by: Optional[UserSortBy] = "created_at"
-    sort_order: Optional[SortOrder] = "desc"
-    limit: Optional[int] = 10
-    offset: Optional[int] = 0
+    sort_by: UserSortBy = "created_at"
+
+
+class UserDirectoryEntry(BaseModel):
+    """Account management must not expose a patient's clinical intake."""
+
+    user_id: str
+    name: str
+    email: Optional[EmailStr] = None
+    is_email_verified: bool = False
+    is_phone_verified: bool = False
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
 
 class UserListResponse(BaseModel):
     total: int
     limit: Optional[int] = 10
     offset: Optional[int] = 0
-    users: List[NormalUserBase]
+    users: List[UserDirectoryEntry]
+
 
 # Additional Schemas
 class CounsellingSessionResponse(BaseModel):
     session_id: str
-    session_scheduled_at: datetime
-    session_expires_at: Optional[datetime] = None
+    session_scheduled_at: UTCDateTime
+    session_expires_at: Optional[UTCDateTime] = None
     counsellor_id: str
-    
-    model_config = {
-        "from_attributes": True
-    }
+
+    model_config = {"from_attributes": True}
+
 
 class DashboardOverviewResponse(BaseModel):
     user: NormalUserBase
     chat_sessions_count: int
     total_sessions: int
     total_messages: int
-    last_active: Optional[datetime] = None
+    last_active: Optional[UTCDateTime] = None
     upcoming_sessions: List[CounsellingSessionResponse]
-
-
-class SentimentTrendsResponse(BaseModel):
-    trends: List[dict]

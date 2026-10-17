@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axiosInstance from '../../utils/axiosInstance';
 
 const SessionNotes = () => {
   const navigate = useNavigate();
-  
+
   const [takeaways, setTakeaways] = useState([]);
   const [newTakeaway, setNewTakeaway] = useState('');
-  
+
   const [mood, setMood] = useState(null);
   const [notes, setNotes] = useState('');
 
@@ -30,32 +30,45 @@ const SessionNotes = () => {
     if ((!notes.trim() && !takeaways.length) || saving) return;
     setSaving(true);
     try {
-      await axiosInstance.post('/user/tracking/journal', { text: [notes.trim(), mood ? `Self-reported mood: ${mood}` : '', ...takeaways].filter(Boolean).join('\n') });
+      await axiosInstance.post('/user/tracking/journal', {
+        text: [notes.trim(), mood ? `Self-reported mood: ${mood}` : '', ...takeaways]
+          .filter(Boolean)
+          .join('\n'),
+      });
       toast.success('Reflection saved to your journal.');
       navigate('/journal');
-    } catch { toast.error('Your reflection could not be saved. Please try again.'); }
-    finally { setSaving(false); }
+    } catch {
+      toast.error('Your reflection could not be saved. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="max-w-7xl mx-auto py-8 font-body-md text-on-surface">
-      
       <div className="flex justify-between items-center mb-8 border-b border-outline pb-6">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center mr-2 hover:bg-surface-container rounded-full">
+          <button
+            onClick={() => navigate(-1)}
+            className="w-10 h-10 flex items-center justify-center mr-2 hover:bg-surface-container rounded-full"
+          >
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
           <div className="h-10 w-10 rounded-full border-outline overflow-hidden bg-surface flex items-center justify-center text-xl font-bold">
             P
           </div>
           <div>
-            <h2 className="font-headline-sm text-headline-sm text-ink-black font-bold">Personal session reflection</h2>
-            <p className="font-label-md text-label-md text-on-surface-variant">Save your own notes to your journal</p>
+            <h2 className="font-headline-sm text-headline-sm text-ink-black font-bold">
+              Personal session reflection
+            </h2>
+            <p className="font-label-md text-label-md text-on-surface-variant">
+              Save your own notes to your journal
+            </p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={handleSaveNotes}
             className="px-6 py-3 bg-primary text-white font-label-bold text-label-md rounded-xl neo-border shadow-subtle active:scale-[0.98] hover:bg-primary-container transition-all"
           >
@@ -65,13 +78,17 @@ const SessionNotes = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
         {/* Reflections Editor (Main Column) */}
         <section className="col-span-1 lg:col-span-8 flex flex-col gap-6">
           <div className="bg-white p-8 rounded-xl neo-border min-h-[500px] flex flex-col">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-headline-sm text-headline-sm text-ink-black flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
+                <span
+                  className="material-symbols-outlined text-primary"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  edit_note
+                </span>
                 Reflections
               </h3>
               <div className="flex gap-2">
@@ -86,55 +103,65 @@ const SessionNotes = () => {
                 </button>
               </div>
             </div>
-            
-            <textarea 
+
+            <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="flex-grow w-full border-none focus:ring-0 text-lg font-body-lg text-on-surface resize-none leading-relaxed placeholder:text-on-surface-variant/50 outline-none" 
+              className="flex-grow w-full border-none focus:ring-0 text-lg font-body-lg text-on-surface resize-none leading-relaxed placeholder:text-on-surface-variant/50 outline-none"
               placeholder="Start typing your thoughts, feelings, and insights from today's session here..."
             ></textarea>
-            
+
             <div className="mt-8 pt-6 border-t-[1.5px] border-outline border-dashed flex justify-between items-center text-on-surface-variant">
               <span className="font-label-md text-label-md">Auto-saved just now</span>
               <div className="flex gap-4">
-                <span className="font-label-md text-label-md">{notes.split(/\s+/).filter(w => w.length > 0).length} words</span>
+                <span className="font-label-md text-label-md">
+                  {notes.split(/\s+/).filter((w) => w.length > 0).length} words
+                </span>
                 <span className="font-label-md text-label-md">{notes.length} characters</span>
               </div>
             </div>
           </div>
-          
+
           {/* Post-Session Mood Section */}
           <div className="bg-accent-sage p-8 rounded-xl neo-border flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <h4 className="font-headline-sm text-headline-sm text-ink-black">Patient's State</h4>
-              <p className="font-body-md text-body-md text-on-surface-variant">How is the patient feeling post-session?</p>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                How is the patient feeling post-session?
+              </p>
             </div>
             <div className="flex gap-4">
-              <button 
+              <button
                 onClick={() => setMood('subdued')}
                 className={`group flex flex-col items-center gap-2 p-4 bg-white border-outline rounded-2xl active:scale-[0.98] transition-all ${mood === 'subdued' ? 'bg-surface translate-y-[2px] shadow-none' : 'shadow-subtle hover:bg-surface-container-low'}`}
               >
-                <span className="text-4xl"><span className="material-symbols-outlined text-xl">sentiment_dissatisfied</span></span>
+                <span className="text-4xl">
+                  <span className="material-symbols-outlined text-xl">sentiment_dissatisfied</span>
+                </span>
                 <span className="font-label-bold text-label-md">Subdued</span>
               </button>
-              <button 
+              <button
                 onClick={() => setMood('neutral')}
                 className={`group flex flex-col items-center gap-2 p-4 bg-white border-outline rounded-2xl active:scale-[0.98] transition-all ${mood === 'neutral' ? 'bg-secondary-container translate-y-[2px] shadow-none' : 'shadow-subtle hover:bg-surface-container-low'}`}
               >
-                <span className="text-4xl"><span className="material-symbols-outlined text-xl">sentiment_neutral</span></span>
+                <span className="text-4xl">
+                  <span className="material-symbols-outlined text-xl">sentiment_neutral</span>
+                </span>
                 <span className="font-label-bold text-label-md">Neutral</span>
               </button>
-              <button 
+              <button
                 onClick={() => setMood('relieved')}
                 className={`group flex flex-col items-center gap-2 p-4 bg-white border-outline rounded-2xl active:scale-[0.98] transition-all ${mood === 'relieved' ? 'bg-accent-sage translate-y-[2px] shadow-none' : 'shadow-subtle hover:bg-surface-container-low'}`}
               >
-                <span className="text-4xl"><span className="material-symbols-outlined text-xl">sentiment_satisfied</span></span>
+                <span className="text-4xl">
+                  <span className="material-symbols-outlined text-xl">sentiment_satisfied</span>
+                </span>
                 <span className="font-label-bold text-label-md">Relieved</span>
               </button>
             </div>
           </div>
         </section>
-        
+
         {/* Side Panel (Key Takeaways) */}
         <aside className="col-span-1 lg:col-span-4 flex flex-col gap-6">
           <div className="bg-surface p-8 rounded-xl neo-border flex flex-col gap-6">
@@ -142,41 +169,50 @@ const SessionNotes = () => {
               <span className="material-symbols-outlined text-primary">auto_awesome</span>
               Key Takeaways
             </h3>
-            
+
             <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto pr-2">
               {takeaways.map((takeaway, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-xl neo-border flex gap-3 shadow-subtle">
+                <div
+                  key={idx}
+                  className="bg-white p-4 rounded-xl neo-border flex gap-3 shadow-subtle"
+                >
                   <span className="material-symbols-outlined text-primary">circle</span>
                   <p className="font-body-md text-body-md">{takeaway}</p>
                 </div>
               ))}
             </div>
-            
+
             <div className="mt-4">
               <div className="relative">
-                <input 
+                <input
                   value={newTakeaway}
                   onChange={(e) => setNewTakeaway(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="w-full bg-white border-outline rounded-xl px-4 py-3 pr-12 focus:ring-0 focus:shadow-subtle outline-none transition-all" 
-                  placeholder="Add takeaway..." 
+                  className="w-full bg-white border-outline rounded-xl px-4 py-3 pr-12 focus:ring-0 focus:shadow-subtle outline-none transition-all"
+                  placeholder="Add takeaway..."
                   type="text"
                 />
-                <button 
+                <button
                   onClick={handleAddTakeaway}
                   className="absolute right-2 top-2 p-1.5 bg-primary text-white rounded-lg active:scale-[0.98] hover:bg-primary-container"
                 >
                   <span className="material-symbols-outlined">add</span>
                 </button>
               </div>
-              <p className="mt-3 text-xs text-on-surface-variant italic">Press enter or click '+' to save a quick point.</p>
+              <p className="mt-3 text-xs text-on-surface-variant italic">
+                Press enter or click '+' to save a quick point.
+              </p>
             </div>
           </div>
-          
+
           {/* Session Context Card */}
           <div className="bg-white p-8 rounded-xl border-outline border-dashed">
-            <h4 className="font-label-bold text-label-md text-on-surface-variant uppercase tracking-wider mb-4">Therapist Prompt</h4>
-            <p className="font-body-md text-body-md text-on-surface">"Think about one way you can be more compassionate toward yourself this week."</p>
+            <h4 className="font-label-bold text-label-md text-on-surface-variant uppercase tracking-wider mb-4">
+              Therapist Prompt
+            </h4>
+            <p className="font-body-md text-body-md text-on-surface">
+              "Think about one way you can be more compassionate toward yourself this week."
+            </p>
             <div className="mt-6 flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
               <span className="material-symbols-outlined text-secondary">lightbulb</span>
               <span className="font-label-md text-label-md">Related Topic: Self-Compassion</span>

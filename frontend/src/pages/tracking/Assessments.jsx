@@ -1,6 +1,6 @@
 // src/pages/Assessments.jsx
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 import styles from './Assessments.module.css';
 
@@ -16,7 +16,6 @@ const Assessments = () => {
   const fetchQuestions = async (type) => {
     try {
       const res = await axiosInstance.get(`/assessments/${type}`);
-      console.log('Fetched questions:', res.data.questions); // <span className="material-symbols-outlined text-sm">search</span> Debug
       setAssessmentType(type);
       setQuestions(res.data.questions);
       setCurrentQuestionIndex(0);
@@ -35,7 +34,10 @@ const Assessments = () => {
     if (index > -1) {
       updated[index].selected_option_score = selectedScore;
     } else {
-      updated.push({ question_id: questionId, selected_option_score: selectedScore });
+      updated.push({
+        question_id: questionId,
+        selected_option_score: selectedScore,
+      });
     }
     setAnswers(updated);
     setErrorMessage('');
@@ -43,7 +45,7 @@ const Assessments = () => {
 
   const handleNext = async () => {
     const current = questions[currentQuestionIndex];
-    const selected = answers.find(a => a.question_id === current.id);
+    const selected = answers.find((a) => a.question_id === current.id);
 
     if (!selected) {
       setErrorMessage('Please select an option before proceeding.');
@@ -51,23 +53,19 @@ const Assessments = () => {
     }
 
     if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex((prev) => prev + 1);
     } else {
       try {
-        const formattedAnswers = answers.map(answer => ({
+        const formattedAnswers = answers.map((answer) => ({
           question_id: answer.question_id,
-          selected_option_score: answer.selected_option_score
+          selected_option_score: answer.selected_option_score,
         }));
-        
+
         const payload = { responses: formattedAnswers };
 
         // <span className="material-symbols-outlined text-sm">search</span> Debug: Check payload structure
-        console.log('Submitting payload:', JSON.stringify(payload, null, 2));
 
-        const res = await axiosInstance.post(
-          `/assessments/score/${assessmentType}`,
-          payload
-        );
+        const res = await axiosInstance.post(`/assessments/score/${assessmentType}`, payload);
 
         // Make sure we're getting a valid score object before setting it
         if (res.data && typeof res.data === 'object') {
@@ -81,10 +79,10 @@ const Assessments = () => {
         if (err.response) {
           console.error('Server responded with:', err.response.data);
           // Safely extract error message without directly using the error object
-          const errorDetail = err.response.data?.detail 
-            ? (typeof err.response.data.detail === 'string' 
-                ? err.response.data.detail 
-                : JSON.stringify(err.response.data.detail))
+          const errorDetail = err.response.data?.detail
+            ? typeof err.response.data.detail === 'string'
+              ? err.response.data.detail
+              : JSON.stringify(err.response.data.detail)
             : 'There was a problem submitting your answers.';
           setErrorMessage(errorDetail);
         } else if (err.request) {
@@ -100,7 +98,7 @@ const Assessments = () => {
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
+      setCurrentQuestionIndex((prev) => prev - 1);
       setErrorMessage('');
     }
   };
@@ -134,18 +132,21 @@ const Assessments = () => {
         </button>
       </div>
 
-
       {score && score.final_score !== undefined ? (
         <div className={styles.scoreResults}>
           <h3>Assessment Results</h3>
-          <p>Final Score: {score.final_score} / {score.max_score || 'N/A'}</p>
+          <p>
+            Final Score: {score.final_score} / {score.max_score || 'N/A'}
+          </p>
           <p>Feedback: {score.result ? capitalize(score.result) : 'No feedback available'}</p>
           {score.score_breakdown && typeof score.score_breakdown === 'object' && (
             <div>
               <h4>Score Breakdown:</h4>
               <ul>
                 {Object.entries(score.score_breakdown).map(([key, val]) => (
-                  <li key={key}><strong>{capitalize(key)}</strong>: {val}</li>
+                  <li key={key}>
+                    <strong>{capitalize(key)}</strong>: {val}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -164,7 +165,7 @@ const Assessments = () => {
                 const isSelected = answers.some(
                   (a) =>
                     a.question_id === questions[currentQuestionIndex].id &&
-                    a.selected_option_score === option.score
+                    a.selected_option_score === option.score,
                 );
 
                 return (
@@ -175,10 +176,7 @@ const Assessments = () => {
                       name={`question-${questions[currentQuestionIndex].id}`}
                       checked={isSelected}
                       onChange={() =>
-                        handleOptionSelect(
-                          questions[currentQuestionIndex].id,
-                          option.score
-                        )
+                        handleOptionSelect(questions[currentQuestionIndex].id, option.score)
                       }
                     />
                     <label htmlFor={`q-${questions[currentQuestionIndex].id}-opt-${idx}`}>
@@ -192,19 +190,14 @@ const Assessments = () => {
             {errorMessage && (
               <div className={styles.errorMsg}>
                 <p>Error: {errorMessage}</p>
-                <button 
-                  onClick={() => setErrorMessage('')}
-                  className={styles.dismissBtn}
-                >
+                <button onClick={() => setErrorMessage('')} className={styles.dismissBtn}>
                   Dismiss
                 </button>
               </div>
             )}
 
             <div className={styles.navigationBtns}>
-              {currentQuestionIndex > 0 && (
-                <button onClick={handlePrevious}>Previous</button>
-              )}
+              {currentQuestionIndex > 0 && <button onClick={handlePrevious}>Previous</button>}
               <button onClick={handleNext}>
                 {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Submit'}
               </button>

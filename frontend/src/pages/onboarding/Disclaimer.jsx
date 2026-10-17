@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Disclaimer = () => {
@@ -23,22 +23,28 @@ const Disclaimer = () => {
           </div>
 
           {/* Heading */}
-          <h1 className="font-display-lg text-3xl md:text-4xl text-on-surface font-bold mb-4">Clinical Safety Notice</h1>
-          
+          <h1 className="font-display-lg text-3xl md:text-4xl text-on-surface font-bold mb-4">
+            Clinical Safety Notice
+          </h1>
+
           {/* Warning Box */}
           <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
             <p className="text-xs md:text-sm text-amber-900 font-semibold leading-relaxed">
-              SarvUday is a supportive tele-counselling &amp; mental well-being platform, NOT a replacement for emergency psychiatric interventions or acute crisis stabilization.
+              SarvUday is a supportive tele-counselling &amp; mental well-being platform, NOT a
+              replacement for emergency psychiatric interventions or acute crisis stabilization.
             </p>
           </div>
 
           {/* Explanation Text */}
           <div className="max-w-xl space-y-3 mb-10 text-on-surface-variant text-sm leading-relaxed">
             <p>
-              The personalized reflections, mood analytics, and companion dialogues are created to foster emotional insight and self-care.
+              The personalized reflections, mood analytics, and companion dialogues are created to
+              foster emotional insight and self-care.
             </p>
             <p>
-              If you or someone you know is experiencing acute emotional crisis, severe panic, or thoughts of self-harm, please reach out directly to emergency responders or 24/7 crisis helplines.
+              If you or someone you know is experiencing acute emotional crisis, severe panic, or
+              thoughts of self-harm, please reach out directly to emergency responders or 24/7
+              crisis helplines.
             </p>
           </div>
 
@@ -72,7 +78,9 @@ const Disclaimer = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg text-ink-black">24/7 Emergency Helplines</h3>
-                <p className="text-xs text-on-surface-variant">Confidential, toll-free, immediate human support.</p>
+                <p className="text-xs text-on-surface-variant">
+                  Confidential, toll-free, immediate human support.
+                </p>
               </div>
             </div>
 
@@ -82,7 +90,10 @@ const Disclaimer = () => {
                   <p className="font-bold text-stone-900 text-sm">Tele-MANAS (Govt of India)</p>
                   <p className="text-stone-500">National Tele Mental Health Programme</p>
                 </div>
-                <a href="tel:14416" className="px-3 py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-xs">
+                <a
+                  href="tel:14416"
+                  className="px-3 py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-xs"
+                >
                   Call 14416
                 </a>
               </div>
@@ -92,7 +103,10 @@ const Disclaimer = () => {
                   <p className="font-bold text-stone-900 text-sm">Vandrevala Foundation</p>
                   <p className="text-stone-500">24/7 Multilingual Crisis Helpline</p>
                 </div>
-                <a href="tel:+919999666555" className="px-3 py-1.5 bg-primary text-white font-bold rounded-lg text-xs">
+                <a
+                  href="tel:+919999666555"
+                  className="px-3 py-1.5 bg-primary text-white font-bold rounded-lg text-xs"
+                >
                   +91 9999 666 555
                 </a>
               </div>
@@ -102,7 +116,10 @@ const Disclaimer = () => {
                   <p className="font-bold text-stone-900 text-sm">International Crisis Lifeline</p>
                   <p className="text-stone-500">USA &amp; Global Routing</p>
                 </div>
-                <a href="tel:988" className="px-3 py-1.5 bg-rose-600 text-white font-bold rounded-lg text-xs">
+                <a
+                  href="tel:988"
+                  className="px-3 py-1.5 bg-rose-600 text-white font-bold rounded-lg text-xs"
+                >
                   Call 988
                 </a>
               </div>

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { auth } from '../../config/firebase';
 import { confirmPasswordReset } from 'firebase/auth';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import sarvudayLogo from '../../assets/sarvuday_logo.png';
+import { auth } from '../../config/firebase';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -11,7 +11,7 @@ const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -79,69 +79,128 @@ const ResetPassword = () => {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'var(--color-background)',
-      padding: '24px',
-    }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'var(--color-background)',
+        padding: '24px',
+      }}
+    >
       <div style={{ width: '100%', maxWidth: '440px' }}>
-        <div style={{
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-xl)',
-          padding: '40px 32px',
-          boxShadow: 'var(--shadow-card)',
-        }}>
+        <div
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-xl)',
+            padding: '40px 32px',
+            boxShadow: 'var(--shadow-card)',
+          }}
+        >
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '20px', textDecoration: 'none' }}>
-              <img src={sarvudayLogo} alt="SarvUday" style={{ width: '38px', height: '38px', borderRadius: '10px', objectFit: 'contain', padding: '2px', border: '1px solid var(--border-color)', backgroundColor: 'var(--color-surface)' }} />
-              <span style={{ fontWeight: 600, fontSize: '18px', color: 'var(--color-on-surface)', letterSpacing: '-0.02em' }}>SarvUday</span>
+            <Link
+              to="/"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '20px',
+                textDecoration: 'none',
+              }}
+            >
+              <img
+                src={sarvudayLogo}
+                alt="SarvUday"
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  objectFit: 'contain',
+                  padding: '2px',
+                  border: '1px solid var(--border-color)',
+                  backgroundColor: 'var(--color-surface)',
+                }}
+              />
+              <span
+                style={{
+                  fontWeight: 600,
+                  fontSize: '18px',
+                  color: 'var(--color-on-surface)',
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                SarvUday
+              </span>
             </Link>
-            <div style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--color-sage-bg)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 20px',
-            }}>
-              <span className="material-symbols-rounded" style={{
-                fontSize: '24px',
-                color: 'var(--color-sage-text)',
-                fontVariationSettings: "'FILL' 1",
-              }}>key</span>
+            <div
+              style={{
+                width: '52px',
+                height: '52px',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: 'var(--color-sage-bg)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 20px',
+              }}
+            >
+              <span
+                className="material-symbols-rounded"
+                style={{
+                  fontSize: '24px',
+                  color: 'var(--color-sage-text)',
+                  fontVariationSettings: "'FILL' 1",
+                }}
+              >
+                key
+              </span>
             </div>
 
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '24px',
-              fontWeight: 700,
-              color: 'var(--color-on-surface)',
-              letterSpacing: '-0.025em',
-              marginBottom: '8px',
-            }}>Create new password</h1>
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '24px',
+                fontWeight: 700,
+                color: 'var(--color-on-surface)',
+                letterSpacing: '-0.025em',
+                marginBottom: '8px',
+              }}
+            >
+              Create new password
+            </h1>
 
-            <p style={{
-              fontSize: '14px',
-              color: 'var(--color-on-surface-variant)',
-              lineHeight: '1.6',
-            }}>Choose a strong password for your account.</p>
+            <p
+              style={{
+                fontSize: '14px',
+                color: 'var(--color-on-surface-variant)',
+                lineHeight: '1.6',
+              }}
+            >
+              Choose a strong password for your account.
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+          >
             <div style={inputGroupStyle}>
-              <label htmlFor="new-password" style={{
-                fontSize: '13px',
-                fontWeight: 500,
-                color: 'var(--color-on-surface)',
-              }}>New password</label>
+              <label
+                htmlFor="new-password"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  color: 'var(--color-on-surface)',
+                }}
+              >
+                New password
+              </label>
               <div style={inputWrapperStyle}>
-                <span className="material-symbols-rounded" style={iconStyle}>lock</span>
+                <span className="material-symbols-rounded" style={iconStyle}>
+                  lock
+                </span>
                 <input
                   className="input-field"
                   id="new-password"
@@ -152,7 +211,11 @@ const ResetPassword = () => {
                   required
                   style={{ paddingLeft: '42px', paddingRight: '42px' }}
                 />
-                <button onClick={() => setShowPassword(!showPassword)} style={toggleBtnStyle} type="button">
+                <button
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={toggleBtnStyle}
+                  type="button"
+                >
                   <span className="material-symbols-rounded" style={{ fontSize: '18px' }}>
                     {showPassword ? 'visibility_off' : 'visibility'}
                   </span>
@@ -161,13 +224,20 @@ const ResetPassword = () => {
             </div>
 
             <div style={inputGroupStyle}>
-              <label htmlFor="confirm-password" style={{
-                fontSize: '13px',
-                fontWeight: 500,
-                color: 'var(--color-on-surface)',
-              }}>Confirm password</label>
+              <label
+                htmlFor="confirm-password"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  color: 'var(--color-on-surface)',
+                }}
+              >
+                Confirm password
+              </label>
               <div style={inputWrapperStyle}>
-                <span className="material-symbols-rounded" style={iconStyle}>lock_reset</span>
+                <span className="material-symbols-rounded" style={iconStyle}>
+                  lock_reset
+                </span>
                 <input
                   className="input-field"
                   id="confirm-password"
@@ -178,7 +248,11 @@ const ResetPassword = () => {
                   required
                   style={{ paddingLeft: '42px', paddingRight: '42px' }}
                 />
-                <button onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={toggleBtnStyle} type="button">
+                <button
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={toggleBtnStyle}
+                  type="button"
+                >
                   <span className="material-symbols-rounded" style={{ fontSize: '18px' }}>
                     {showConfirmPassword ? 'visibility_off' : 'visibility'}
                   </span>
@@ -194,17 +268,24 @@ const ResetPassword = () => {
             >
               {isLoading ? 'Resetting…' : 'Reset password'}
               {!isLoading && (
-                <span className="material-symbols-rounded" style={{ fontSize: '18px' }}>arrow_forward</span>
+                <span className="material-symbols-rounded" style={{ fontSize: '18px' }}>
+                  arrow_forward
+                </span>
               )}
             </button>
 
             <div style={{ textAlign: 'center', paddingTop: '8px' }}>
-              <Link to="/login" style={{
-                fontSize: '13px',
-                fontWeight: 500,
-                color: 'var(--color-on-surface-variant)',
-                transition: 'color 0.15s ease',
-              }}>Back to login</Link>
+              <Link
+                to="/login"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  color: 'var(--color-on-surface-variant)',
+                  transition: 'color 0.15s ease',
+                }}
+              >
+                Back to login
+              </Link>
             </div>
           </form>
         </div>

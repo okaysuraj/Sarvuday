@@ -1,7 +1,13 @@
 import { apiClient as api } from './client';
 
 export const trackingApi = {
-  logMood: async (data: { moodIndex: number, energy_level?: number, anxiety_level?: number, sleep_quality?: string, notes?: string }) => {
+  logMood: async (data: {
+    moodIndex: number;
+    energy_level?: number;
+    anxiety_level?: number;
+    sleep_quality?: string;
+    notes?: string;
+  }) => {
     const response = await api.post('/user/tracking/mood', data);
     return response.data;
   },
@@ -21,7 +27,7 @@ export const trackingApi = {
     return response.data;
   },
 
-  logSleep: async (data: { date: string, duration_hours: number, quality: string }) => {
+  logSleep: async (data: { date: string; duration_hours: number; quality: string }) => {
     const response = await api.post('/user/tracking/sleep', data);
     return response.data;
   },
@@ -41,7 +47,13 @@ export const trackingApi = {
     return response.data;
   },
 
-  addMedication: async (data: { name: string, dosage?: string, schedule?: string, refill_days?: number, type?: string }) => {
+  addMedication: async (data: {
+    name: string;
+    dosage?: string;
+    schedule?: string;
+    refill_days?: number;
+    type?: string;
+  }) => {
     const response = await api.post('/user/tracking/medications', data);
     return response.data;
   },
@@ -49,5 +61,5 @@ export const trackingApi = {
   getGoals: async () => {
     const response = await api.get('/user/tracking/goals');
     return response.data;
-  }
+  },
 };

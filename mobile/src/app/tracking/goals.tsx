@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { trackingApi } from '../../api/tracking';
 
 interface Goal {
@@ -32,17 +32,53 @@ export default function GoalsTrackingScreen() {
         setGoals(data);
       } else {
         setGoals([
-          { id: '1', title: 'Guided Breathing', progress_total: 1, progress_current: 1, frequency: 'Daily' },
-          { id: '2', title: 'Daily Journaling', progress_total: 7, progress_current: 4, frequency: 'Weekly' },
-          { id: '3', title: 'Sleep 8 Hours', progress_total: 7, progress_current: 5, frequency: 'Weekly' },
+          {
+            id: '1',
+            title: 'Guided Breathing',
+            progress_total: 1,
+            progress_current: 1,
+            frequency: 'Daily',
+          },
+          {
+            id: '2',
+            title: 'Daily Journaling',
+            progress_total: 7,
+            progress_current: 4,
+            frequency: 'Weekly',
+          },
+          {
+            id: '3',
+            title: 'Sleep 8 Hours',
+            progress_total: 7,
+            progress_current: 5,
+            frequency: 'Weekly',
+          },
         ]);
       }
     } catch (err) {
       console.error('Error fetching goals:', err);
       setGoals([
-        { id: '1', title: 'Guided Breathing', progress_total: 1, progress_current: 1, frequency: 'Daily' },
-        { id: '2', title: 'Daily Journaling', progress_total: 7, progress_current: 4, frequency: 'Weekly' },
-        { id: '3', title: 'Sleep 8 Hours', progress_total: 7, progress_current: 5, frequency: 'Weekly' },
+        {
+          id: '1',
+          title: 'Guided Breathing',
+          progress_total: 1,
+          progress_current: 1,
+          frequency: 'Daily',
+        },
+        {
+          id: '2',
+          title: 'Daily Journaling',
+          progress_total: 7,
+          progress_current: 4,
+          frequency: 'Weekly',
+        },
+        {
+          id: '3',
+          title: 'Sleep 8 Hours',
+          progress_total: 7,
+          progress_current: 5,
+          frequency: 'Weekly',
+        },
       ]);
     } finally {
       setLoading(false);
@@ -62,7 +98,9 @@ export default function GoalsTrackingScreen() {
 
       <ScrollView className="flex-1 px-6 pt-6">
         <View className="flex-row justify-between items-center mb-6">
-          <Text className="font-headline-md text-on-surface text-lg font-bold">This Week's Progress</Text>
+          <Text className="font-headline-md text-on-surface text-lg font-bold">
+            This Week's Progress
+          </Text>
           <TouchableOpacity onPress={loadGoals} className="bg-primary-fixed px-3 py-1 rounded-full">
             <Text className="text-on-primary-fixed font-label-bold text-xs">Refresh</Text>
           </TouchableOpacity>
@@ -79,36 +117,56 @@ export default function GoalsTrackingScreen() {
               const target = goal.progress_total || 1;
               const progress = (current / target) * 100;
               const isComplete = current >= target;
-              
+
               return (
-                <View key={goal.id} className="bg-surface-container-highest p-4 rounded-xl border border-outline-variant">
+                <View
+                  key={goal.id}
+                  className="bg-surface-container-highest p-4 rounded-xl border border-outline-variant"
+                >
                   <View className="flex-row justify-between items-center mb-3">
-                    <Text className="font-headline-md text-on-surface font-bold text-base">{goal.title}</Text>
+                    <Text className="font-headline-md text-on-surface font-bold text-base">
+                      {goal.title}
+                    </Text>
                     <Text className="font-body-md text-on-surface-variant text-sm">
                       {current} / {target} {goal.frequency || 'Weekly'}
                     </Text>
                   </View>
-                  
+
                   <View className="w-full bg-surface-variant h-2 rounded-full mb-4">
-                    <View 
-                      className={`h-2 rounded-full ${isComplete ? 'bg-secondary' : 'bg-primary'}`} 
-                      style={{ width: `${Math.min(100, Math.max(0, progress))}%` }} 
+                    <View
+                      className={`h-2 rounded-full ${isComplete ? 'bg-secondary' : 'bg-primary'}`}
+                      style={{
+                        width: `${Math.min(100, Math.max(0, progress))}%`,
+                      }}
                     />
                   </View>
 
                   {isComplete ? (
                     <View className="flex-row items-center">
                       <Ionicons name="trophy" size={16} color="#006d3a" className="mr-2" />
-                      <Text className="font-label-bold text-secondary text-xs uppercase">Goal Reached!</Text>
+                      <Text className="font-label-bold text-secondary text-xs uppercase">
+                        Goal Reached!
+                      </Text>
                     </View>
                   ) : (
                     <View className="flex-row items-center justify-between mt-2">
                       <TouchableOpacity className="flex-1 bg-surface py-2 rounded-lg items-center border border-outline-variant mr-2">
-                        <Text className="text-on-surface font-label-bold text-xs">{goal.frequency || 'Ongoing'}</Text>
+                        <Text className="text-on-surface font-label-bold text-xs">
+                          {goal.frequency || 'Ongoing'}
+                        </Text>
                       </TouchableOpacity>
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         onPress={() => {
-                          setGoals(prev => prev.map(g => g.id === goal.id ? { ...g, progress_current: Math.min(target, current + 1) } : g));
+                          setGoals((prev) =>
+                            prev.map((g) =>
+                              g.id === goal.id
+                                ? {
+                                    ...g,
+                                    progress_current: Math.min(target, current + 1),
+                                  }
+                                : g,
+                            ),
+                          );
                         }}
                         className="flex-1 bg-primary py-2 rounded-lg items-center"
                       >

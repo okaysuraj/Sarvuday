@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { CustomButton } from '../../components/CustomButton';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { CustomButton } from '../../components/forms/CustomButton';
 
 export default function CBTExerciseScreen() {
   const router = useRouter();
@@ -34,11 +42,16 @@ export default function CBTExerciseScreen() {
         <View className="h-1 bg-primary" style={{ width: `${(step / 4) * 100}%` }} />
       </View>
 
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1"
+      >
         <ScrollView className="flex-1 px-6 pt-6">
           {step === 1 && (
             <View>
-              <Text className="font-headline-md text-on-surface text-2xl font-bold mb-4">1. The Situation</Text>
+              <Text className="font-headline-md text-on-surface text-2xl font-bold mb-4">
+                1. The Situation
+              </Text>
               <Text className="font-body-md text-on-surface-variant mb-6">
                 What happened? Describe the event that triggered your negative thoughts.
               </Text>
@@ -56,7 +69,9 @@ export default function CBTExerciseScreen() {
 
           {step === 2 && (
             <View>
-              <Text className="font-headline-md text-on-surface text-2xl font-bold mb-4">2. Automatic Thoughts</Text>
+              <Text className="font-headline-md text-on-surface text-2xl font-bold mb-4">
+                2. Automatic Thoughts
+              </Text>
               <Text className="font-body-md text-on-surface-variant mb-6">
                 What thoughts went through your mind? What did this event mean to you?
               </Text>
@@ -74,7 +89,9 @@ export default function CBTExerciseScreen() {
 
           {step === 3 && (
             <View>
-              <Text className="font-headline-md text-on-surface text-2xl font-bold mb-4">3. Emotions</Text>
+              <Text className="font-headline-md text-on-surface text-2xl font-bold mb-4">
+                3. Emotions
+              </Text>
               <Text className="font-body-md text-on-surface-variant mb-6">
                 How did you feel? Rate the intensity of your emotions.
               </Text>
@@ -92,9 +109,12 @@ export default function CBTExerciseScreen() {
 
           {step === 4 && (
             <View>
-              <Text className="font-headline-md text-on-surface text-2xl font-bold mb-4">4. Reframing</Text>
+              <Text className="font-headline-md text-on-surface text-2xl font-bold mb-4">
+                4. Reframing
+              </Text>
               <Text className="font-body-md text-on-surface-variant mb-6">
-                Is there an alternative way to look at this? What is the evidence against your negative thought?
+                Is there an alternative way to look at this? What is the evidence against your
+                negative thought?
               </Text>
               <TextInput
                 className="bg-surface-container-highest rounded-xl p-4 font-body-md text-on-surface border border-outline-variant min-h-[150px]"
@@ -111,7 +131,7 @@ export default function CBTExerciseScreen() {
 
         <View className="p-6 border-t border-surface-variant bg-surface flex-row gap-4">
           {step > 1 && (
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setStep(step - 1)}
               className="px-6 py-4 rounded-full border border-primary justify-center"
             >
@@ -119,8 +139,8 @@ export default function CBTExerciseScreen() {
             </TouchableOpacity>
           )}
           <View className="flex-1">
-            <CustomButton 
-              title={step === 4 ? "Complete Exercise" : "Next Step"}
+            <CustomButton
+              title={step === 4 ? 'Complete Exercise' : 'Next Step'}
               onPress={nextStep}
             />
           </View>

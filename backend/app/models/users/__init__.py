@@ -1,5 +1,7 @@
+"""Account models for patients, counsellors and administrators."""
+
 from .admin import Admin
 from .counsellor import Counsellor
 from .normal_user import NormalUser
 
-__all__ = ['Admin', 'Counsellor', 'NormalUser']
+__all__ = ["Admin", "Counsellor", "NormalUser"]

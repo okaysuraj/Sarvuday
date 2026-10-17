@@ -1,1 +1,1 @@
-export { RecordedInsights as default } from '../../components/screens/RecordedScreens';
+export { InsightsScreen as default } from '../../components/screens/InsightsScreen';

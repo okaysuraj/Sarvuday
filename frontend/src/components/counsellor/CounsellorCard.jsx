@@ -1,7 +1,6 @@
-import React from 'react';
-import styles from './CounsellorCard.module.css';
-import BookAppointmentButton from '../booking/BookAppointmentButton';
 import { Link } from 'react-router-dom';
+import BookAppointmentButton from '../booking/BookAppointmentButton';
+import styles from './CounsellorCard.module.css';
 
 const CounsellorCard = ({ counsellor }) => {
   return (
@@ -17,21 +16,20 @@ const CounsellorCard = ({ counsellor }) => {
           <h3 className={styles.name}>{counsellor.name || 'Unknown Counsellor'}</h3>
           <span className={styles.specTitle}>{counsellor.specializations?.[0] || 'Therapist'}</span>
         </div>
-        
+
         <p className={styles.bio}>{counsellor.bio}</p>
-        
+
         <div className={styles.tags}>
           {(counsellor.specializations || []).slice(0, 4).map((s, i) => (
-            <span key={i} className={styles.tag}>{s}</span>
+            <span key={i} className={styles.tag}>
+              {s}
+            </span>
           ))}
         </div>
       </div>
 
       <div className={styles.actions}>
-        <Link
-          to={`/therapists/${counsellor.user_id}`}
-          className={styles.viewProfile}
-        >
+        <Link to={`/therapists/${counsellor.user_id}`} className={styles.viewProfile}>
           View Profile
         </Link>
         <BookAppointmentButton counsellorId={counsellor.user_id} />
@@ -41,5 +39,3 @@ const CounsellorCard = ({ counsellor }) => {
 };
 
 export default CounsellorCard;
-
-
