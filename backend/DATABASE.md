@@ -57,6 +57,34 @@ Do not run the baseline CREATE TABLE script over an existing deployment, and do 
 
 Promote the rehearsed migration only after the staging checks succeed. The new columns and historical clinical records are not automatically dropped by a downgrade; restore a tested backup when rollback requires reverting the schema.
 
+### Recovering `type "genderenum" already exists` during deployment
+
+This error means Alembic is running the baseline against a database that already contains schema objects. A database created by the former `create_all` startup code can have all application tables without an Alembic revision. Recreating the enum or skipping only that statement would leave the same problem for existing tables.
+
+After taking a backup and rehearsing on staging, verify the unversioned database from `backend`:
+
+```bash
+python -m scripts.adopt_legacy_postgres
+```
+
+The verifier builds the frozen baseline in a uniquely named reference schema inside a savepoint, compares PostgreSQL catalog definitions, and rolls back all reference objects before continuing. It checks all baseline tables, enum labels, columns/types/defaults/nullability, primary/unique/foreign/check constraints, indexes, and non-internal triggers. Unrelated tables are preserved. This requires permission to create schemas in the target database, as well as the normal migration permissions. The preview does not stamp the database or alter application records.
+
+To record the baseline after verification and then run pending migrations and MongoDB provisioning:
+
+```bash
+python -m scripts.prepare_deploy --adopt-legacy
+```
+
+For the existing Render service, set **Root Directory** to `backend` and **Build Command** to:
+
+```bash
+python -m pip install -r requirements.txt && python -m scripts.prepare_deploy --adopt-legacy
+```
+
+Set **Start Command** to `uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --ws-max-size 65536 --ws-max-queue 16`. Paid instances can put `python -m scripts.prepare_deploy --adopt-legacy` in Pre-Deploy Command instead and install dependencies only in Build Command.
+
+The adoption option records only revision `20261016_0001`, only when every baseline definition matches. The subsequent normal Alembic upgrade still runs revision `20261016_0002`. Drift or a partial schema stops deployment with differences to investigate; it does not stamp an unknown schema or delete existing objects. Already versioned databases skip adoption, so later deploys can reuse the command without downgrading their revision. Once adoption succeeds, the option can also be removed.
+
 ## Connection and resource budgets
 
 Each API worker defaults to at most 10 asynchronous PostgreSQL connections and 4 synchronous PostgreSQL connections. Multiply this by the worker count and leave capacity for migrations, monitoring and maintenance. Pools use checkout health checks and recycle old connections. Query timeout defaults to 15 seconds and pool checkout timeout to 15 seconds.

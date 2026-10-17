@@ -1,4 +1,5 @@
 """Apply database migrations and MongoDB provisioning before deploying the API."""
+import argparse
 from pathlib import Path
 import subprocess
 import sys
@@ -7,11 +8,18 @@ import sys
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 
 
-def main() -> int:
-    steps = (
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--adopt-legacy", action="store_true",
+                        help="Verify and record an existing unversioned PostgreSQL baseline before migrations")
+    args = parser.parse_args(argv)
+    steps = []
+    if args.adopt_legacy:
+        steps.append(("legacy PostgreSQL verification", ["-m", "scripts.adopt_legacy_postgres", "--apply"]))
+    steps.extend((
         ("PostgreSQL migrations", ["-m", "alembic", "upgrade", "head"]),
         ("MongoDB provisioning", ["-m", "scripts.provision_mongo", "--apply"]),
-    )
+    ))
     for label, arguments in steps:
         print(f"Running {label}...", flush=True)
         try:
