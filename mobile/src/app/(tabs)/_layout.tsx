@@ -1,6 +1,17 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 
+const secondaryScreens = [
+  'ai_chat',
+  'exercises',
+  'insights',
+  'journal',
+  'medication',
+  'mood',
+  'notifications',
+  'therapist_notes',
+];
+
 export default function TabLayout() {
   return (
     <Tabs
@@ -14,6 +25,9 @@ export default function TabLayout() {
         },
       }}
     >
+      {secondaryScreens.map((name) => (
+        <Tabs.Screen key={name} name={name} options={{ href: null }} />
+      ))}
       <Tabs.Screen
         name="index"
         options={{

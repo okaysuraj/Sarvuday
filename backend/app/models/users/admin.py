@@ -1,6 +1,6 @@
 """Relational records and relationships for admin."""
 
-from sqlalchemy import TIMESTAMP, Boolean, Column, DateTime, ForeignKey, Index, String
+from sqlalchemy import TIMESTAMP, Boolean, Column, ForeignKey, Index, String
 from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import relationship
 
@@ -30,7 +30,6 @@ class Admin(Base, BaseMixin):
     )
     email = Column(String(255), unique=True, nullable=False)
     phone_number = Column(String(15), unique=True, nullable=True)
-    hashed_password = Column(String(255), nullable=True)
     firebase_uid = Column(String(255), unique=True, nullable=True)
 
     # Profile information
@@ -47,7 +46,6 @@ class Admin(Base, BaseMixin):
     # Status and engagement tracking
     is_email_verified = Column(Boolean, default=False, nullable=False)
     is_phone_verified = Column(Boolean, default=False, nullable=False)
-    last_verification_sent_at = Column(DateTime, nullable=True)
     is_approved = Column(Boolean, default=False, nullable=False)
     last_login_at = Column(TIMESTAMP(timezone=True), nullable=True)
 

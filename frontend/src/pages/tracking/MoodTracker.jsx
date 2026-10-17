@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../utils/axiosInstance';
+import { api } from '../../utils/axiosInstance';
 import { moodValue, recordedStreak } from '../../utils/healthMetrics';
 
 const MoodTracker = () => {
@@ -30,9 +30,9 @@ const MoodTracker = () => {
     const fetchMoodHistory = async () => {
       try {
         setLoading(true);
-        const res = await axiosInstance.get('/user/tracking/mood/history');
-        if (Array.isArray(res.data)) {
-          setMoodLogs(res.data);
+        const res = await api.get('/user/tracking/mood/history');
+        if (Array.isArray(res)) {
+          setMoodLogs(res);
         }
       } catch (err) {
         console.error('Error fetching mood history:', err);

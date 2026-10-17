@@ -1,39 +1,16 @@
-import { apiClient as api } from './client';
+import type { components } from '../../../shared/api-types';
+import { api } from './client';
 
+type Schema = components['schemas'];
 export const communityApi = {
-  getGroups: async () => {
-    const response = await api.get('/community/groups');
-    return response.data;
-  },
-
-  getGroupFeed: async (groupId: string) => {
-    const response = await api.get(`/community/groups/${groupId}/feed`);
-    return response.data;
-  },
-
-  getFeed: async (groupId?: string) => {
-    if (groupId) {
-      const response = await api.get(`/community/groups/${groupId}/feed`);
-      return response.data;
-    }
-    const response = await api.get('/community/groups');
-    return response.data;
-  },
-
-  createPost: async (data: {
-    content: string;
-    is_anonymous: boolean;
-    has_trigger_warning: boolean;
-    group_id?: string;
-  }) => {
-    const response = await api.post('/community/posts', data);
-    return response.data;
-  },
-
-  interactWithPost: async (postId: string, action: 'hug' | 'relate' | 'like') => {
-    const response = await api.post(`/community/posts/${postId}/interact`, {
-      action,
-    });
-    return response.data;
-  },
+  getGroups: () => api.get('/community/groups'),
+  getGroupFeed: (group_id: string) =>
+    api.get('/community/groups/{group_id}/feed', { path: { group_id } }),
+  getFeed: (group_id?: string) =>
+    group_id
+      ? api.get('/community/groups/{group_id}/feed', { path: { group_id } })
+      : api.get('/community/feed'),
+  createPost: (body: Schema['PostCreate']) => api.post('/community/posts', { body }),
+  interactWithPost: (post_id: string, action: Schema['PostInteract']['action']) =>
+    api.post('/community/posts/{post_id}/interact', { path: { post_id }, body: { action } }),
 };

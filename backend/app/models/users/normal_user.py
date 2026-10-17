@@ -5,7 +5,6 @@ from sqlalchemy import (
     TIMESTAMP,
     Boolean,
     Column,
-    DateTime,
     ForeignKey,
     Index,
     Integer,
@@ -40,7 +39,6 @@ class NormalUser(Base, BaseMixin):
     )
     email = Column(String(255), unique=True, nullable=True)
     phone_number = Column(String(15), unique=True)
-    hashed_password = Column(String(255))
     firebase_uid = Column(String(255), unique=True)
 
     name = Column(String(255), nullable=False)
@@ -50,7 +48,6 @@ class NormalUser(Base, BaseMixin):
 
     is_email_verified = Column(Boolean, default=False)
     is_phone_verified = Column(Boolean, default=False)
-    last_verification_sent_at = Column(DateTime)
 
     preferred_languages = Column(JSON)
     primary_concerns = Column(JSON)

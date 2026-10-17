@@ -1,65 +1,19 @@
-import { apiClient as api } from './client';
+// Payloads and responses come from the backend contract shared with the web app.
+import type { components } from '../../../shared/api-types';
+import { api } from './client';
+type Schema = components['schemas'];
 
 export const trackingApi = {
-  logMood: async (data: {
-    moodIndex: number;
-    energy_level?: number;
-    anxiety_level?: number;
-    sleep_quality?: string;
-    notes?: string;
-  }) => {
-    const response = await api.post('/user/tracking/mood', data);
-    return response.data;
-  },
-
-  getMoodHistory: async () => {
-    const response = await api.get('/user/tracking/mood/history');
-    return response.data;
-  },
-
-  submitJournal: async (data: { text: string }) => {
-    const response = await api.post('/user/tracking/journal', data);
-    return response.data;
-  },
-
-  getJournalEntries: async () => {
-    const response = await api.get('/user/tracking/journal');
-    return response.data;
-  },
-
-  logSleep: async (data: { date: string; duration_hours: number; quality: string }) => {
-    const response = await api.post('/user/tracking/sleep', data);
-    return response.data;
-  },
-
-  getSleepHistory: async () => {
-    const response = await api.get('/user/tracking/sleep');
-    return response.data;
-  },
-
-  getMedications: async () => {
-    const response = await api.get('/user/tracking/medications');
-    return response.data;
-  },
-
-  toggleMedication: async (medId: string) => {
-    const response = await api.patch(`/user/tracking/medications/${medId}/toggle`);
-    return response.data;
-  },
-
-  addMedication: async (data: {
-    name: string;
-    dosage?: string;
-    schedule?: string;
-    refill_days?: number;
-    type?: string;
-  }) => {
-    const response = await api.post('/user/tracking/medications', data);
-    return response.data;
-  },
-
-  getGoals: async () => {
-    const response = await api.get('/user/tracking/goals');
-    return response.data;
-  },
+  logMood: (body: Schema['MoodCreate']) => api.post('/user/tracking/mood', { body }),
+  getMoodHistory: () => api.get('/user/tracking/mood/history'),
+  submitJournal: (body: Schema['JournalCreate']) => api.post('/user/tracking/journal', { body }),
+  getJournalEntries: () => api.get('/user/tracking/journal'),
+  logSleep: (body: Schema['SleepCreate']) => api.post('/user/tracking/sleep', { body }),
+  getSleepHistory: () => api.get('/user/tracking/sleep'),
+  getMedications: () => api.get('/user/tracking/medications'),
+  toggleMedication: (med_id: string) =>
+    api.patch('/user/tracking/medications/{med_id}/toggle', { path: { med_id } }),
+  addMedication: (body: Schema['MedicationCreate']) =>
+    api.post('/user/tracking/medications', { body }),
+  getGoals: () => api.get('/user/tracking/goals'),
 };

@@ -2,12 +2,8 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { apiClient } from '../api/client';
 
-export function errorMessage(error: unknown): string {
-  const detail = (error as any)?.response?.data?.detail;
-  return typeof detail === 'string'
-    ? detail
-    : (error as Error)?.message || 'Please check your connection and try again.';
-}
+export { apiErrorMessage as errorMessage } from '../../../shared/api';
+import { apiErrorMessage as errorMessage } from '../../../shared/api';
 
 /** Requests exist only while a screen is visible; rapid navigation cancels stale work. */
 export function useApiResource<T = any>(path: string | null) {

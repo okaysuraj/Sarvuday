@@ -6,8 +6,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.postgres import get_db
 from app.models.community import CommunityPost, SupportGroup
-from app.schemas.community_schemas import PostCreate, PostInteract
+from app.schemas.community_schemas import (
+    CommunityPostResponse,
+    PostCreate,
+    PostInteract,
+    SupportGroupResponse,
+)
 from app.schemas.records import record_fields
+from app.schemas.tracking_schemas import RecordCreated
 from app.utils.oauth import ensure_normal_user
 
 router = APIRouter(tags=["Community"])
@@ -45,7 +51,7 @@ async def feed(db, group_id, limit, offset):
     return [post_response(record) for record in records]
 
 
-@router.get("/groups")
+@router.get("/groups", response_model=list[SupportGroupResponse])
 async def get_support_groups(
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
@@ -64,7 +70,7 @@ async def get_support_groups(
     ]
 
 
-@router.get("/groups/{group_id}/feed")
+@router.get("/groups/{group_id}/feed", response_model=list[CommunityPostResponse])
 async def get_group_feed(
     group_id: str,
     limit: int = Query(50, ge=1, le=100),
@@ -76,7 +82,7 @@ async def get_group_feed(
     return await feed(db, group_id, limit, offset)
 
 
-@router.get("/feed")
+@router.get("/feed", response_model=list[CommunityPostResponse])
 async def get_general_feed(
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
@@ -86,7 +92,7 @@ async def get_general_feed(
     return await feed(db, None, limit, offset)
 
 
-@router.post("/posts", status_code=201)
+@router.post("/posts", status_code=201, response_model=RecordCreated)
 async def create_post(
     data: PostCreate,
     current_user=Depends(ensure_normal_user),

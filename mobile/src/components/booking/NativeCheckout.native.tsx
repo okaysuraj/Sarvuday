@@ -86,7 +86,7 @@ export default function NativeCheckout() {
           <Text className="text-on-surface">Choose an available appointment time first.</Text>
           <Action
             title="Find a therapist"
-            onPress={() => router.replace('/patient/therapist_list')}
+            onPress={() => router.replace('/(tabs)/therapists')}
           />
         </Card>
       )}

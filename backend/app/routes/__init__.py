@@ -34,7 +34,11 @@ for router, prefix, tags in (
     (chat_router, "/chat", ["Chat"]),
 ):
     api_router.include_router(
-        router, prefix=prefix, tags=tags, responses=documented_errors
+        router,
+        prefix=prefix,
+        tags=tags,
+        responses=documented_errors,
+        include_in_schema=prefix != "/normal_user",
     )
 for router, prefix, tags in (
     (ai_chat_router, "/ai", ["AI Chat"]),

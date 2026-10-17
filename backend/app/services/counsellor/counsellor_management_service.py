@@ -144,7 +144,7 @@ class CounsellorManagementService:
     async def delete_account(self, user_id: str) -> bool:
         raise HTTPException(
             status_code=503,
-            detail="Account erasure is unavailable until cross-store retention and audit workflows are configured.",
+            detail="Account erasure is unavailable until retention and audit workflows are configured.",
         )
 
     async def _get_counsellor(self, user_id: str) -> Counsellor:
@@ -159,7 +159,6 @@ class CounsellorManagementService:
         required_fields = [
             "email",
             "phone_number",
-            "hashed_password",
             "name",
             "gender",
             "profile_pic",

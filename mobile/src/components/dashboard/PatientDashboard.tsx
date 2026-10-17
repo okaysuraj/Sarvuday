@@ -13,11 +13,11 @@ export function PatientDashboard() {
       <RequestState loading={state.loading} error={state.error} retry={state.reload} />
       <Action title="Check in" onPress={() => router.push('/tracking/mood-check-in')} />
       <Action title="Your journal" onPress={() => router.push('/tracking/journal')} />
-      <Action title="Find a therapist" onPress={() => router.push('/patient/therapist_list')} />
+      <Action title="Find a therapist" onPress={() => router.push('/(tabs)/therapists')} />
       <Action title="Your appointments" onPress={() => router.push('/(tabs)/appointments')} />
       <Action
         title="Review your progress"
-        onPress={() => router.push('/patient/progress_review')}
+        onPress={() => router.push('/tracking/history')}
       />
     </Screen>
   );

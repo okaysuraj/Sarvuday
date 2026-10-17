@@ -18,11 +18,22 @@ from app.models.wellness import (
 )
 from app.schemas.records import record_fields
 from app.schemas.tracking_schemas import (
+    BiofeedbackResponse,
+    CorrelationResponse,
     GoalCreate,
+    GoalProgress,
+    GoalRecord,
     JournalCreate,
+    JournalCreated,
+    JournalRecord,
     MedicationCreate,
+    MedicationRecord,
+    MedicationToggled,
     MoodCreate,
+    MoodRecord,
+    RecordCreated,
     SleepCreate,
+    SleepRecord,
 )
 from app.utils.oauth import ensure_normal_user
 
@@ -91,7 +102,7 @@ async def history(db, model, user_id, limit, offset, *filters):
     return [serialize(record) for record in records]
 
 
-@router.post("/mood", status_code=201)
+@router.post("/mood", status_code=201, response_model=RecordCreated)
 async def log_mood(
     data: MoodCreate,
     current_user=Depends(ensure_normal_user),
@@ -107,7 +118,7 @@ async def log_mood(
     )
 
 
-@router.get("/mood/history")
+@router.get("/mood/history", response_model=list[MoodRecord])
 async def get_mood_history(
     start_date: date | None = None,
     end_date: date | None = None,
@@ -136,7 +147,7 @@ async def get_mood_history(
     )
 
 
-@router.post("/journal", status_code=201)
+@router.post("/journal", status_code=201, response_model=JournalCreated)
 async def submit_journal(
     data: JournalCreate,
     current_user=Depends(ensure_normal_user),
@@ -151,7 +162,7 @@ async def submit_journal(
     return {**result, "sentiment": None}
 
 
-@router.get("/journal")
+@router.get("/journal", response_model=list[JournalRecord])
 async def get_journal_entries(
     limit: int = Query(100, ge=1, le=100),
     offset: int = Query(0, ge=0),
@@ -161,7 +172,7 @@ async def get_journal_entries(
     return await history(db, JournalEntry, current_user.user_id, limit, offset)
 
 
-@router.post("/sleep", status_code=201)
+@router.post("/sleep", status_code=201, response_model=RecordCreated)
 async def log_sleep(
     data: SleepCreate,
     current_user=Depends(ensure_normal_user),
@@ -177,7 +188,7 @@ async def log_sleep(
     )
 
 
-@router.get("/sleep")
+@router.get("/sleep", response_model=list[SleepRecord])
 async def get_sleep_history(
     limit: int = Query(30, ge=1, le=100),
     offset: int = Query(0, ge=0),
@@ -187,7 +198,7 @@ async def get_sleep_history(
     return await history(db, SleepTracking, current_user.user_id, limit, offset)
 
 
-@router.get("/medications")
+@router.get("/medications", response_model=list[MedicationRecord])
 async def get_medications(
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
@@ -197,7 +208,7 @@ async def get_medications(
     return await history(db, UserMedication, current_user.user_id, limit, offset)
 
 
-@router.post("/medications", status_code=201)
+@router.post("/medications", status_code=201, response_model=RecordCreated)
 async def add_medication(
     data: MedicationCreate,
     current_user=Depends(ensure_normal_user),
@@ -208,7 +219,7 @@ async def add_medication(
     )
 
 
-@router.patch("/medications/{med_id}/toggle")
+@router.patch("/medications/{med_id}/toggle", response_model=MedicationToggled)
 async def toggle_medication(
     med_id: str,
     current_user=Depends(ensure_normal_user),
@@ -228,7 +239,7 @@ async def toggle_medication(
     return {"status": "success", "is_taken": taken}
 
 
-@router.get("/goals")
+@router.get("/goals", response_model=list[GoalRecord])
 async def get_goals(
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
@@ -238,7 +249,7 @@ async def get_goals(
     return await history(db, UserGoal, current_user.user_id, limit, offset)
 
 
-@router.post("/goals", status_code=201)
+@router.post("/goals", status_code=201, response_model=RecordCreated)
 async def create_goal(
     data: GoalCreate,
     current_user=Depends(ensure_normal_user),
@@ -249,7 +260,7 @@ async def create_goal(
     )
 
 
-@router.patch("/goals/{goal_id}/increment")
+@router.patch("/goals/{goal_id}/increment", response_model=GoalProgress)
 async def increment_goal(
     goal_id: str,
     current_user=Depends(ensure_normal_user),
@@ -281,7 +292,7 @@ async def increment_goal(
     }
 
 
-@router.get("/biofeedback")
+@router.get("/biofeedback", response_model=BiofeedbackResponse)
 async def get_biofeedback(
     current_user=Depends(ensure_normal_user), db: AsyncSession = Depends(get_db)
 ):
@@ -344,7 +355,7 @@ def correlate_records(sleeps, moods):
     return points, pairs, coefficient
 
 
-@router.get("/correlation")
+@router.get("/correlation", response_model=CorrelationResponse)
 async def get_correlation_data(
     current_user=Depends(ensure_normal_user), db: AsyncSession = Depends(get_db)
 ):

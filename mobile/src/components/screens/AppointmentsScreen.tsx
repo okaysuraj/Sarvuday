@@ -69,7 +69,7 @@ export default function AppointmentsScreen() {
                   title="Open session"
                   onPress={() =>
                     router.push({
-                      pathname: '/session/video/[id]',
+                      pathname: '/call/[id]',
                       params: { id: item.session.session_id },
                     })
                   }

@@ -3,6 +3,9 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CustomButton as Action } from '../forms/CustomButton';
+
+export { Action };
 
 export function Screen({
   title,
@@ -53,32 +56,6 @@ export function Screen({
 
 export function Card({ children }: { children: React.ReactNode }) {
   return <View className="bg-surface border border-outline rounded-2xl p-5 gap-3">{children}</View>;
-}
-
-export function Action({
-  title,
-  onPress,
-  disabled = false,
-}: {
-  title: string;
-  onPress: () => void;
-  disabled?: boolean;
-}) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ disabled }}
-      disabled={disabled}
-      onPress={onPress}
-      className={`min-h-12 rounded-xl px-5 py-3 items-center justify-center ${disabled ? 'bg-surface-container' : 'bg-primary'}`}
-    >
-      <Text
-        className={`text-sm font-semibold ${disabled ? 'text-on-surface-variant' : 'text-white'}`}
-      >
-        {title}
-      </Text>
-    </Pressable>
-  );
 }
 
 export function RequestState({

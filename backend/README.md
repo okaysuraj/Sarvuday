@@ -4,17 +4,17 @@ FastAPI serves the web and mobile apps. PostgreSQL is the only application datab
 
 ## Layout
 
-| Path | Responsibility |
-| --- | --- |
-| `app/main.py` | Application creation and route registration |
-| `app/core/` | Startup, Firebase, middleware and safe database errors |
-| `app/routes/` | HTTP and WebSocket endpoints grouped by feature |
-| `app/services/` | Business rules and database operations |
-| `app/models/` | SQLAlchemy tables and relationships |
-| `app/schemas/` | Validated requests and explicit response fields |
-| `app/database/` | PostgreSQL pool and verified legacy schema adoption |
-| `migrations/` | Ordered, versioned schema changes |
-| `scripts/` | Deployment preparation, data import and administrator setup |
+| Path            | Responsibility                                              |
+| --------------- | ----------------------------------------------------------- |
+| `app/main.py`   | Application creation and route registration                 |
+| `app/core/`     | Startup, Firebase, middleware and safe database errors      |
+| `app/routes/`   | HTTP and WebSocket endpoints grouped by feature             |
+| `app/services/` | Business rules and database operations                      |
+| `app/models/`   | SQLAlchemy tables and relationships                         |
+| `app/schemas/`  | Validated requests and explicit response fields             |
+| `app/database/` | PostgreSQL pool and verified legacy schema adoption         |
+| `migrations/`   | Ordered, versioned schema changes                           |
+| `scripts/`      | Deployment preparation, data import and administrator setup |
 
 Import dependencies from their specific modules. `app/models/__init__.py` registers every table for relationships and Alembic. Add schema changes in a new revision; never change an already applied migration.
 
@@ -30,16 +30,16 @@ flowchart LR
 
 The application has 33 tables, grouped by purpose:
 
-| Records | Storage and ownership |
-| --- | --- |
-| Accounts and profiles | `accounts`, `normal_users`, `counsellors`, `admins` |
-| Scheduling and clinical care | `counsellor_availability`, `appointments`, `counselling_sessions`, `prescriptions` |
-| Payments | `user_payments`, `user_refunds`, `counsellor_payments`, `user_wallets` |
-| Conversations and notifications | `chat_sessions`, `chat_turns`, `direct_messages`, `notifications` |
-| Personal tracking | `mood_tracking`, `journal_entries`, `sleep_tracking`, `user_medications`, `user_goals`, `biofeedback_telemetry`, `exercise_progress` |
-| Published content and results | `assessment_questions`, `assessment_results`, `disorders`, `exercises` |
-| Community | `support_groups`, `community_posts`, `counsellor_reviews` |
-| Operations | `crisis_logs`, `flagged_content`, `contact_submissions` |
+| Records                         | Storage and ownership                                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Accounts and profiles           | `accounts`, `normal_users`, `counsellors`, `admins`                                                                                  |
+| Scheduling and clinical care    | `counsellor_availability`, `appointments`, `counselling_sessions`, `prescriptions`                                                   |
+| Payments                        | `user_payments`, `user_refunds`, `counsellor_payments`, `user_wallets`                                                               |
+| Conversations and notifications | `chat_sessions`, `chat_turns`, `direct_messages`, `notifications`                                                                    |
+| Personal tracking               | `mood_tracking`, `journal_entries`, `sleep_tracking`, `user_medications`, `user_goals`, `biofeedback_telemetry`, `exercise_progress` |
+| Published content and results   | `assessment_questions`, `assessment_results`, `disorders`, `exercises`                                                               |
+| Community                       | `support_groups`, `community_posts`, `counsellor_reviews`                                                                            |
+| Operations                      | `crisis_logs`, `flagged_content`, `contact_submissions`                                                                              |
 
 Ownership, timestamps, money and references use typed columns. JSONB holds variable arrays such as question options and instructions. `imported_data` retains original fields for reconciliation and is excluded from API responses. Existing opaque record IDs remain usable; new feature records use UUID strings. Neither client connects to the database directly.
 
@@ -59,11 +59,11 @@ Create `backend/.env` locally and configure the same settings on the server:
 
 Production needs `ENVIRONMENT=production`, explicit HTTPS `CORS_ALLOWED_ORIGINS`, and `ALLOWED_HOSTS` containing the API hostname. `FRONTEND_BASE_URL` may supply the web origin. Production signing keys require at least 32 bytes for HS256, 48 for HS384, or 64 for HS512.
 
-| Optional feature | Settings |
-| --- | --- |
-| Video | `DAILY_API_KEY`, optional `DAILY_BASE_URL` |
-| Payments | `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET` |
-| Assistant | `CHATBOT_BASE_URL`, `CHATBOT_API_KEY`, `CHATBOT_MODEL` |
+| Optional feature | Settings                                                               |
+| ---------------- | ---------------------------------------------------------------------- |
+| Video            | `DAILY_API_KEY`, optional `DAILY_BASE_URL`                             |
+| Payments         | `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET` |
+| Assistant        | `CHATBOT_BASE_URL`, `CHATBOT_API_KEY`, `CHATBOT_MODEL`                 |
 
 Defaults and connection limits are in `app/config.py`. Each worker has one bounded async PostgreSQL pool. Migration and import commands use short-lived synchronous connections. Transaction-local timeouts support transaction poolers; preserve TLS options in the URL. A separate migration job may use the provider's direct URL while the API uses its pooled URL.
 
@@ -153,7 +153,7 @@ The API reloads roles and approval from PostgreSQL, scopes personal records to t
 
 Paid cancellation, wallet top-ups, voice analysis and account erasure remain unavailable until their corresponding settlement, analysis or retention workflows exist. Browser API tokens are accessible to JavaScript in local storage; native sessions use OS-protected storage. Intake drafts stay in tab session storage and are cleared after saving or session changes.
 
-Hosted TLS, database permissions, network rules, backups, restoration and retention require operational verification. Source migration and foreign keys do not establish that a hosted deployment is secure. SQL models retain some unused legacy fields to preserve applied migration history.
+Hosted TLS, database permissions, network rules, backups, restoration and retention require operational verification. Source migration and foreign keys do not establish that a hosted deployment is secure. Applied migrations remain immutable. Revision `20261018_0004` removes the unused local-password and verification-delivery fields from all three profiles, and stops if any of those fields contain values pending archival.
 
 ## First administrator
 
@@ -164,3 +164,9 @@ python -m scripts.create_super_admin --email admin@example.com --name "Administr
 ```
 
 The command requires an existing verified Firebase identity and never installs a default password.
+
+## Regression checks
+
+Run `npm run check` from the repository root. The small standard-library unittest suite in `tests/test_critical_workflows.py` runs against an isolated local PostgreSQL container and refuses a hosted database URL. Video/provider calls are stubbed; ownership checks, database constraints and migration rollback use PostgreSQL. No extra test framework is required.
+
+`python -m scripts.export_openapi` is a build tool for the shared client contract. It constructs the application using explicit inert configuration and never enters the startup lifespan or opens a hosted connection. Update the Pydantic response schema alongside endpoint behavior, then run the root API generator.

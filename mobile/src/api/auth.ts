@@ -4,7 +4,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { apiClient } from './client';
+import { api } from './client';
 import { auth } from './firebase';
 
 export const authApi = {
@@ -14,13 +14,11 @@ export const authApi = {
     const idToken = await getIdToken(userCredential.user);
 
     // 2. Send ID token to FastAPI backend
-    const response = await apiClient.post('/auth/firebase-login', {
-      id_token: idToken,
-    });
+    const backendData = await api.post('/auth/firebase-login', { body: { id_token: idToken } });
 
     return {
       firebaseUser: userCredential.user,
-      backendData: response.data,
+      backendData,
     };
   },
 
@@ -30,17 +28,19 @@ export const authApi = {
     const idToken = await getIdToken(userCredential.user);
 
     // 2. Register user in FastAPI backend
-    const response = await apiClient.post('/auth/firebase-register', {
-      id_token: idToken,
-      user_type: data.user_type === 'therapist' ? 'counsellor' : 'normal_user',
-      name: data.name,
-      terms_accepted: true,
-      privacy_policy_accepted: true,
+    const backendData = await api.post('/auth/firebase-register', {
+      body: {
+        id_token: idToken,
+        user_type: data.user_type === 'therapist' ? 'counsellor' : 'normal_user',
+        name: data.name,
+        terms_accepted: true,
+        privacy_policy_accepted: true,
+      },
     });
 
     return {
       firebaseUser: userCredential.user,
-      backendData: response.data,
+      backendData,
     };
   },
 

@@ -1,0 +1,13 @@
+{
+  "name": "sarvuday",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "api:generate": "node scripts/generate-api.mjs",
+    "check": "node scripts/check.mjs",
+    "check:full": "node scripts/check.mjs --full"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0"
+  }
+}

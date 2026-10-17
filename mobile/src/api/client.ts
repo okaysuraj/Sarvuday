@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { createApi, apiErrorMessage } from '../../../shared/api';
 import { useAuthStore } from '../store/authStore';
 import { API_CONFIGURATION_ERROR, BASE_URL } from './config';
 
@@ -30,7 +31,10 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    error.userMessage = apiErrorMessage(error);
     if (error.response?.status === 401) useAuthStore.getState().logout();
     return Promise.reject(error);
   },
 );
+
+export const api = createApi(apiClient);

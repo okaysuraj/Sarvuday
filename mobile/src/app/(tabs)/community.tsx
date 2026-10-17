@@ -1,1 +1,1 @@
-export { default } from '../community/feed';
+export { default } from '../../components/screens/CommunityFeed';

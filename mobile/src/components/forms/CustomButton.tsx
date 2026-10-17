@@ -20,37 +20,25 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
   className = '',
   textClassName = '',
 }) => {
-  const getVariantStyles = () => {
-    switch (variant) {
-      case 'primary':
-        return 'bg-primary text-on-primary';
-      case 'secondary':
-        return 'bg-secondary text-on-secondary';
-      case 'outline':
-        return 'bg-transparent border border-outline text-primary';
-      default:
-        return 'bg-primary text-on-primary';
-    }
-  };
-
-  const variantStyles = getVariantStyles();
+  const styles = {
+    primary: { button: 'bg-primary', text: 'text-on-primary' },
+    secondary: { button: 'bg-secondary', text: 'text-on-secondary' },
+    outline: { button: 'bg-transparent border border-outline', text: 'text-primary' },
+  }[variant];
+  const inactive = disabled || isLoading;
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
+      accessibilityState={{ disabled: inactive, busy: isLoading }}
       onPress={onPress}
-      disabled={disabled || isLoading}
-      className={`py-3 px-6 rounded-lg items-center justify-center ${
-        disabled ? 'opacity-50' : ''
-      } ${variantStyles.split(' ')[0]} ${
-        variant === 'outline' ? 'border border-outline' : ''
-      } ${className}`}
+      disabled={inactive}
+      className={`py-3 px-6 rounded-lg items-center justify-center ${inactive ? 'opacity-50' : ''} ${styles.button} ${className}`}
     >
       {isLoading ? (
         <ActivityIndicator color={variant === 'outline' ? '#18181B' : '#ffffff'} />
       ) : (
-        <Text
-          className={`font-headline-md text-base ${variantStyles.split(' ')[1]} ${textClassName}`}
-        >
+        <Text className={`font-headline-md text-base ${styles.text} ${textClassName}`}>
           {title}
         </Text>
       )}

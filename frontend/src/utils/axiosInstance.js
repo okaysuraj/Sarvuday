@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { createApi, apiErrorMessage } from '../../../shared/api';
 import { toast } from 'react-toastify';
 import BASE_URL from '../config/apiConfig';
 import { clearSession, getAccessToken } from './session';
@@ -20,19 +21,6 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-function errorMessage(error) {
-  const detail = error.response?.data?.detail;
-  if (typeof detail === 'string') return detail;
-  if (Array.isArray(detail))
-    return detail
-      .map((item) => item.msg)
-      .filter(Boolean)
-      .join('. ');
-  if (typeof error.response?.data?.message === 'string') return error.response.data.message;
-  if (error.response) return 'The request could not be completed.';
-  return 'Unable to reach the server. Please try again.';
-}
-
 // Every API consumer gets the same message format and expired-session policy.
 axiosInstance.interceptors.response.use(
   (response) => {
@@ -40,7 +28,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (axios.isCancel(error)) return Promise.reject(error);
-    const message = errorMessage(error);
+    const message = apiErrorMessage(error);
     error.userMessage = message;
     if (error.response) {
       // Handle unauthorized errors (e.g., token expiration)
@@ -66,3 +54,5 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
+
+export const api = createApi(axiosInstance);

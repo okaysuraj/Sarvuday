@@ -1,6 +1,7 @@
+import FormField from '../../components/common/FormField';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import axiosInstance from '../../utils/axiosInstance';
+import { api } from '../../utils/axiosInstance';
 
 const MedicationPlan = () => {
   const [medications, setMedications] = useState([]);
@@ -16,8 +17,8 @@ const MedicationPlan = () => {
   useEffect(() => {
     const fetchMedications = async () => {
       try {
-        const response = await axiosInstance.get('/user/tracking/medications');
-        setMedications(response.data);
+        const response = await api.get('/user/tracking/medications');
+        setMedications(response);
       } catch (error) {
         console.error('Error fetching medications', error);
         toast.error('Failed to load medication plan.');
@@ -30,12 +31,12 @@ const MedicationPlan = () => {
 
   const handleToggleTaken = async (medId) => {
     try {
-      const response = await axiosInstance.patch(`/user/tracking/medications/${medId}/toggle`);
+      const response = await api.patch('/user/tracking/medications/{med_id}/toggle', {
+        path: { med_id: medId },
+      });
       setMedications((previous) =>
         previous.map((medication) =>
-          medication.id === medId
-            ? { ...medication, is_taken: response.data.is_taken }
-            : medication,
+          medication.id === medId ? { ...medication, is_taken: response.is_taken } : medication,
         ),
       );
       toast.success('Medication record updated.');
@@ -57,9 +58,9 @@ const MedicationPlan = () => {
     };
 
     try {
-      const res = await axiosInstance.post('/user/tracking/medications', payload);
+      const res = await api.post('/user/tracking/medications', { body: payload });
       const created = {
-        id: res.data.id,
+        id: res.id,
         ...payload,
         is_taken: false,
       };
@@ -211,46 +212,37 @@ const MedicationPlan = () => {
             </p>
 
             <form onSubmit={handleAddMedication} className="space-y-3.5">
-              <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1">
-                  Medicine Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g., Sertraline or Melatonin"
-                  value={newMed.name}
-                  onChange={(e) => setNewMed({ ...newMed, name: e.target.value })}
-                  className="w-full bg-surface-container border border-outline rounded-xl p-2.5 text-xs text-on-surface focus:outline-none focus:border-primary"
-                />
-              </div>
+              <FormField
+                label="Medicine Name"
+                type="text"
+                required
+                placeholder="e.g., Sertraline or Melatonin"
+                value={newMed.name}
+                onChange={(e) => setNewMed({ ...newMed, name: e.target.value })}
+                className="w-full bg-surface-container border border-outline rounded-xl p-2.5 text-xs text-on-surface focus:outline-none focus:border-primary"
+              />
 
-              <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1">Dosage</label>
-                <input
-                  type="text"
-                  placeholder="e.g., 50mg, 1 Capsule"
-                  value={newMed.dosage}
-                  onChange={(e) => setNewMed({ ...newMed, dosage: e.target.value })}
-                  className="w-full bg-surface-container border border-outline rounded-xl p-2.5 text-xs text-on-surface focus:outline-none focus:border-primary"
-                />
-              </div>
+              <FormField
+                label="Dosage"
+                type="text"
+                placeholder="e.g., 50mg, 1 Capsule"
+                value={newMed.dosage}
+                onChange={(e) => setNewMed({ ...newMed, dosage: e.target.value })}
+                className="w-full bg-surface-container border border-outline rounded-xl p-2.5 text-xs text-on-surface focus:outline-none focus:border-primary"
+              />
 
-              <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1">
-                  Schedule Timing
-                </label>
-                <select
-                  value={newMed.schedule}
-                  onChange={(e) => setNewMed({ ...newMed, schedule: e.target.value })}
-                  className="w-full bg-surface-container border border-outline rounded-xl p-2.5 text-xs text-on-surface focus:outline-none focus:border-primary"
-                >
-                  <option>Morning (08:00 AM)</option>
-                  <option>Afternoon (01:00 PM)</option>
-                  <option>Evening (08:00 PM)</option>
-                  <option>Bedtime (10:30 PM)</option>
-                </select>
-              </div>
+              <FormField
+                label="Schedule Timing"
+                as="select"
+                value={newMed.schedule}
+                onChange={(e) => setNewMed({ ...newMed, schedule: e.target.value })}
+                className="w-full bg-surface-container border border-outline rounded-xl p-2.5 text-xs text-on-surface focus:outline-none focus:border-primary"
+              >
+                <option>Morning (08:00 AM)</option>
+                <option>Afternoon (01:00 PM)</option>
+                <option>Evening (08:00 PM)</option>
+                <option>Bedtime (10:30 PM)</option>
+              </FormField>
 
               <div className="flex gap-3 pt-3">
                 <button

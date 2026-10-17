@@ -2,16 +2,19 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.community import CounsellorReview
-from app.schemas.records import record_fields
 from app.database.postgres import get_db
 from app.models import Appointment, NormalUser
+from app.models.community import CounsellorReview
 from app.schemas.counsellors_schemas import CounsellorListWebView, CounsellorWebView
-from app.services.general import CounsellorService
+from app.schemas.records import record_fields
+from app.services.general.counsellors_service import (
+    fetch_counsellor_by_id,
+    fetch_counsellors,
+)
 from app.utils.constants import AppointmentStatusEnum
 from app.utils.oauth import ensure_normal_user
 
@@ -20,12 +23,12 @@ router = APIRouter()
 
 @router.get("", response_model=CounsellorListWebView)
 async def get_counsellors(db: AsyncSession = Depends(get_db)):
-    return await CounsellorService.fetch_counsellors(db)
+    return await fetch_counsellors(db)
 
 
 @router.get("/{counsellor_id}", response_model=CounsellorWebView)
 async def get_counsellor(counsellor_id: str, db: AsyncSession = Depends(get_db)):
-    return await CounsellorService.fetch_counsellor_by_id(db, counsellor_id)
+    return await fetch_counsellor_by_id(db, counsellor_id)
 
 
 @router.get("/{counsellor_id}/reviews")

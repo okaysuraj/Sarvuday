@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import axiosInstance from '../../utils/axiosInstance';
+import { api } from '../../utils/axiosInstance';
 
 const DailyJournal = () => {
   const [entry, setEntry] = useState('');
@@ -13,8 +13,8 @@ const DailyJournal = () => {
 
   const fetchRecentEntries = async () => {
     try {
-      const response = await axiosInstance.get('/user/tracking/journal');
-      setRecentEntries(response.data);
+      const response = await api.get('/user/tracking/journal');
+      setRecentEntries(response);
     } catch (error) {
       console.error('Failed to load recent journals', error);
     }
@@ -28,7 +28,7 @@ const DailyJournal = () => {
 
     setIsSaving(true);
     try {
-      await axiosInstance.post('/user/tracking/journal', { text: entry });
+      await api.post('/user/tracking/journal', { body: { text: entry } });
       toast.success('Journal entry saved successfully!');
       setEntry('');
       fetchRecentEntries(); // Refresh the list

@@ -11,19 +11,25 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   label,
   error,
   containerClassName = '',
+  accessibilityLabel = label,
   ...props
 }) => {
   return (
     <View className={`w-full ${containerClassName}`}>
       <Text className="text-on-surface text-sm font-label-md mb-2">{label}</Text>
       <TextInput
+        accessibilityLabel={accessibilityLabel}
         className={`w-full bg-surface-container-highest px-4 py-3 rounded-lg border ${
           error ? 'border-error' : 'border-outline-variant focus:border-primary'
         } text-on-surface font-body-md`}
         placeholderTextColor="#747687"
         {...props}
       />
-      {error ? <Text className="text-error text-xs font-label-md mt-1">{error}</Text> : null}
+      {error ? (
+        <Text accessibilityRole="alert" className="text-error text-xs font-label-md mt-1">
+          {error}
+        </Text>
+      ) : null}
     </View>
   );
 };

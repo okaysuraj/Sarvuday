@@ -1,34 +1,13 @@
-import { apiClient } from './client';
+import type { components } from '../../../shared/api-types';
+import { api } from './client';
 
-export interface AssessmentQuestion {
-  id: number;
-  question: string;
-  options: {
-    text: string;
-    score: number;
-  }[];
-}
-
-export interface AssessmentResponse {
-  questions: AssessmentQuestion[];
-  instructions?: string;
-  title?: string;
-}
-
-export interface ScoreResponse {
-  final_score: number;
-  max_score: number;
-  result: string;
-}
+type Schema = components['schemas'];
+export type AssessmentQuestion = Schema['QuestionSchema'];
+export type AssessmentResponse = Schema['AssessmentSchema'];
+export type ScoreResponse = Schema['ScoreResponseSchema'];
 
 export const assessmentsApi = {
-  submitScore: async (
-    type: 'phq9' | 'bdi' | 'hdrs',
-    answers: { question_id: number; selected_option_score: number }[],
-  ): Promise<ScoreResponse> => {
-    const response = await apiClient.post(`/assessments/score/${type}`, {
-      responses: answers,
-    });
-    return response.data;
+  submitScore(type: 'phq9' | 'bdi' | 'hdrs', responses: Schema['ScoreRequestSchema']['responses']) {
+    return api.post(`/assessments/score/${type}`, { body: { responses } });
   },
 };

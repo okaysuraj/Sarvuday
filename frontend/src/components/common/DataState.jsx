@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
 
-export function DataState({ loading, error, retry, empty, children }) {
+export function DataState({
+  loading,
+  error,
+  retry,
+  empty,
+  emptyMessage = 'No records yet.',
+  emptyAction,
+  children,
+}) {
   if (loading)
     return (
       <p role="status" className="py-12 text-on-surface-variant">
@@ -11,18 +19,22 @@ export function DataState({ loading, error, retry, empty, children }) {
     return (
       <div role="alert" className="rounded-xl border border-red-200 bg-white p-6 space-y-4">
         <p>{error}</p>
-        <button onClick={retry} className="btn-primary">
-          Try again
-        </button>
+        {retry && (
+          <button onClick={retry} className="btn-primary">
+            Try again
+          </button>
+        )}
       </div>
     );
   if (empty)
     return (
       <div role="status" className="rounded-xl border border-stone-200 bg-white p-6">
-        <p>No records yet.</p>
-        <Link to="/mood-tracker/add" className="inline-block mt-3 underline">
-          Add a check-in
-        </Link>
+        <p>{emptyMessage}</p>
+        {emptyAction && (
+          <Link to={emptyAction.to} className="inline-block mt-3 underline">
+            {emptyAction.label}
+          </Link>
+        )}
       </div>
     );
   return children;

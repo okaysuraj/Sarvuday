@@ -1,4 +1,4 @@
-"""Privacy operations require a verified cross-store retention workflow."""
+"""Privacy operations require a verified retention workflow."""
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -11,7 +11,7 @@ router = APIRouter(tags=["Admin Privacy Operations"])
 async def anonymize_user_data(user_id: str, current_admin=Depends(ensure_admin_user)):
     raise HTTPException(
         status_code=503,
-        detail="Anonymization is unavailable until cross-store retention and audit workflows are configured.",
+        detail="Anonymization is unavailable until retention and audit workflows are configured.",
     )
 
 
@@ -19,5 +19,5 @@ async def anonymize_user_data(user_id: str, current_admin=Depends(ensure_admin_u
 async def right_to_delete_user(user_id: str, current_admin=Depends(ensure_admin_user)):
     raise HTTPException(
         status_code=503,
-        detail="Account erasure is unavailable until cross-store retention and audit workflows are configured.",
+        detail="Account erasure is unavailable until retention and audit workflows are configured.",
     )

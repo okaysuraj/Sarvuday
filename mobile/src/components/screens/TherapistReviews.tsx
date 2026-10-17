@@ -47,7 +47,7 @@ export default function TherapistReviews() {
   return (
     <Screen title="Verified therapist reviews">
       {!id ? (
-        <Action title="Choose a therapist" onPress={() => router.push('/patient/therapist_list')} />
+        <Action title="Choose a therapist" onPress={() => router.push('/(tabs)/therapists')} />
       ) : (
         <>
           <RequestState

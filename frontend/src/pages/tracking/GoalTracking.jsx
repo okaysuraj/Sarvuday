@@ -1,6 +1,7 @@
+import FormField from '../../components/common/FormField';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import axiosInstance from '../../utils/axiosInstance';
+import { api } from '../../utils/axiosInstance';
 
 const GoalTracking = () => {
   const [goals, setGoals] = useState([]);
@@ -12,8 +13,8 @@ const GoalTracking = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axiosInstance.get('/user/tracking/goals');
-        setGoals(response.data);
+        const response = await api.get('/user/tracking/goals');
+        setGoals(response);
       } catch (error) {
         console.error('Error fetching goals', error);
         toast.error('Failed to load active goals.');
@@ -28,12 +29,14 @@ const GoalTracking = () => {
     e.preventDefault();
     if (!newTitle.trim()) return;
     try {
-      const res = await axiosInstance.post('/user/tracking/goals', {
-        title: newTitle,
-        progress_total: Number(newTotal),
+      const res = await api.post('/user/tracking/goals', {
+        body: {
+          title: newTitle,
+          progress_total: Number(newTotal),
+        },
       });
-      if (!res.data.id) throw new Error('The goal was not saved.');
-      setGoals((await axiosInstance.get('/user/tracking/goals')).data);
+      if (!res.id) throw new Error('The goal was not saved.');
+      setGoals(await api.get('/user/tracking/goals'));
       toast.success('New goal created successfully!');
       setShowAddModal(false);
       setNewTitle('');
@@ -44,14 +47,16 @@ const GoalTracking = () => {
 
   const handleIncrementGoal = async (goalId) => {
     try {
-      const response = await axiosInstance.patch(`/user/tracking/goals/${goalId}/increment`);
+      const response = await api.patch('/user/tracking/goals/{goal_id}/increment', {
+        path: { goal_id: goalId },
+      });
       setGoals((previous) =>
         previous.map((goal) =>
           goal.id === goalId
             ? {
                 ...goal,
-                progress_current: response.data.progress_current,
-                streak: response.data.streak,
+                progress_current: response.progress_current,
+                streak: response.streak,
               }
             : goal,
         ),
@@ -204,33 +209,23 @@ const GoalTracking = () => {
             </p>
 
             <form onSubmit={handleCreateGoal} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1">
-                  Goal Description
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g., 10 minutes box breathing daily"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full bg-surface-container border border-outline rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary"
-                />
-              </div>
+              <FormField
+                label="Goal Description"
+                type="text"
+                required
+                placeholder="e.g., 10 minutes box breathing daily"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+              />
 
-              <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1">
-                  Target Repetitions (Days)
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  max="365"
-                  value={newTotal}
-                  onChange={(e) => setNewTotal(e.target.value)}
-                  className="w-full bg-surface-container border border-outline rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary"
-                />
-              </div>
+              <FormField
+                label="Target Repetitions (Days)"
+                type="number"
+                min="1"
+                max="365"
+                value={newTotal}
+                onChange={(e) => setNewTotal(e.target.value)}
+              />
 
               <div className="flex gap-3 pt-3">
                 <button

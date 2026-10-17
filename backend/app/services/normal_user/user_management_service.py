@@ -125,7 +125,7 @@ class UserManagementService:
     async def delete_account(self, user_id: str) -> bool:
         raise HTTPException(
             status_code=503,
-            detail="Account erasure is unavailable until cross-store retention and audit workflows are configured.",
+            detail="Account erasure is unavailable until retention and audit workflows are configured.",
         )
 
     async def _get_user(self, user_id: str) -> NormalUser:

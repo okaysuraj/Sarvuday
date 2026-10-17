@@ -1,33 +1,48 @@
-"""Appointment service business logic and persistence."""
+"""Own booking and cancellation transactions; delegate read-only appointment queries."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
-from fastapi import HTTPException
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.concurrency import run_in_threadpool
-
 from app.config import settings
-from app.models import Appointment, Counsellor, NormalUser, UserPayment
+from app.models import (
+    Appointment,
+    Counsellor,
+    CounsellorAvailability,
+    NormalUser,
+    UserPayment,
+)
 from app.schemas.appointments_schemas import (
     AppointmentBase,
     AppointmentListResponse,
     CancelAppointmentResponse,
+    CounsellorAppointmentView,
     CreateAppointmentRequest,
     CreateAppointmentResponse,
+    NormalUserAppointmentView,
+    SessionAppointmentView,
 )
 from app.schemas.availability_schemas import AvailableSlotsResponse
+from app.services.counselling_services.counselling_service import (
+    CounsellingSessionService,
+)
 from app.services.payments.stripe_service import reconcile_intent, require_stripe
-from app.utils.constants import UserTypeEnum
+from app.utils.constants import (
+    AppointmentStatusEnum,
+    CounsellorAvailabilityStatusEnum,
+    UserTypeEnum,
+)
+from app.utils.unique_id_generation import generate_appointment_id
+from fastapi import HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+from starlette.concurrency import run_in_threadpool
 
-from .creators import create_appointment_record
 from .fetchers import (
     fetch_appointment_details,
     fetch_appointment_list,
     fetch_available_slots,
 )
-from .utils import cancel_appointment_logic
 from .validators import validate_slot_availability, validate_user_access_to_appointment
 
 
@@ -128,8 +143,8 @@ class AppointmentService:
             reconcile_intent(payment, intent, require_unreversed_charge=True)
             payment_id = payment.payment_id
 
-        booked_appointment = await create_appointment_record(
-            self.db, user_id, slot, booking_data, payment_id
+        booked_appointment = await self._create_appointment(
+            user_id, slot, booking_data, payment_id
         )
 
         # ✅ Commit the transaction to persist the appointment, session, and payment
@@ -159,4 +174,122 @@ class AppointmentService:
 
         await validate_user_access_to_appointment(user_type, user_id, appointment)
 
-        return await cancel_appointment_logic(self.db, appointment, reason)
+        return await self._cancel_appointment(appointment, reason)
+
+    async def _create_appointment(
+        self,
+        user_id: str,
+        slot: CounsellorAvailability,
+        booking_data: CreateAppointmentRequest,
+        payment_id: str | None,
+    ) -> AppointmentBase:
+        appointment_id = generate_appointment_id()
+
+        session = await CounsellingSessionService(self.db).create_counselling_session(
+            user_id=user_id,
+            counsellor_id=booking_data.counsellor_id,
+            availability_slot=slot,
+        )
+
+        appointment = Appointment(
+            appointment_id=appointment_id,
+            availability_slot_id=slot.availability_slot_id,
+            session_id=session.session_id,
+            status=AppointmentStatusEnum.confirmed,
+            reason=booking_data.reason,
+            created_at=datetime.now(timezone.utc),
+            user_id=user_id,
+            counsellor_id=slot.counsellor_id,
+            payment_id=payment_id,
+        )
+
+        # Update slot status
+        slot.status = CounsellorAvailabilityStatusEnum.booked
+
+        # Add to session
+        self.db.add_all([appointment, slot])
+
+        # Flush to generate IDs and make objects persistent
+        await self.db.flush()
+
+        # Query with relationships (appointment is now persistent)
+        result = await self.db.execute(
+            select(Appointment)
+            .options(
+                selectinload(Appointment.user), selectinload(Appointment.counsellor)
+            )
+            .where(Appointment.appointment_id == appointment_id)
+        )
+        full_appointment = result.scalar_one()
+
+        return AppointmentBase(
+            appointment_id=full_appointment.appointment_id,
+            status=full_appointment.status,
+            availability_slot_id=full_appointment.availability_slot_id,
+            payment_id=full_appointment.payment_id,
+            reason=full_appointment.reason,
+            created_at=full_appointment.created_at,
+            session=SessionAppointmentView.model_validate(session),
+            user=NormalUserAppointmentView.model_validate(full_appointment.user),
+            counsellor=CounsellorAppointmentView.model_validate(
+                full_appointment.counsellor
+            ),
+        )
+
+    async def _cancel_appointment(
+        self, appointment: Appointment, reason: str = None
+    ) -> CancelAppointmentResponse:
+        if appointment.status not in (
+            AppointmentStatusEnum.pending,
+            AppointmentStatusEnum.confirmed,
+        ):
+            raise HTTPException(
+                status_code=409, detail="Only an active appointment can be cancelled"
+            )
+        if appointment.payment_id:
+            raise HTTPException(
+                status_code=503,
+                detail="Paid appointment cancellation is unavailable until verified refund handling is configured",
+            )
+
+        slot = (
+            await self.db.execute(
+                select(CounsellorAvailability)
+                .where(
+                    CounsellorAvailability.availability_slot_id
+                    == appointment.availability_slot_id
+                )
+                .with_for_update()
+            )
+        ).scalar_one_or_none()
+        if slot is None:
+            raise HTTPException(
+                status_code=409, detail="Appointment timing is unavailable"
+            )
+        start = (
+            slot.start_time.replace(tzinfo=timezone.utc)
+            if slot.start_time.tzinfo is None
+            else slot.start_time.astimezone(timezone.utc)
+        )
+        if start <= datetime.now(timezone.utc):
+            raise HTTPException(
+                status_code=409,
+                detail="An appointment that has started cannot be cancelled",
+            )
+        slot.status = CounsellorAvailabilityStatusEnum.available
+        self.db.add(slot)
+
+        appointment.status = AppointmentStatusEnum.cancelled
+        if reason:
+            appointment.cancellation_reason = reason
+
+        self.db.add(appointment)
+        await self.db.commit()
+
+        return CancelAppointmentResponse(
+            message="Appointment cancelled successfully",
+            appointment_id=appointment.appointment_id,
+            cancelled_at=datetime.now(timezone.utc),
+            refund_status="not_required",
+            refund_payment_id=None,
+        )

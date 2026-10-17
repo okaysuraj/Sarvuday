@@ -1,7 +1,8 @@
 // src/pages/Assessments.jsx
 
 import { useState } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import { api } from '../../utils/axiosInstance';
+import { apiErrorMessage } from '../../../../shared/api';
 import styles from './Assessments.module.css';
 
 const Assessments = () => {
@@ -15,9 +16,9 @@ const Assessments = () => {
 
   const fetchQuestions = async (type) => {
     try {
-      const res = await axiosInstance.get(`/assessments/${type}`);
+      const res = await api.get(`/assessments/${type}`);
       setAssessmentType(type);
-      setQuestions(res.data.questions);
+      setQuestions(res.questions);
       setCurrentQuestionIndex(0);
       setAnswers([]);
       setScore(null);
@@ -63,35 +64,17 @@ const Assessments = () => {
 
         const payload = { responses: formattedAnswers };
 
-        // <span className="material-symbols-outlined text-sm">search</span> Debug: Check payload structure
-
-        const res = await axiosInstance.post(`/assessments/score/${assessmentType}`, payload);
+        const res = await api.post(`/assessments/score/${assessmentType}`, { body: payload });
 
         // Make sure we're getting a valid score object before setting it
-        if (res.data && typeof res.data === 'object') {
-          setScore(res.data);
+        if (res && typeof res === 'object') {
+          setScore(res);
         } else {
-          console.error('Invalid score data received:', res.data);
+          console.error('Invalid score data received:', res);
           setErrorMessage('Received invalid score data from server.');
         }
       } catch (err) {
-        console.error('Error submitting answers:', err);
-        if (err.response) {
-          console.error('Server responded with:', err.response.data);
-          // Safely extract error message without directly using the error object
-          const errorDetail = err.response.data?.detail
-            ? typeof err.response.data.detail === 'string'
-              ? err.response.data.detail
-              : JSON.stringify(err.response.data.detail)
-            : 'There was a problem submitting your answers.';
-          setErrorMessage(errorDetail);
-        } else if (err.request) {
-          console.error('No response received:', err.request);
-          setErrorMessage('No response from server. Please try again later.');
-        } else {
-          console.error('Unexpected error:', err.message);
-          setErrorMessage('Unexpected error occurred. Please try again.');
-        }
+        setErrorMessage(apiErrorMessage(err));
       }
     }
   };

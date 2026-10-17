@@ -32,7 +32,7 @@ export default function AppointmentBooking() {
       {!counsellorId ? (
         <Action
           title="Choose a therapist"
-          onPress={() => router.replace('/patient/therapist_list')}
+          onPress={() => router.replace('/(tabs)/therapists')}
         />
       ) : (
         <>
@@ -82,7 +82,7 @@ export default function AppointmentBooking() {
               disabled={!selected || state.loading}
               onPress={() =>
                 router.push({
-                  pathname: '/patient/payment',
+                  pathname: '/finance/checkout',
                   params: { counsellorId, slotId: selected! },
                 })
               }

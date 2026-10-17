@@ -23,15 +23,18 @@ npm start
 
 Daily video and Stripe payments contain native code. Use a native development build for those features, for example `npx expo run:android`. Production settings belong in `app.json` and `eas.json`.
 
+The EAS production profile sets `EXPO_PUBLIC_API_URL` to `https://sarvuday-backend.onrender.com`. Development and preview profiles use their own environment settings.
+
 ## Source layout
 
-- `src/app/`: Expo Router URLs, layouts and access guards. Small re-export files preserve existing deep links.
+- `src/app/`: Canonical Expo Router URLs, layouts and access guards.
+- `src/navigation/legacy-routes.ts`: Central redirects for retired URLs. `+native-intent.tsx` handles native links; `+not-found.tsx` handles unmatched navigation. Query values and session IDs are preserved. New links should use canonical routes.
 - `src/components/screens/`: Shared administration, tracking, directory, payment and exercise views.
 - `PatientRecords.tsx`, `SupportGroups.tsx`, `StressTriggers.tsx`: Separate counsellor records, community groups and journal summaries by feature.
 - `src/components/dashboard/`: Patient, therapist and administrator dashboards.
 - `src/components/booking/`, `calls/`, `chat/`: Booking, platform payments, video and messaging flows.
 - `src/components/common/Screen.tsx`: Shared page, action, card and request-state UI.
-- `src/api/`: Authenticated request client and feature-specific API operations.
+- `src/api/`: Authenticated request transport and feature operations using `shared/api.ts` and generated backend types.
 - `src/store/authStore.ts`: Authentication state and platform-appropriate persistence.
 - `src/hooks/use-api-resource.ts`: Focus-aware data loading, cancellation and retry.
 
@@ -40,6 +43,8 @@ Profile requests select the API route for the current account role. Assessment s
 Files ending in `.native.ts` or `.native.tsx` provide device implementations. Their plain `.ts` or `.tsx` siblings provide browser fallbacks. Keep both when changing Firebase, payments or calls.
 
 ## Check and export
+
+From the repository root, `npm run check` verifies both apps and the backend. Use `npm run check:full` for all-platform exports. The root guide explains setup.
 
 ```bash
 npm run typecheck
