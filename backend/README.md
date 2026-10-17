@@ -81,7 +81,7 @@ The backend uses the official [Responses API](https://developers.openai.com/api/
 
 `CHATBOT_SYSTEM_PROMPT` controls assistant instructions. `MAX_TOTAL_TOKENS` limits approximate input history; `OPENAI_MAX_OUTPUT_TOKENS` separately caps generated output, including reasoning tokens when applicable. Recent SQL conversation pairs supply context. Requests set `store=false`; this disables response-history storage and does not establish zero data retention. See [OpenAI data controls](https://developers.openai.com/api/docs/guides/your-data) before sending sensitive records.
 
-Keep the API key only on the backend, outside Git. Missing credentials disable chat with a generic 503 response while other API features can still start. Streams persist only after a completion event; provider failures, truncation and disconnected streams never save partial replies. Test checks use a mocked HTTP transport and never make billable calls.
+Keep the API key only on the backend, outside Git. Missing credentials disable chat with a generic 503 response while other API features can still start. Streams persist only after a completion event; provider failures, truncation and disconnected streams never save partial replies.
 
 ## Run locally
 
@@ -115,41 +115,17 @@ python -m scripts.prepare_deploy --adopt-legacy
 
 Revision `20261017_0003` adds the remaining feature tables and backfills account identities. It preserves existing SQL records. Cross-role ID collisions stop migration. Destructive downgrade is disabled; use a verified backup and the prior deployment for rollback.
 
-## Import existing feature records
+## Backups and recovery
 
-`scripts/import_records.py` accepts a portable archive directory. Its `manifest.json` has `format_version: 1` and a `tables` object keyed by target table name. Each entry declares `file`, `count` and `sha256`. Each file contains one JSON object per line, using the target model's column names. Every feature row needs its existing string `id`; timestamps need explicit timezones. Preserve additional source fields in `imported_data`.
+Keep database dumps and source archives outside the repository. Verify a full restoration on an isolated PostgreSQL instance before relying on a backup. The completed cutover importer is retained in Git history; normal deployment now only applies Alembic migrations.
 
-The accepted feature tables and dependency order are declared in `MODELS` in the script. Core account, appointment and payment records already belong to PostgreSQL and cannot be overwritten through this importer. Chat archives additionally include `chat_sessions` rows with exactly `session_id`, `user_id` and `imported_data`; the importer requires the existing SQL session to have that owner. Metadata may declare `source_turn_count`, which must match the contiguous imported turn positions. This retains metadata for empty histories and reconciles session counts.
-
-Preview performs real inserts and constraint checks inside one transaction, then rolls it back:
-
-```powershell
-python -m scripts.import_records C:\private-backups\feature-archive
-```
-
-Commit a validated archive:
-
-```powershell
-python -m scripts.import_records C:\private-backups\feature-archive --apply
-```
-
-Imports check file hashes, counts, IDs, types, nested published content, ownership references and SQL constraints. Identical records can be imported repeatedly. A conflicting existing record aborts the entire transaction; nothing is silently overwritten. Reports contain counts, without patient content or credentials. Imported wallets retain fixed-precision balances; importing them does not enable top-ups or fabricate a settlement ledger.
-
-For hosted cutover:
-
-1. Pause application writers. Save restorable PostgreSQL and source-data backups outside the repository.
-2. Export a final archive, reconcile its inventory, and rehearse migrations and import on a restored PostgreSQL copy.
-3. Apply schema preparation to the target, preview the final archive, then apply it and verify a repeated preview reports unchanged records.
-4. Deploy this API, check readiness, authenticate both clients and verify history/tracking before resuming writes.
-5. Retain backups and the previous release for the rollback period. After new writes resume, reverting requires reconciling those writes too.
-
-Do not place archives, connection files or patient records in Git. The importer takes explicit operator input and never downloads source records during app startup or deployment builds.
+Pause application writes before restoring a database. After restoration, deploy the matching API revision, check `/health/ready`, and verify account access and conversation history before resuming writes. Reverting after new writes requires reconciling those writes too.
 
 ## Render
 
 Set **Root Directory** to `backend`.
 
-Set `ALLOWED_HOSTS=sarvuday-backend.onrender.com` in the Render environment, alongside `ENVIRONMENT=production` and the explicit web origins described above. Hostnames have no scheme or path. A missing allowed hostname produces `400 Invalid host header`, including on health checks.
+The backend automatically trusts its own hostname from Render's `RENDER_EXTERNAL_HOSTNAME` setting. Keep `ALLOWED_HOSTS` for additional custom domains; values are hostnames without a scheme or path. Requests for unrelated hosts remain rejected. Set `ENVIRONMENT=production` and the explicit web origins described above. Use `/health/ready` as the Render health check path.
 
 For the existing deployment, use this **Build Command**:
 
@@ -185,8 +161,10 @@ python -m scripts.create_super_admin --email admin@example.com --name "Administr
 
 The command requires an existing verified Firebase identity and never installs a default password.
 
-## Regression checks
+## Maintenance commands
 
-Run `npm run check` from the repository root. The small standard-library unittest suite in `tests/test_critical_workflows.py` runs against an isolated local PostgreSQL container and refuses a hosted database URL. Video/provider calls are stubbed; ownership checks, database constraints and migration rollback use PostgreSQL. No extra test framework is required.
+Run `npm run check` from the repository root for contract freshness, web lint/build and mobile types. It does not require Docker or connect to a database. Test fixtures and the completed cutover importer are omitted from the application tree.
 
-`python -m scripts.export_openapi` is a build tool for the shared client contract. It constructs the application using explicit inert configuration and never enters the startup lifespan or opens a hosted connection. Update the Pydantic response schema alongside endpoint behavior, then run the root API generator.
+`python -m scripts.export_openapi` exports the shared client contract using inert configuration without entering the application lifespan or opening hosted connections. Update Pydantic schemas alongside endpoint behavior, then run the root API generator.
+
+Keep `scripts.prepare_deploy` and `scripts.adopt_legacy_postgres`: the existing Render build command calls them. `scripts.create_super_admin` remains the explicit administrator setup command. Applied migrations and their frozen baseline are required to rebuild or verify the database schema.

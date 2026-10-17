@@ -44,7 +44,7 @@ Files ending in `.native.ts` or `.native.tsx` provide device implementations. Th
 
 ## Check and export
 
-From the repository root, `npm run check` verifies both apps and the backend. Use `npm run check:full` for all-platform exports. The root guide explains setup.
+From the repository root, `npm run check` verifies API contract freshness, the web build and mobile types. Use `npm run check:full` for all-platform exports. The root guide explains setup.
 
 ```bash
 npm run typecheck

@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     environment: Literal["development", "test", "production"] = "development"
     cors_allowed_origins: str = ""
     allowed_hosts: str = "localhost,127.0.0.1,testserver"
+    render_external_hostname: str = Field(
+        default="", pattern=r"^$|^[a-zA-Z0-9-]+\.onrender\.com$"
+    )
     enable_api_docs: bool = False
 
     # Per API worker: size worker count to the database's connection budget.

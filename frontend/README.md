@@ -51,4 +51,4 @@ Vite writes the production app to `dist/`. Netlify uses the root `netlify.toml` 
 
 The backend verifies token signatures and authorizes data access. Browser role checks only control navigation. Logging out clears the API session and intake draft even when Firebase sign-out fails.
 
-The root `npm run check` command also checks API contract freshness and backend regressions. Regenerate `shared/api-types.d.ts` with `npm run api:generate` after changing FastAPI schemas.
+The root `npm run check` command also checks API contract freshness and mobile types. Regenerate `shared/api-types.d.ts` with `npm run api:generate` after changing FastAPI schemas.

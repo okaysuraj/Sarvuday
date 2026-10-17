@@ -1,6 +1,6 @@
 """Create the API, attach request middleware and register its routes."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 
 from app.config import settings
 from app.core.errors import configure_exception_handlers
@@ -27,3 +27,9 @@ app.include_router(health_router)
 @app.get("/")
 def root():
     return {"message": "Welcome to SurvUday App API"}
+
+
+@app.head("/", include_in_schema=False)
+def head_root():
+    # Render probes the root with HEAD while detecting an HTTP service.
+    return Response(status_code=200)

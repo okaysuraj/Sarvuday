@@ -52,7 +52,7 @@ The web client uses [netlify.toml](netlify.toml). Render runs the backend with `
 
 AI replies use the OpenAI API through the backend. Configure `OPENAI_API_KEY` on the server; model binaries and a separate inference server are unnecessary.
 
-PostgreSQL is the only application database. The [backend guide](backend/README.md#database-architecture) explains table ownership, transactional updates, importing existing records and hosted security requirements.
+PostgreSQL is the only application database. The [backend guide](backend/README.md#database-architecture) explains table ownership, transactional updates, backups and hosted security requirements.
 
 JavaScript and TypeScript formatting follows the shared `.prettierrc.json`. Keep comments focused on ownership rules, compatibility requirements and decisions that would otherwise be unclear.
 
@@ -69,8 +69,6 @@ npm run api:generate
 npm run check
 ```
 
-The check command verifies contract freshness, typed request failures, legacy route redirects, a small backend regression suite, schema/model agreement, web lint/build and mobile types. Database checks create a disposable PostgreSQL 17 container bound only to localhost and remove it afterwards. Docker must be running. They never use `backend/.env` database credentials or hosted data. Python comes from `backend/venv` when present, or the `PYTHON` environment variable.
-
-`backend/tests/test_critical_workflows.py` covers login, role boundaries, personal-record isolation, concurrent booking and goal updates, cancellation ownership, provider payment verification, chat transaction integrity and guarded migrations. Add regressions for meaningful failures without maintaining large duplicate fixtures.
+The check command verifies API contract freshness, web lint/build and mobile types. It does not require Docker, use database credentials or run a test suite. Python comes from `backend/venv` when present, or the `PYTHON` environment variable.
 
 Run `npm run check:full` before releasing a mobile change; it additionally exports Android, iOS and Expo web. Keep production bundles and test output out of Git.

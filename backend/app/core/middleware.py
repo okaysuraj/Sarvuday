@@ -114,6 +114,9 @@ def configure_middlewares(app: FastAPI):
     hosts = [
         value.strip() for value in settings.allowed_hosts.split(",") if value.strip()
     ]
+    # Render supplies this trusted deployment setting; never infer it from a request.
+    if settings.render_external_hostname:
+        hosts.append(settings.render_external_hostname)
 
     def valid_origin(origin):
         parsed = urlsplit(origin)
