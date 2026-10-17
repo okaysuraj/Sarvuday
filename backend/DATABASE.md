@@ -21,6 +21,28 @@ There is no automatic clinical or demonstration data import. An empty exercise c
 
 The API runtime account should have data access only, while the deployment account has DDL/index/collection-modification permissions. Protect backups, define retention, use provider encryption, and verify restores before launch.
 
+## Render deployment
+
+The API checks MongoDB's `_schema_versions` document against `SCHEMA_VERSION` and PostgreSQL's Alembic revision at startup. A successful build followed by `MongoDB schema is not current` means the MongoDB version marker is missing or outdated in the configured database. Uvicorn exits before binding a port, which also causes Render's subsequent "No open ports detected" message.
+
+For an existing database, complete the adoption checks below before enabling automatic migrations. Do not stamp an unknown PostgreSQL schema or bypass the startup checks.
+
+After pushing these files, open the existing Render web service's **Settings > Build & Deploy**. Set **Root Directory** to `backend` and use these commands:
+
+| Setting | Free instance | Paid instance |
+| --- | --- | --- |
+| Build Command | `python -m pip install -r requirements.txt && python -m scripts.prepare_deploy` | `python -m pip install -r requirements.txt` |
+| Pre-Deploy Command | Unavailable; preparation runs during the build | `python -m scripts.prepare_deploy` |
+| Start Command | `uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --ws-max-size 65536 --ws-max-queue 16` | Same as Free |
+
+Render documents its [deployment commands](https://render.com/docs/deploys#deploy-steps) and restricts the pre-deploy command to paid services. The build command provides the deployment preparation step for Free instances. The command must be added to the existing service settings; changing the Procfile alone does not update the dashboard's explicit start command.
+
+`python -m scripts.prepare_deploy` first runs `python -m alembic upgrade head`, then `python -m scripts.provision_mongo --apply`, using the backend directory and the current Python interpreter. Either failure stops preparation with a nonzero exit code, preventing Render from launching an unprepared build. Repeated successful runs are supported: Alembic applies pending revisions, and MongoDB reapplies validators/indexes before publishing its schema version. No feature or demo records are inserted.
+
+Set `DATABASE_URL`, `MONGO_URI`, and `MONGO_DB_NAME` in Render's environment to the intended target databases, along with the required Firebase and application secrets. The preparation step needs migration/collection/index permissions; use a separate deployment job if your runtime credentials have data access only. Do not put connection strings into build commands or commit them.
+
+Deploy the latest commit after saving the commands. The logs should show `Database schemas are ready for application startup.` before Uvicorn starts. Startup continues to verify both schemas and Firebase before marking `/health/ready` ready.
+
 ## Adopting an existing database created by create_all
 
 Do not run the baseline CREATE TABLE script over an existing deployment, and do not stamp an unknown schema.

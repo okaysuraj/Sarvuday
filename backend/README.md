@@ -32,10 +32,16 @@ This is the core server application powering the Sarvuday platform. It handles a
    pip install -r requirements.txt
    ```
 3. Copy `.env.example` to `.env` and fill in the configuration parameters for cloud databases (Neon PostgreSQL, MongoDB Atlas) and Hugging Face Spaces AI assistant.
-4. Run the development server:
+4. Prepare both database schemas before starting the server (for existing databases, follow the adoption instructions in [DATABASE.md](DATABASE.md) first):
+   ```bash
+   python -m scripts.prepare_deploy
+   ```
+5. Run the development server:
    ```bash
    uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
    ```
+
+For Render, configure a database preparation step before Uvicorn using the [Render deployment settings](DATABASE.md#render-deployment). Startup checks schema versions and exits if provisioning or migrations have not run.
 
 ## 🧪 Running Tests
 

@@ -163,13 +163,13 @@ You need to create a `.env` file in the `/mobile` directory so the Expo app know
 
 ## 3. Deployment Checklist
 
-1. **Database Migrations**: Run Alembic migrations on your production PostgreSQL database before launching the backend.
+1. **Database Preparation**: Apply PostgreSQL migrations and MongoDB validators/indexes before launching the backend. For an existing database, first follow the adoption checks in [backend/DATABASE.md](./backend/DATABASE.md).
    ```bash
    cd backend
-   alembic upgrade head
+   python -m scripts.prepare_deploy
    ```
 2. **Web Deployment**: Deploy `/frontend` to Vercel/Netlify. Ensure build command is `npm run build` and output directory is `dist`.
-3. **Backend Deployment**: Deploy `/backend` to Render/Railway using the provided Dockerfile or via standard ASGI Uvicorn commands.
+3. **Backend Deployment**: Deploy `/backend` to Render/Railway. Configure the database preparation step before the Uvicorn start command using the [Render settings](./backend/DATABASE.md#render-deployment).
 4. **Mobile Deployment**: 
    - Use EAS (Expo Application Services) to build the app.
    - Run `eas build --platform ios` and `eas build --platform android`.
