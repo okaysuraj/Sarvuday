@@ -1,6 +1,6 @@
+# Set Netlify's Base directory to frontend so it discovers this file.
 # Build the web client and let React Router handle browser URLs.
 [build]
-  base = "frontend"
   command = "npm run build"
   publish = "dist"
 

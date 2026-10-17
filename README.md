@@ -24,7 +24,6 @@ The three applications have separate dependencies. The shared API code sits besi
 | `.gitignore` | Excludes secrets, dependencies, logs and generated files | Version control |
 | `.prettierrc.json` | Shared editor formatting preferences | Optional editor tooling |
 | `README.md` | Setup and maintenance instructions | Maintenance |
-| `netlify.toml` | Web deployment settings | Netlify deployment |
 
 `.git/` holds repository history. `.agents/` holds local coding-assistant skills. Neither is application runtime code. Installed dependencies (`node_modules/`, `backend/venv/`) are local and untracked; production environments install their own dependencies.
 
@@ -68,7 +67,7 @@ Use descriptive names, format code consistently, and comment decisions that are 
 
 ## Deployment
 
-The web client uses [netlify.toml](netlify.toml). Render runs the backend with `backend` as its root directory; its build and start commands are documented in the backend guide. Mobile release settings live in `mobile/app.json` and `mobile/eas.json`.
+The web client uses [frontend/netlify.toml](frontend/netlify.toml). Set Netlify's Base directory to `frontend` so it finds the configuration and installs the web client's dependencies. Render runs the backend with `backend` as its root directory; its build and start commands are documented in the backend guide. Mobile release settings live in `mobile/app.json` and `mobile/eas.json`.
 
 AI replies use the OpenAI API through the backend. Configure `OPENAI_API_KEY` on the server; model binaries and a separate inference server are unnecessary.
 

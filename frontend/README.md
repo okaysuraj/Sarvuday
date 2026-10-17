@@ -45,7 +45,7 @@ npm run build
 npm run preview
 ```
 
-Vite writes the production app to `dist/`. Netlify uses the root `netlify.toml` for build settings and browser-route fallbacks. Configure production environment variables before building; Vite embeds public values in the bundle.
+Vite writes the production app to `dist/`. Netlify uses [netlify.toml](netlify.toml) in this directory for build settings and browser-route fallbacks. In Netlify's build settings, set **Base directory** to `frontend`; the configuration runs `npm run build` and publishes `dist` relative to that directory. Configure production environment variables before building; Vite embeds public values in the bundle.
 
 `netlify.toml` sets the production API to `https://sarvuday-backend.onrender.com`. Local development continues to use the address in `.env`.
 
