@@ -98,17 +98,3 @@ class PrescriptionService:
             total_count=total,
             prescriptions=[PrescriptionBase.model_validate(p) for p in records],
         )
-
-    async def get_session_prescription(self, session_id: str, counsellor_id: str):
-        record = (
-            await self.db.execute(
-                select(Prescription)
-                .where(
-                    Prescription.session_id == session_id,
-                    Prescription.counsellor_id == counsellor_id,
-                )
-                .order_by(Prescription.created_at.desc())
-                .limit(1)
-            )
-        ).scalar_one_or_none()
-        return PrescriptionBase.model_validate(record) if record else None

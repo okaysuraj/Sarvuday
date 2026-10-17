@@ -31,19 +31,6 @@ def database_urls(value: str):
     )
 
 
-def set_transaction_timeouts(connection, *, statement_timeout_ms, lock_timeout_ms=None):
-    """Set limits inside a transaction so PgBouncer accepts the connection."""
-    connection.execute(
-        text("SELECT set_config('statement_timeout', :timeout, true)"),
-        {"timeout": str(statement_timeout_ms)},
-    )
-    if lock_timeout_ms is not None:
-        connection.execute(
-            text("SELECT set_config('lock_timeout', :timeout, true)"),
-            {"timeout": str(lock_timeout_ms)},
-        )
-
-
 POSTGRES_DATABASE_URL, POSTGRES_SYNC_URL, _connect_args = database_urls(
     settings.database_url
 )
@@ -60,8 +47,10 @@ engine = create_async_engine(
 
 @event.listens_for(engine.sync_engine, "begin")
 def configure_query_timeout(connection):
-    set_transaction_timeouts(
-        connection, statement_timeout_ms=settings.database_statement_timeout_ms
+    # Transaction-local settings also work through PgBouncer transaction pooling.
+    connection.execute(
+        text("SELECT set_config('statement_timeout', :timeout, true)"),
+        {"timeout": str(settings.database_statement_timeout_ms)},
     )
 
 

@@ -10,6 +10,26 @@ The web and mobile clients share one FastAPI backend for authentication, appoint
 | `shared/`   | Generated API types and the shared request adapter | Generated from FastAPI             |
 | `scripts/`  | Contract generation and repository checks          | `npm run check`                    |
 
+## Root files and folders
+
+The three applications have separate dependencies. The shared API code sits beside them because both clients import it.
+
+| Item | Purpose | Used when |
+| --- | --- | --- |
+| `shared/api.ts` | One request formatter and error-message helper for both clients | Web and mobile builds/runtime |
+| `shared/api-types.d.ts` | Generated request and response types; regenerate instead of editing | Mobile type checking and API maintenance |
+| `scripts/` | Generate the contract and run the combined build checks | Development/release checks |
+| Root `package.json`, `package-lock.json` | Commands and reproducible dependencies for those tools | Development/release checks |
+| Root `node_modules/` | Installed tooling dependencies; recreated with `npm ci` | Running the root commands |
+| `.gitignore` | Excludes secrets, dependencies, logs and generated files | Version control |
+| `.prettierrc.json` | Shared editor formatting preferences | Optional editor tooling |
+| `README.md` | Setup and maintenance instructions | Maintenance |
+| `netlify.toml` | Web deployment settings | Netlify deployment |
+
+`.git/` holds repository history. `.agents/` holds local coding-assistant skills. Neither is application runtime code. Installed dependencies (`node_modules/`, `backend/venv/`) are local and untracked; production environments install their own dependencies.
+
+The root tooling is not required on Render or on a user's phone. Client builds use the committed shared contract, so they do not need Python or root tooling dependencies. Keep `shared/` in its current location unless both clients' imports and bundler settings are updated together.
+
 ## Run locally
 
 Start the backend first, then either client. Each application reads its own `.env` file. Client environment values are public build configuration; backend credentials belong only on the server.

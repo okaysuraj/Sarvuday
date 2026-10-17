@@ -2,11 +2,6 @@
 
 from enum import Enum
 
-# Verify email route
-verify_email_route = "/auth/verify-email"
-admin_verify_email_route = "/"
-reset_password_route = "/auth/reset-password"
-
 
 # Gender Enum
 class GenderEnum(str, Enum):
@@ -22,14 +17,6 @@ class UserTypeEnum(str, Enum):
     admin = "admin"
 
 
-# User ID generation configuration
-USER_ID_CONFIG = {
-    UserTypeEnum.normal_user.value: {"prefix": "NUSER", "length": 9},
-    UserTypeEnum.counsellor.value: {"prefix": "CUSER", "length": 6},
-    UserTypeEnum.admin.value: {"prefix": "ADMIN", "length": 3},
-}
-
-
 # Admin Role Enum
 class AdminRoleEnum(str, Enum):
     super_admin = "super_admin"
@@ -37,32 +24,6 @@ class AdminRoleEnum(str, Enum):
     auditor = "auditor"
     support = "support"
 
-
-# User Emotions Enum
-class UserEmotionsEnum(str, Enum):
-    grateful = "grateful"
-    happy = "happy"
-    sad = "sad"
-    fear = "fear"
-    stress = "stress"
-    anxiety = "anxiety"
-    bipolar = "bipolar"
-    depression = "depression"
-
-
-# Emotions and their categories
-EMOTION_CATEGORIES = {
-    "positive": [UserEmotionsEnum.grateful.value, UserEmotionsEnum.happy.value],
-    "negative": [
-        UserEmotionsEnum.sad.value,
-        UserEmotionsEnum.fear.value,
-        UserEmotionsEnum.stress.value,
-        UserEmotionsEnum.anxiety.value,
-        UserEmotionsEnum.bipolar.value,
-        UserEmotionsEnum.depression.value,
-    ],
-    "neutral": [],
-}
 
 # Assessments scoring constants
 MAX_BDI_SCORE = 63
@@ -92,9 +53,6 @@ class CounsellorAvailabilityStatusEnum(str, Enum):
     unavailable = "unavailable"
     booked = "booked"
     on_leave = "on_leave"
-
-
-COUNSELLOR_AVAILABILITY_DAYS = 30
 
 
 # Payment Status Enum
@@ -133,11 +91,3 @@ class CommissionTypeEnum(str, Enum):
     low = "low"
     medium = "medium"
     high = "high"
-
-
-# Commission Percentage Constant
-COMMISSION_PERCENTAGE = {
-    CommissionTypeEnum.low.value: 5,
-    CommissionTypeEnum.medium.value: 10,
-    CommissionTypeEnum.high.value: 15,
-}

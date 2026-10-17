@@ -10,33 +10,21 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--adopt-legacy",
-        action="store_true",
-        help="Repair reviewed omissions, verify and record a legacy PostgreSQL baseline before migrations",
+    # Older Render build commands still pass this flag. Adoption is complete;
+    # Alembic now owns every schema change, including creating a new database.
+    parser.add_argument("--adopt-legacy", action="store_true", help=argparse.SUPPRESS)
+    parser.parse_args(argv)
+    print("Running PostgreSQL migrations...", flush=True)
+    result = subprocess.run(
+        [sys.executable, "-m", "alembic", "upgrade", "head"], cwd=BACKEND_DIR
     )
-    args = parser.parse_args(argv)
-    steps = []
-    if args.adopt_legacy:
-        steps.append(
-            (
-                "legacy PostgreSQL verification",
-                ["-m", "scripts.adopt_legacy_postgres", "--apply"],
-            )
+    if result.returncode:
+        print(
+            "PostgreSQL migrations failed; deployment preparation stopped.",
+            file=sys.stderr,
         )
-    steps.append(("PostgreSQL migrations", ["-m", "alembic", "upgrade", "head"]))
-    for label, arguments in steps:
-        print(f"Running {label}...", flush=True)
-        try:
-            subprocess.run([sys.executable, *arguments], cwd=BACKEND_DIR, check=True)
-        except subprocess.CalledProcessError as error:
-            print(
-                f"{label} failed; deployment preparation stopped.",
-                file=sys.stderr,
-                flush=True,
-            )
-            return error.returncode
-    print("Database schemas are ready for application startup.", flush=True)
+        return result.returncode
+    print("Database schema is ready for application startup.", flush=True)
     return 0
 
 

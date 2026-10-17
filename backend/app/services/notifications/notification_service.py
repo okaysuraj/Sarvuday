@@ -1,12 +1,10 @@
 """Notification service business logic and persistence."""
 
-from uuid import uuid4
-
 from fastapi import HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.notification import Notification, NotificationTypeEnum
+from app.models.notification import Notification
 from app.schemas.notification_schemas import NotificationBase, NotificationListResponse
 
 
@@ -50,25 +48,3 @@ class NotificationService:
             )
         await self.db.commit()
         return {"status": "success", "message": "Notification marked as read."}
-
-    async def create_notification(
-        self,
-        user_id: str,
-        user_type: str,
-        title: str,
-        message: str,
-        notification_type: NotificationTypeEnum = NotificationTypeEnum.system,
-    ) -> Notification:
-        """Create a notification for a user."""
-        notification = Notification(
-            notification_id=f"NOTIF-{uuid4().hex[:12]}",
-            user_id=user_id,
-            user_type=user_type,
-            title=title,
-            message=message,
-            type=notification_type,
-            is_read=False,
-        )
-        self.db.add(notification)
-        await self.db.commit()
-        return notification

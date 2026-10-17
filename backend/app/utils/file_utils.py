@@ -8,7 +8,6 @@ from fastapi import HTTPException, UploadFile
 
 BASE_UPLOAD_DIR = Path("uploads")
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png"}
-ALLOWED_PDF_TYPES = {"application/pdf"}
 MAX_FILE_SIZE_MB = 2
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 MIME_EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png", "application/pdf": ".pdf"}
@@ -81,15 +80,6 @@ def save_uploaded_file(
         destination.unlink(missing_ok=True)
         raise
     return str(destination.relative_to(root.parent))
-
-
-def delete_file(relative_path: str) -> None:
-    root = BASE_UPLOAD_DIR.resolve()
-    destination = Path(relative_path).resolve()
-    if not destination.is_relative_to(root) or destination == root:
-        raise HTTPException(status_code=400, detail="Invalid uploaded file path")
-    if destination.is_file():
-        destination.unlink()
 
 
 def replace_uploaded_file(

@@ -22,7 +22,6 @@ class Settings(BaseSettings):
     database_pool_timeout: int = Field(default=15, ge=1)
     database_statement_timeout_ms: int = Field(default=15000, ge=100)
 
-    backend_base_url: str = ""
     frontend_base_url: str = ""
     private_key_id: str = ""
     firebase_client_email: str

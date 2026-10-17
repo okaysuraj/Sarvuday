@@ -12,9 +12,9 @@ FastAPI serves the web and mobile apps. PostgreSQL is the only application datab
 | `app/services/` | Business rules and database operations                      |
 | `app/models/`   | SQLAlchemy tables and relationships                         |
 | `app/schemas/`  | Validated requests and explicit response fields             |
-| `app/database/` | PostgreSQL pool and verified legacy schema adoption         |
+| `app/database/` | PostgreSQL URLs, pool and request sessions         |
 | `migrations/`   | Ordered, versioned schema changes                           |
-| `scripts/`      | Deployment preparation, data import and administrator setup |
+| `scripts/`      | Migrations, contract export and administrator setup |
 
 Import dependencies from their specific modules. `app/models/__init__.py` registers every table for relationships and Alembic. Add schema changes in a new revision; never change an already applied migration.
 
@@ -65,7 +65,7 @@ Production needs `ENVIRONMENT=production`, explicit HTTPS `CORS_ALLOWED_ORIGINS`
 | Payments         | `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET` |
 | Assistant        | `OPENAI_API_KEY`, optional `OPENAI_MODEL`, `OPENAI_MAX_OUTPUT_TOKENS`  |
 
-Defaults and connection limits are in `app/config.py`. Each worker has one bounded async PostgreSQL pool. Migration and import commands use short-lived synchronous connections. Transaction-local timeouts support transaction poolers; preserve TLS options in the URL. A separate migration job may use the provider's direct URL while the API uses its pooled URL.
+Defaults and connection limits are in `app/config.py`. Each worker has one bounded async PostgreSQL pool. Alembic migrations use short-lived synchronous connections. Transaction-local timeouts support transaction poolers; preserve TLS options in the URL. A separate migration job may use the provider's direct URL while the API uses its pooled URL.
 
 ### OpenAI assistant
 
@@ -97,23 +97,13 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
 Preparation applies Alembic migrations without inserting demonstration content. Startup verifies the current SQL revision and initializes Firebase. `/health/live` checks the process; `/health/ready` checks initialization and PostgreSQL connectivity. Production API documentation requires `ENABLE_API_DOCS=true`.
 
-## Existing PostgreSQL deployments
+## Database migration history
 
-Back up the database and verify restoration before changing its schema. Preview adoption of an unversioned older deployment with:
+All deployed tables are now versioned by Alembic. Keep every applied revision and `migrations/sql/0001_baseline.sql`: Alembic needs the complete revision chain, and the first revision reads that SQL file when creating an empty database. `migrations/script.py.mako` is the template for new revisions.
 
-```powershell
-python -m scripts.adopt_legacy_postgres
-```
+The completed unversioned-schema adoption tools have been removed. `scripts.prepare_deploy` still accepts `--adopt-legacy` for compatibility with the existing Render build command, but all preparation now runs `alembic upgrade head`. A new empty database can be created directly. An older unversioned database requires explicit reconciliation using the tooling in Git history; deployment does not silently stamp it as current.
 
-For that deployment, apply the reviewed repair and remaining migrations:
-
-```powershell
-python -m scripts.prepare_deploy --adopt-legacy
-```
-
-`app/database/legacy_schema.py` compares the complete catalog with the frozen baseline in a temporary reference schema. It only repairs the 18 reviewed nullable column omissions. Other differences stop preparation. Repairs and baseline recording are atomic; later runs skip adoption when a revision already exists. Duplicate bookings, malformed profile JSON and inconsistent records require explicit reconciliation, without deleting data to make migration succeed.
-
-Revision `20261017_0003` adds the remaining feature tables and backfills account identities. It preserves existing SQL records. Cross-role ID collisions stop migration. Destructive downgrade is disabled; use a verified backup and the prior deployment for rollback.
+Revision `20261017_0003` preserves existing records and backfills account identities. Cross-role ID collisions stop migration. Destructive downgrade is disabled; use a verified backup and the prior deployment for rollback.
 
 ## Backups and recovery
 
@@ -127,13 +117,13 @@ Set **Root Directory** to `backend`.
 
 The backend automatically trusts its own hostname from Render's `RENDER_EXTERNAL_HOSTNAME` setting. Keep `ALLOWED_HOSTS` for additional custom domains; values are hostnames without a scheme or path. Requests for unrelated hosts remain rejected. Set `ENVIRONMENT=production` and the explicit web origins described above. Use `/health/ready` as the Render health check path.
 
-For the existing deployment, use this **Build Command**:
+Use this **Build Command**:
 
 ```bash
-python -m pip install -r requirements.txt && python -m scripts.prepare_deploy --adopt-legacy
+python -m pip install -r requirements.txt && python -m scripts.prepare_deploy
 ```
 
-For a new empty database, omit `--adopt-legacy`. Use this **Start Command**:
+The previous `--adopt-legacy` command remains accepted. Render uses its explicit start command, so a `Procfile` is unnecessary. Use this **Start Command**:
 
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --ws-max-size 65536 --ws-max-queue 16
@@ -167,4 +157,16 @@ Run `npm run check` from the repository root for contract freshness, web lint/bu
 
 `python -m scripts.export_openapi` exports the shared client contract using inert configuration without entering the application lifespan or opening hosted connections. Update Pydantic schemas alongside endpoint behavior, then run the root API generator.
 
-Keep `scripts.prepare_deploy` and `scripts.adopt_legacy_postgres`: the existing Render build command calls them. `scripts.create_super_admin` remains the explicit administrator setup command. Applied migrations and their frozen baseline are required to rebuild or verify the database schema.
+| File or folder | Why it stays |
+| --- | --- |
+| `app/` | Registered API routes, services, validation, SQL models and authentication |
+| `migrations/`, `alembic.ini` | Rebuild, upgrade and verify the database schema |
+| `requirements.txt` | Reproducible backend dependencies |
+| `scripts/prepare_deploy.py` | Apply migrations before starting API workers |
+| `scripts/create_super_admin.py` | Explicit, verified administrator setup |
+| `scripts/export_openapi.py` | Generate the contract used by both clients |
+| `README.md` | Deployment, configuration and recovery instructions |
+| Local `.env` | Development credentials; ignored by Git and supplied separately on Render |
+| Local `venv/` | Installed Python dependencies; recreated with `python -m venv venv` and pip |
+
+Package `__init__.py` files establish import boundaries. Model initializers also register SQLAlchemy relationships and table metadata; route initializers assemble the public API. `asyncpg` serves asynchronous API queries, while `psycopg2-binary` serves Alembic's synchronous migration connections to the same PostgreSQL database.
