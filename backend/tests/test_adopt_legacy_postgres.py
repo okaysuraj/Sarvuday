@@ -77,7 +77,7 @@ def test_adoption_then_upgrade_preserves_legacy_data_and_is_repeatable(legacy_co
 @pytest.mark.parametrize("drift", [
     "ALTER TYPE genderenum ADD VALUE 'unexpected'",
     "DROP TABLE notifications",
-    "ALTER TABLE normal_users DROP COLUMN bio",
+    "ALTER TABLE normal_users DROP COLUMN hashed_password",
     "ALTER TABLE normal_users ALTER COLUMN name TYPE varchar(100)",
     "ALTER TABLE normal_users ALTER COLUMN email DROP NOT NULL",
     "ALTER TABLE normal_users ALTER COLUMN created_at SET DEFAULT '2000-01-01'::timestamptz",
@@ -113,3 +113,76 @@ def test_unrelated_objects_are_preserved(legacy_connection):
 
     assert adoption.adopt_baseline(legacy_connection, apply=True) == 0
     assert legacy_connection.scalar(text("SELECT id FROM unrelated_records")) == 42
+
+
+def omit_deployed_legacy_columns(connection):
+    for table, column in adoption.LEGACY_COLUMN_ADDITIONS:
+        connection.exec_driver_sql(f"ALTER TABLE {table} DROP COLUMN {column}")
+
+
+def test_all_reported_missing_columns_are_repaired_without_changing_existing_data(legacy_connection):
+    omit_deployed_legacy_columns(legacy_connection)
+    legacy_connection.execute(text("""
+        INSERT INTO normal_users (user_id, email, name, country, preferred_languages)
+        VALUES ('AUDIT-REPAIR', 'repair@example.invalid', 'Existing user', 'India', 'English, Hindi')
+    """))
+
+    assert adoption.adopt_baseline(legacy_connection, apply=True) == 0
+    assert adoption.verify_baseline(legacy_connection) == []
+    row = legacy_connection.execute(text("""
+        SELECT name, country, preferred_languages, bio, is_anonymous, symptoms
+        FROM normal_users WHERE user_id = 'AUDIT-REPAIR'
+    """)).one()
+    assert tuple(row) == ("Existing user", "India", "English, Hindi", None, None, None)
+    assert MigrationContext.configure(legacy_connection).get_current_heads() == (adoption.BASELINE_REVISION,)
+    assert adoption.adopt_baseline(legacy_connection, apply=True) == 0
+
+
+def test_repair_preview_leaves_schema_and_version_untouched(legacy_connection, capsys):
+    omit_deployed_legacy_columns(legacy_connection)
+    schema = legacy_connection.scalar(text("SELECT current_schema()"))
+    before = adoption.schema_snapshot(legacy_connection, schema)
+
+    assert adoption.adopt_baseline(legacy_connection) == 0
+    assert adoption.schema_snapshot(legacy_connection, schema) == before
+    assert MigrationContext.configure(legacy_connection).get_current_heads() == ()
+    output = capsys.readouterr().out
+    assert output.count("Planned legacy repair: ADD COLUMN") == 18
+    assert "Repair plan verified" in output
+    assert "Verified existing PostgreSQL schema against baseline" not in output
+
+
+def test_unrelated_drift_prevents_even_reviewed_additions(legacy_connection):
+    legacy_connection.exec_driver_sql("ALTER TABLE normal_users DROP COLUMN bio")
+    legacy_connection.exec_driver_sql("ALTER TABLE normal_users ALTER COLUMN name TYPE varchar(100)")
+    schema = legacy_connection.scalar(text("SELECT current_schema()"))
+    before = adoption.schema_snapshot(legacy_connection, schema)
+
+    assert adoption.adopt_baseline(legacy_connection, apply=True) == 1
+    assert adoption.schema_snapshot(legacy_connection, schema) == before
+    assert MigrationContext.configure(legacy_connection).get_current_heads() == ()
+
+
+def test_repair_statement_failure_rolls_back_all_additions(legacy_connection, monkeypatch):
+    omit_deployed_legacy_columns(legacy_connection)
+    schema = legacy_connection.scalar(text("SELECT current_schema()"))
+    before = adoption.schema_snapshot(legacy_connection, schema)
+    monkeypatch.setitem(adoption.LEGACY_COLUMN_ADDITIONS,
+                        ("counsellor_availability", "locked_until"), "invalid_audit_type")
+
+    with pytest.raises(ProgrammingError):
+        adoption.adopt_baseline(legacy_connection, apply=True)
+
+    assert adoption.schema_snapshot(legacy_connection, schema) == before
+    assert MigrationContext.configure(legacy_connection).get_current_heads() == ()
+
+
+def test_post_repair_mismatch_rolls_back_additions_and_does_not_stamp(legacy_connection, monkeypatch):
+    omit_deployed_legacy_columns(legacy_connection)
+    schema = legacy_connection.scalar(text("SELECT current_schema()"))
+    before = adoption.schema_snapshot(legacy_connection, schema)
+    monkeypatch.setitem(adoption.LEGACY_COLUMN_ADDITIONS, ("counsellors", "timezone"), "character varying(49)")
+
+    assert adoption.adopt_baseline(legacy_connection, apply=True) == 1
+    assert adoption.schema_snapshot(legacy_connection, schema) == before
+    assert MigrationContext.configure(legacy_connection).get_current_heads() == ()

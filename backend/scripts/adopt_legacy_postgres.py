@@ -1,4 +1,4 @@
-"""Verify an unversioned PostgreSQL baseline; --apply records its Alembic revision."""
+"""Verify a legacy PostgreSQL schema; --apply repairs reviewed omissions and records its baseline."""
 import argparse
 from pathlib import Path
 import re
@@ -17,6 +17,29 @@ BASELINE_REVISION = "20261016_0001"
 BASELINE_SQL = (BACKEND_DIR / "migrations/sql/0001_baseline.sql").read_text(encoding="utf-8")
 TABLE_NAMES = re.findall(r"CREATE TABLE (\w+)\s*\(", BASELINE_SQL)
 ENUM_NAMES = re.findall(r"CREATE TYPE (\w+) AS ENUM", BASELINE_SQL)
+
+# Reviewed omissions from the deployed pre-Alembic schema. Every addition is
+# nullable with no default: historical records retain unknown values as NULL.
+LEGACY_COLUMN_ADDITIONS = {
+    ("appointments", "is_emergency"): "boolean",
+    ("counsellor_availability", "is_locked"): "boolean",
+    ("counsellor_availability", "locked_until"): "timestamp without time zone",
+    ("counsellors", "therapy_methods"): "text",
+    ("counsellors", "timezone"): "character varying(50)",
+    ("normal_users", "accessibility_preferences"): "text",
+    ("normal_users", "age_range"): "character varying(50)",
+    ("normal_users", "bio"): "text",
+    ("normal_users", "dob"): "character varying(20)",
+    ("normal_users", "emergency_contact_name"): "character varying(255)",
+    ("normal_users", "emergency_contact_phone"): "character varying(15)",
+    ("normal_users", "emergency_contact_relation"): "character varying(100)",
+    ("normal_users", "is_anonymous"): "boolean",
+    ("normal_users", "mental_health_history"): "text",
+    ("normal_users", "stress_factors"): "text",
+    ("normal_users", "symptoms"): "text",
+    ("normal_users", "therapy_goals"): "text",
+    ("normal_users", "timezone"): "character varying(50)",
+}
 
 # Compare catalog definitions, never application records. search_path makes types
 # and foreign keys in the reference and application schemas render identically.
@@ -102,7 +125,7 @@ def baseline_differences(expected, actual):
     return differences
 
 
-def verify_baseline(connection):
+def baseline_snapshots(connection):
     original_path = connection.scalar(text("SHOW search_path"))
     target_schema = connection.scalar(text("SELECT current_schema()"))
     if not target_schema or target_schema.startswith("pg_"):
@@ -128,9 +151,33 @@ def verify_baseline(connection):
         if existing:
             tables = ", ".join(f"{quote(target_schema)}.{quote(name)}" for name in existing)
             connection.exec_driver_sql(f"LOCK TABLE {tables} IN ACCESS SHARE MODE")
-        return baseline_differences(expected, schema_snapshot(connection, target_schema))
+        return expected, schema_snapshot(connection, target_schema), target_schema
     finally:
         connection.execute(text("SELECT set_config('search_path', :path, true)"), {"path": original_path})
+
+
+def verify_baseline(connection):
+    expected, actual, _ = baseline_snapshots(connection)
+    return baseline_differences(expected, actual)
+
+
+def legacy_repair_plan(expected, actual):
+    expected_columns = {row[:2]: row for row in expected["columns"]}
+    existing_columns = {row[:2] for row in actual["columns"]}
+    additions = [key for key in LEGACY_COLUMN_ADDITIONS
+                 if key in expected_columns and key not in existing_columns]
+    projected = {category: list(rows) for category, rows in actual.items()}
+    projected["columns"].extend(expected_columns[key] for key in additions)
+    return additions, baseline_differences(expected, projected)
+
+
+def report_differences(differences):
+    print("Existing PostgreSQL schema does not match the baseline; no revision recorded.", file=sys.stderr)
+    for difference in differences[:20]:
+        print(f"  {difference}", file=sys.stderr)
+    if len(differences) > 20:
+        print(f"  {len(differences) - 20} additional differences.", file=sys.stderr)
+    print("Resolve schema drift using backend/DATABASE.md before retrying.", file=sys.stderr)
 
 
 def adopt_baseline(connection, *, apply=False):
@@ -138,29 +185,48 @@ def adopt_baseline(connection, *, apply=False):
     if heads:
         print(f"PostgreSQL already has Alembic revisions: {', '.join(heads)}; no adoption needed.", flush=True)
         return 0
-    differences = verify_baseline(connection)
+    expected, actual, target_schema = baseline_snapshots(connection)
+    additions, differences = legacy_repair_plan(expected, actual)
     if differences:
-        print("Existing PostgreSQL schema does not match the baseline; no revision recorded.", file=sys.stderr)
-        for difference in differences[:20]:
-            print(f"  {difference}", file=sys.stderr)
-        if len(differences) > 20:
-            print(f"  {len(differences) - 20} additional differences.", file=sys.stderr)
-        print("Resolve schema drift using backend/DATABASE.md before retrying.", file=sys.stderr)
+        report_differences(differences)
         return 1
-    print(f"Verified existing PostgreSQL schema against baseline {BASELINE_REVISION}.", flush=True)
+    for table, column in additions:
+        print(f"Planned legacy repair: ADD COLUMN {table}.{column} {LEGACY_COLUMN_ADDITIONS[table, column]} NULL.",
+              flush=True)
     if apply:
-        config = Config(str(BACKEND_DIR / "alembic.ini"))
-        config.attributes["connection"] = connection
-        command.stamp(config, BASELINE_REVISION)
+        # Keep every addition and the version record atomic. Other differences
+        # are rejected before any ALTER; recheck the full schema after repair.
+        with connection.begin_nested() as repair:
+            quote = connection.dialect.identifier_preparer.quote
+            for table, column in additions:
+                connection.exec_driver_sql(
+                    f"ALTER TABLE {quote(target_schema)}.{quote(table)} "
+                    f"ADD COLUMN {quote(column)} {LEGACY_COLUMN_ADDITIONS[table, column]}"
+                )
+            if additions:
+                differences = verify_baseline(connection)
+                if differences:
+                    repair.rollback()
+                    report_differences(differences)
+                    return 1
+                print(f"Added {len(additions)} missing legacy columns; existing records preserved.", flush=True)
+            print(f"Verified existing PostgreSQL schema against baseline {BASELINE_REVISION}.", flush=True)
+            config = Config(str(BACKEND_DIR / "alembic.ini"))
+            config.attributes["connection"] = connection
+            command.stamp(config, BASELINE_REVISION)
         print(f"Recorded PostgreSQL baseline {BASELINE_REVISION}; existing records preserved.", flush=True)
+    elif additions:
+        print("Repair plan verified. Use --apply to add these columns, reverify, and record the baseline.", flush=True)
     else:
+        print(f"Verified existing PostgreSQL schema against baseline {BASELINE_REVISION}.", flush=True)
         print("Verification only. Use --apply to record this baseline revision.", flush=True)
     return 0
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--apply", action="store_true", help="Record the baseline only after successful verification")
+    parser.add_argument("--apply", action="store_true",
+                        help="Add reviewed missing columns and record the baseline after full verification")
     args = parser.parse_args(argv)
     from app.database.postgres import POSTGRES_SYNC_URL, set_transaction_timeouts
     engine = create_engine(POSTGRES_SYNC_URL, poolclass=NullPool)

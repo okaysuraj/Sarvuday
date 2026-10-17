@@ -11,7 +11,7 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--adopt-legacy", action="store_true",
-                        help="Verify and record an existing unversioned PostgreSQL baseline before migrations")
+                        help="Repair reviewed omissions, verify and record a legacy PostgreSQL baseline before migrations")
     args = parser.parse_args(argv)
     steps = []
     if args.adopt_legacy:

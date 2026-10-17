@@ -58,6 +58,9 @@ def test_pooler_rejects_old_startup_options(pooler_database):
 
 
 def test_adoption_and_migrations_run_through_transaction_pooler(pooler_database):
+    with pooler_database.begin() as connection:
+        for table, column in adoption.LEGACY_COLUMN_ADDITIONS:
+            connection.exec_driver_sql(f"ALTER TABLE {table} DROP COLUMN {column}")
     result = run_backend("""
         from scripts.adopt_legacy_postgres import main as verify
         from scripts.prepare_deploy import main as prepare
@@ -67,13 +70,14 @@ def test_adoption_and_migrations_run_through_transaction_pooler(pooler_database)
     """)
     assert result.returncode == 0, result.stderr
     assert "Verified existing PostgreSQL schema" in result.stdout
+    assert "Added 18 missing legacy columns" in result.stdout
     assert result.stdout.count("Database schemas are ready for application startup.") == 2
     with pooler_database.connect() as connection:
         assert MigrationContext.configure(connection).get_current_heads() == ("20261016_0002",)
         row = connection.execute(text("""
-            SELECT name, preferred_languages FROM normal_users WHERE user_id = 'AUDIT-POOLED'
+            SELECT name, preferred_languages, bio, is_anonymous FROM normal_users WHERE user_id = 'AUDIT-POOLED'
         """)).one()
-        assert tuple(row) == ("Existing user", ["English", "Hindi"])
+        assert tuple(row) == ("Existing user", ["English", "Hindi"], None, None)
 
 
 def test_sync_and_async_runtime_timeouts_work_after_commit_and_rollback(pooler_database):

@@ -67,7 +67,7 @@ After taking a backup and rehearsing on staging, verify the unversioned database
 python -m scripts.adopt_legacy_postgres
 ```
 
-The verifier builds the frozen baseline in a uniquely named reference schema inside a savepoint, compares PostgreSQL catalog definitions, and rolls back all reference objects before continuing. It checks all baseline tables, enum labels, columns/types/defaults/nullability, primary/unique/foreign/check constraints, indexes, and non-internal triggers. Unrelated tables are preserved. This requires permission to create schemas in the target database, as well as the normal migration permissions. The preview does not stamp the database or alter application records.
+The verifier builds the frozen baseline in a uniquely named reference schema inside a savepoint, compares PostgreSQL catalog definitions, and rolls back all reference objects before continuing. It checks all baseline tables, enum labels, columns/types/defaults/nullability, primary/unique/foreign/check constraints, indexes, and non-internal triggers. Unrelated tables are preserved. This requires permission to create schemas in the target database, as well as the normal migration permissions. The preview lists any reviewed missing-column repairs without applying them or stamping the database.
 
 To record the baseline after verification and then run pending migrations and MongoDB provisioning:
 
@@ -83,7 +83,17 @@ python -m pip install -r requirements.txt && python -m scripts.prepare_deploy --
 
 Set **Start Command** to `uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --ws-max-size 65536 --ws-max-queue 16`. Paid instances can put `python -m scripts.prepare_deploy --adopt-legacy` in Pre-Deploy Command instead and install dependencies only in Build Command.
 
-The adoption option records only revision `20261016_0001`, only when every baseline definition matches. The subsequent normal Alembic upgrade still runs revision `20261016_0002`. Drift or a partial schema stops deployment with differences to investigate; it does not stamp an unknown schema or delete existing objects. Already versioned databases skip adoption, so later deploys can reuse the command without downgrading their revision. Once adoption succeeds, the option can also be removed.
+The adoption option records only revision `20261016_0001`, only when every baseline definition matches after any reviewed missing-column repairs. The subsequent normal Alembic upgrade still runs revision `20261016_0002`. Other drift or a partial schema stops deployment with differences to investigate. Already versioned databases skip adoption, so later deploys can reuse the command without downgrading their revision. Once adoption succeeds, the option can also be removed.
+
+### Recovering the older schema with 18 missing columns
+
+The hosted schema verification identified missing optional fields in `normal_users`, `counsellors`, `counsellor_availability`, and `appointments`. The reviewed definitions are listed in `LEGACY_COLUMN_ADDITIONS` in `scripts/adopt_legacy_postgres.py`.
+
+The existing `python -m scripts.prepare_deploy --adopt-legacy` command now adds these specific columns when they are absent. Each addition is nullable and has no default. Existing application values are preserved; newly available fields on historical rows remain `NULL`. It does not fabricate profile, clinical, emergency, or lock-state values.
+
+Before applying any addition, the command checks that the projected schema would match the complete baseline. A changed existing column, missing index/constraint, unexpected field, or any other difference stops the repair before writes. After adding the missing fields, it verifies the full schema again before recording the baseline revision. The additions and baseline version record share a savepoint and transaction, so an SQL failure or failed verification rolls back the whole repair. The frozen baseline SQL is unchanged.
+
+Preview the repair plan with `python -m scripts.adopt_legacy_postgres`. Apply it through the Render build command shown above. The logs should show `Added 18 missing legacy columns; existing records preserved.` for this deployment, followed by baseline verification, normal migrations, and MongoDB provisioning. Later successful deployments skip adoption after finding an existing Alembic revision.
 
 ### Neon pooled connections and timeout settings
 
@@ -135,6 +145,6 @@ Remove-Item Env:\SARVUDAY_RUN_POOLER_TESTS
 docker compose -f tests/pooling/compose.yaml down --volumes
 ```
 
-The pooler regressions reproduce rejection of the former startup options, run preview/adoption/PostgreSQL migrations/MongoDB provisioning twice, preserve an existing user, and exercise both runtime drivers across commit, rollback, query cancellation, and recovery. These are local compatibility tests, not a check of hosted Neon permissions or hosted schema drift.
+The pooler regressions reproduce rejection of the former startup options and the hosted schema's 18 missing columns, run preview/repair/adoption/PostgreSQL migrations/MongoDB provisioning twice, preserve an existing user, and exercise both runtime drivers across commit, rollback, query cancellation, and recovery. Separate repair tests cover preview without writes, unrelated drift, SQL errors, and rollback after failed final verification. These are local compatibility tests, not a check of hosted Neon permissions or hosted schema drift.
 
 Implementation references: [Alembic migration environment](https://alembic.sqlalchemy.org/en/latest/tutorial.html), [SQLAlchemy pool behavior](https://docs.sqlalchemy.org/en/20/core/pooling.html), and [MongoDB schema validation](https://www.mongodb.com/docs/manual/core/schema-validation/).
