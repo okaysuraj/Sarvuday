@@ -1,0 +1,31 @@
+name: sarvuday-pooler-audit
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: audit
+      POSTGRES_PASSWORD: local-audit-only
+      POSTGRES_DB: sarvuday_audit
+    ports:
+      - "127.0.0.1:55439:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/pooler-audit.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U audit -d sarvuday_audit"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  pooler:
+    build: .
+    ports:
+      - "127.0.0.1:56439:6432"
+    volumes:
+      - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+  mongo:
+    image: mongo:8.0
+    ports:
+      - "127.0.0.1:57029:27017"

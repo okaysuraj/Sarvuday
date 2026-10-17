@@ -54,6 +54,7 @@ def test_postgres_url_preserves_tls_and_supported_options():
     )
     assert arguments["ssl"] == "verify-full"
     assert arguments["server_settings"]["application_name"] == "audit"
+    assert "statement_timeout" not in arguments["server_settings"]
     assert async_url.query["command_timeout"] == "4"
     assert sync_url.query["sslmode"] == "verify-full"
 

@@ -85,6 +85,14 @@ Set **Start Command** to `uvicorn app.main:app --host 0.0.0.0 --port $PORT --wor
 
 The adoption option records only revision `20261016_0001`, only when every baseline definition matches. The subsequent normal Alembic upgrade still runs revision `20261016_0002`. Drift or a partial schema stops deployment with differences to investigate; it does not stamp an unknown schema or delete existing objects. Already versioned databases skip adoption, so later deploys can reuse the command without downgrading their revision. Once adoption succeeds, the option can also be removed.
 
+### Neon pooled connections and timeout settings
+
+Neon's transaction pooler rejects unsupported startup parameters such as `lock_timeout` and `statement_timeout`, including parameters supplied through the driver's `options` or `server_settings`. See Neon's [startup parameter troubleshooting](https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter).
+
+The adoption command now connects without timeout startup options and sets its 15-second lock timeout and 60-second statement timeout inside its transaction. Both API database engines set the configured query timeout at the start of each transaction. These settings expire on commit or rollback and are reapplied for the next transaction, so pooled backend connections do not depend on session state. TLS settings and credentials remain in the configured database URL.
+
+The Render build command above can continue using the pooled `DATABASE_URL`. Neon [recommends direct connections for schema migration tools](https://neon.com/docs/connect/connection-pooling#when-to-use-pooled-vs-direct-connections); a separate migration job can use the direct URL while the API uses the pooled URL.
+
 ## Connection and resource budgets
 
 Each API worker defaults to at most 10 asynchronous PostgreSQL connections and 4 synchronous PostgreSQL connections. Multiply this by the worker count and leave capacity for migrations, monitoring and maintenance. Pools use checkout health checks and recycle old connections. Query timeout defaults to 15 seconds and pool checkout timeout to 15 seconds.
@@ -111,5 +119,22 @@ docker stop sarvuday-audit-postgres-20261016 sarvuday-audit-mongo-20261016
 ~~~
 
 The final October 16, 2026 run passed 74 backend tests (21 database/tracking and 53 security regressions), including live migrations, zero Alembic drift, legacy profile conversion, booking uniqueness, concurrent availability writes, free cancellation/join consistency, prescription creation/ownership, dashboard queries, strict MongoDB validators, concurrent updates, empty-state reads, and real-data-only telemetry responses. This is not end-to-end validation of provider payments, Firebase, Daily video, hosted data, mobile hardware, or production load. Procfile now runs one Uvicorn worker because realtime connections/rate state are process-local; horizontal scaling requires a shared broker and distributed abuse protection.
+
+### PgBouncer compatibility tests
+
+The pooling fixture provides PostgreSQL and MongoDB on the same reserved local test ports above, plus PgBouncer in transaction mode on `127.0.0.1:56439`. It uses the separate database `sarvuday_pooler_audit` for pooled tests. Run this setup instead of the standalone audit containers:
+
+```powershell
+Set-Location backend
+docker compose -f tests/pooling/compose.yaml up --detach --build --wait
+$env:SARVUDAY_RUN_DATABASE_TESTS = '1'
+$env:SARVUDAY_RUN_POOLER_TESTS = '1'
+.\venv\Scripts\python.exe -m pytest tests -q
+Remove-Item Env:\SARVUDAY_RUN_DATABASE_TESTS
+Remove-Item Env:\SARVUDAY_RUN_POOLER_TESTS
+docker compose -f tests/pooling/compose.yaml down --volumes
+```
+
+The pooler regressions reproduce rejection of the former startup options, run preview/adoption/PostgreSQL migrations/MongoDB provisioning twice, preserve an existing user, and exercise both runtime drivers across commit, rollback, query cancellation, and recovery. These are local compatibility tests, not a check of hosted Neon permissions or hosted schema drift.
 
 Implementation references: [Alembic migration environment](https://alembic.sqlalchemy.org/en/latest/tutorial.html), [SQLAlchemy pool behavior](https://docs.sqlalchemy.org/en/20/core/pooling.html), and [MongoDB schema validation](https://www.mongodb.com/docs/manual/core/schema-validation/).

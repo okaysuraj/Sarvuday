@@ -1,6 +1,6 @@
 """Bounded, worker-local PostgreSQL pools. Importing never opens a connection."""
 from typing import AsyncGenerator
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -20,13 +20,21 @@ def database_urls(value: str):
     query.pop("channel_binding", None)
     async_args["server_settings"] = {
         "application_name": application_name,
-        "statement_timeout": str(settings.database_statement_timeout_ms),
     }
     return (
         url.set(drivername="postgresql+asyncpg", query=query),
         url.set(drivername="postgresql+psycopg2"),
         async_args,
     )
+
+
+def set_transaction_timeouts(connection, *, statement_timeout_ms, lock_timeout_ms=None):
+    """Set limits inside a transaction so PgBouncer accepts the connection."""
+    connection.execute(text("SELECT set_config('statement_timeout', :timeout, true)"),
+                       {"timeout": str(statement_timeout_ms)})
+    if lock_timeout_ms is not None:
+        connection.execute(text("SELECT set_config('lock_timeout', :timeout, true)"),
+                           {"timeout": str(lock_timeout_ms)})
 
 
 POSTGRES_DATABASE_URL, POSTGRES_SYNC_URL, _connect_args = database_urls(settings.database_url)
@@ -46,8 +54,15 @@ sync_engine = create_engine(
     pool_timeout=settings.database_pool_timeout,
     pool_pre_ping=True,
     pool_recycle=1800,
-    connect_args={"options": f"-c statement_timeout={settings.database_statement_timeout_ms}"},
 )
+
+
+@event.listens_for(engine.sync_engine, "begin")
+@event.listens_for(sync_engine, "begin")
+def configure_query_timeout(connection):
+    set_transaction_timeouts(connection, statement_timeout_ms=settings.database_statement_timeout_ms)
+
+
 SessionLocal = sessionmaker(bind=sync_engine, expire_on_commit=False)
 async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 Base = declarative_base()

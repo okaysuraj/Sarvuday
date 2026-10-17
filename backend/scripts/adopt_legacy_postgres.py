@@ -162,11 +162,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true", help="Record the baseline only after successful verification")
     args = parser.parse_args(argv)
-    from app.database.postgres import POSTGRES_SYNC_URL
-    engine = create_engine(POSTGRES_SYNC_URL, poolclass=NullPool,
-                           connect_args={"options": "-c lock_timeout=15000 -c statement_timeout=60000"})
+    from app.database.postgres import POSTGRES_SYNC_URL, set_transaction_timeouts
+    engine = create_engine(POSTGRES_SYNC_URL, poolclass=NullPool)
     try:
         with engine.begin() as connection:
+            set_transaction_timeouts(connection, statement_timeout_ms=60000, lock_timeout_ms=15000)
             return adopt_baseline(connection, apply=args.apply)
     finally:
         engine.dispose()
