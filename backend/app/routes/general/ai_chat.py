@@ -12,7 +12,6 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import settings
 from app.database.postgres import get_db
 from app.models import Counsellor, NormalUser
 from app.services.chatbot.chatbot_service import ChatBotService
@@ -121,16 +120,10 @@ async def ai_chat(
         new_session = await service.create_session(current_user.user_id, None)
         session_id = new_session.session_id
 
-    # Run inference
-    chatbot_model = settings.chatbot_model
-    chatbot_temperature = settings.chatbot_temperature
-
     try:
         result = await service.chat_inference(
             user_id=current_user.user_id,
             session_id=session_id,
-            chatbot_model=chatbot_model,
-            temperature=chatbot_temperature,
             user_input=payload.message,
         )
 

@@ -39,6 +39,5 @@ mobile/android/
 mobile/ios/
 mobile/.kotlin/
 
-# Independent AI service checkout and local agent skills
-Huggingface_Repo/
+# Local agent skills
 skills/

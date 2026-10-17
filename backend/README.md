@@ -1,6 +1,6 @@
 ﻿# Backend
 
-FastAPI serves the web and mobile apps. PostgreSQL is the only application database. Firebase verifies identities; Stripe, Daily and the configured assistant endpoint provide optional external services.
+FastAPI serves the web and mobile apps. PostgreSQL is the only application database. Firebase verifies identities; Stripe, Daily and OpenAI provide optional external services.
 
 ## Layout
 
@@ -63,9 +63,25 @@ Production needs `ENVIRONMENT=production`, explicit HTTPS `CORS_ALLOWED_ORIGINS`
 | ---------------- | ---------------------------------------------------------------------- |
 | Video            | `DAILY_API_KEY`, optional `DAILY_BASE_URL`                             |
 | Payments         | `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET` |
-| Assistant        | `CHATBOT_BASE_URL`, `CHATBOT_API_KEY`, `CHATBOT_MODEL`                 |
+| Assistant        | `OPENAI_API_KEY`, optional `OPENAI_MODEL`, `OPENAI_MAX_OUTPUT_TOKENS`  |
 
 Defaults and connection limits are in `app/config.py`. Each worker has one bounded async PostgreSQL pool. Migration and import commands use short-lived synchronous connections. Transaction-local timeouts support transaction poolers; preserve TLS options in the URL. A separate migration job may use the provider's direct URL while the API uses its pooled URL.
+
+### OpenAI assistant
+
+Create an API key in your [OpenAI project](https://platform.openai.com/api-keys), then set these values in `backend/.env` and the Render backend environment:
+
+```dotenv
+OPENAI_API_KEY=your-server-api-key
+OPENAI_MODEL=gpt-6-luna
+OPENAI_MAX_OUTPUT_TOKENS=2048
+```
+
+The backend uses the official [Responses API](https://developers.openai.com/api/docs/guides/streaming-responses) for ordinary and streamed replies. `OPENAI_MODEL` can select another Responses-compatible text model available to your API project. Requests omit sampling parameters so reasoning models can also be selected. API billing and model access belong to that OpenAI project.
+
+`CHATBOT_SYSTEM_PROMPT` controls assistant instructions. `MAX_TOTAL_TOKENS` limits approximate input history; `OPENAI_MAX_OUTPUT_TOKENS` separately caps generated output, including reasoning tokens when applicable. Recent SQL conversation pairs supply context. Requests set `store=false`; this disables response-history storage and does not establish zero data retention. See [OpenAI data controls](https://developers.openai.com/api/docs/guides/your-data) before sending sensitive records.
+
+Keep the API key only on the backend, outside Git. Missing credentials disable chat with a generic 503 response while other API features can still start. Streams persist only after a completion event; provider failures, truncation and disconnected streams never save partial replies. Test checks use a mocked HTTP transport and never make billable calls.
 
 ## Run locally
 
@@ -131,7 +147,11 @@ Do not place archives, connection files or patient records in Git. The importer 
 
 ## Render
 
-Set **Root Directory** to `backend`. For the existing deployment, use this **Build Command**:
+Set **Root Directory** to `backend`.
+
+Set `ALLOWED_HOSTS=sarvuday-backend.onrender.com` in the Render environment, alongside `ENVIRONMENT=production` and the explicit web origins described above. Hostnames have no scheme or path. A missing allowed hostname produces `400 Invalid host header`, including on health checks.
+
+For the existing deployment, use this **Build Command**:
 
 ```bash
 python -m pip install -r requirements.txt && python -m scripts.prepare_deploy --adopt-legacy

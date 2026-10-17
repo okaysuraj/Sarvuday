@@ -10,6 +10,7 @@ from sqlalchemy import text
 
 from app.core.firebase import initialize_firebase
 from app.database.postgres import engine
+from app.services.chatbot.chatbot_inference import close_openai_client
 
 
 async def verify_postgres_schema() -> None:
@@ -36,4 +37,7 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         app.state.ready = False
-        await engine.dispose()
+        try:
+            await close_openai_client()
+        finally:
+            await engine.dispose()

@@ -6,7 +6,6 @@ from fastapi import APIRouter, Depends, Query, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import settings
 from app.database.postgres import get_db
 from app.models import NormalUser
 from app.schemas.chatbot_schemas import (
@@ -20,6 +19,7 @@ from app.schemas.chatbot_schemas import (
     UpdateTitleResponse,
 )
 from app.services.chatbot.chatbot_service import ChatBotService
+from app.services.chatbot.chatbot_inference import get_openai_client
 from app.utils.oauth import ensure_normal_user
 
 router = APIRouter(prefix="/chatbot", tags=["Chatbot Sessions"])
@@ -111,12 +111,8 @@ async def chat_inference(
     current_user: NormalUser = Depends(ensure_normal_user),
     db: AsyncSession = Depends(get_db),
 ):
-    chatbot_model = settings.chatbot_model
-    chatbot_temperature = settings.chatbot_temperature
-    user_input = input_data.user_input
-
     return await ChatBotService(db).chat_inference(
-        current_user.user_id, session_id, chatbot_model, chatbot_temperature, user_input
+        current_user.user_id, session_id, input_data.user_input
     )
 
 
@@ -128,19 +124,16 @@ async def stream_chat_endpoint(
     db: AsyncSession = Depends(get_db),
     current_user: NormalUser = Depends(ensure_normal_user),
 ):
-    chatbot_model = settings.chatbot_model
-    chatbot_temperature = settings.chatbot_temperature
     user_input = input_data.user_input
 
     # Reject foreign sessions before StreamingResponse sends its HTTP headers.
     user_id = current_user.user_id
     service = ChatBotService(db)
     await service.get_session(user_id, session_id)
+    get_openai_client()  # Missing credentials must fail before HTTP stream headers.
     generator = service.stream_chat_inference(
         user_id=user_id,
         session_id=session_id,
-        chatbot_model=chatbot_model,
-        temperature=chatbot_temperature,
         user_input=user_input,
     )
 

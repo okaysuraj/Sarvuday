@@ -6,6 +6,7 @@ transactions, migrations and constraints use the real application and database.
 
 import asyncio
 import importlib
+import json
 import os
 import unittest
 from datetime import datetime, timedelta, timezone
@@ -33,6 +34,9 @@ os.environ.update(
     FIREBASE_PRIVATE_KEY="unused",
     STRIPE_SECRET_KEY="",
     DAILY_API_KEY="",
+    OPENAI_API_KEY="",
+    OPENAI_MODEL="gpt-6-luna",
+    OPENAI_MAX_OUTPUT_TOKENS="2048",
 )
 
 import httpx
@@ -40,6 +44,8 @@ import jwt
 from alembic import command
 from alembic.config import Config
 from fastapi import HTTPException
+from openai import AsyncOpenAI
+from pydantic import SecretStr
 from sqlalchemy import create_engine, func, inspect, select, text
 from sqlalchemy.exc import IntegrityError
 
@@ -59,6 +65,7 @@ from app.schemas.appointments_schemas import CreateAppointmentRequest
 from app.services.appointments.appointment_service import AppointmentService
 from app.services.auth.firebase_auth_service import FirebaseAuthService
 from app.services.chatbot.chatbot_service import ChatBotService
+from app.services.chatbot import chatbot_inference
 from app.services.counselling_services.daily_service import DailyService
 from app.services.payments.stripe_service import reconcile_intent
 from app.utils.constants import PaymentStatusEnum, UserTypeEnum
@@ -73,6 +80,25 @@ def migration_config():
 
 def setUpModule():
     command.upgrade(migration_config(), "head")
+
+
+def openai_response(text="A supportive reply.", status="completed"):
+    return {
+        "id": "resp_local",
+        "object": "response",
+        "created_at": 0,
+        "model": "gpt-6-luna",
+        "status": status,
+        "output": [
+            {
+                "type": "message",
+                "id": "msg_local",
+                "role": "assistant",
+                "status": "completed",
+                "content": [{"type": "output_text", "text": text, "annotations": []}],
+            }
+        ],
+    }
 
 
 class CriticalDatabaseChecks(unittest.IsolatedAsyncioTestCase):
@@ -333,6 +359,176 @@ class CriticalDatabaseChecks(unittest.IsolatedAsyncioTestCase):
                 await ChatBotService(db).get_chat_history(
                     self.other.user_id, "CHAT-CHECK"
                 )
+
+    async def test_openai_reply_uses_owned_history_and_saves_one_turn(self):
+        async with async_session() as db:
+            await ChatBotService(db)._save_conversation(
+                self.patient.user_id, "CHAT-CHECK", "Earlier input", "Earlier reply"
+            )
+
+        def handler(request):
+            self.assertEqual(str(request.url), "https://api.openai.com/v1/responses")
+            self.assertEqual(request.headers["authorization"], "Bearer sk-local-test")
+            body = json.loads(request.content)
+            self.assertEqual(body["model"], "gpt-6-luna")
+            self.assertIs(body["store"], False)
+            self.assertEqual(body["max_output_tokens"], 2048)
+            self.assertEqual(body["instructions"], settings.chatbot_system_prompt)
+            self.assertEqual(
+                body["input"],
+                [
+                    {"role": "user", "content": "Earlier input"},
+                    {"role": "assistant", "content": "Earlier reply"},
+                    {"role": "user", "content": "Current input"},
+                ],
+            )
+            return httpx.Response(200, json=openai_response())
+
+        async with AsyncOpenAI(
+            api_key="sk-local-test",
+            http_client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+            max_retries=0,
+        ) as client:
+            with (
+                patch.object(chatbot_inference, "_client", client),
+                patch.object(settings, "openai_api_key", SecretStr("sk-local-test")),
+            ):
+                response = await self.request(
+                    "POST",
+                    "/ai/chat",
+                    json={"session_id": "CHAT-CHECK", "message": "Current input"},
+                )
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()["reply"], "A supportive reply.")
+        async with async_session() as db:
+            self.assertEqual((await db.get(ChatSession, "CHAT-CHECK")).message_count, 2)
+            rows = list(await db.scalars(select(ChatTurn).order_by(ChatTurn.position)))
+            self.assertEqual(rows[-1].assistant_response, "A supportive reply.")
+
+    async def test_openai_stream_persists_only_after_successful_completion(self):
+        for ending in ("completed", "failed", "incomplete", "disconnected"):
+            with self.subTest(ending=ending):
+                events = [
+                    {"type": "response.output_text.delta", "delta": "A streamed reply."}
+                ]
+                if ending != "disconnected":
+                    events.append(
+                        {
+                            "type": "response." + ending,
+                            "response": openai_response(status=ending),
+                        }
+                    )
+                payload = "".join(
+                    "data: " + json.dumps(event) + "\n\n" for event in events
+                )
+                provider_response = httpx.Response(
+                    200, headers={"Content-Type": "text/event-stream"}, content=payload
+                )
+                async with (
+                    AsyncOpenAI(
+                        api_key="sk-local-test",
+                        http_client=httpx.AsyncClient(
+                            transport=httpx.MockTransport(lambda _: provider_response)
+                        ),
+                        max_retries=0,
+                    ) as client,
+                    async_session() as db,
+                ):
+                    service = ChatBotService(db)
+                    session = await service.create_session(self.patient.user_id, None)
+                    with (
+                        patch.object(chatbot_inference, "_client", client),
+                        patch.object(
+                            settings, "openai_api_key", SecretStr("sk-local-test")
+                        ),
+                    ):
+
+                        async def collect():
+                            return "".join(
+                                [
+                                    chunk
+                                    async for chunk in service.stream_chat_inference(
+                                        self.patient.user_id,
+                                        session.session_id,
+                                        "Current input",
+                                    )
+                                ]
+                            )
+
+                        if ending == "completed":
+                            self.assertEqual(await collect(), "A streamed reply.")
+                        else:
+                            with self.assertRaises(HTTPException) as denied:
+                                await collect()
+                            self.assertEqual(denied.exception.status_code, 503)
+                    self.assertTrue(provider_response.is_closed)
+                    stored = await db.get(ChatSession, session.session_id)
+                    self.assertEqual(stored.message_count, int(ending == "completed"))
+
+    async def test_openai_provider_errors_and_incomplete_replies_are_not_saved(self):
+        cases = [
+            httpx.Response(
+                401,
+                json={
+                    "error": {
+                        "message": "Private provider detail",
+                        "type": "invalid_api_key",
+                    }
+                },
+            ),
+            httpx.Response(
+                429,
+                json={
+                    "error": {
+                        "message": "Private quota detail",
+                        "type": "insufficient_quota",
+                    }
+                },
+            ),
+            httpx.Response(200, json=openai_response(status="incomplete")),
+            httpx.Response(200, json=openai_response(text="")),
+        ]
+        for provider_response in cases:
+            with self.subTest(status=provider_response.status_code):
+                async with AsyncOpenAI(
+                    api_key="sk-local-test",
+                    http_client=httpx.AsyncClient(
+                        transport=httpx.MockTransport(lambda _: provider_response)
+                    ),
+                    max_retries=0,
+                ) as client:
+                    with (
+                        patch.object(chatbot_inference, "_client", client),
+                        patch.object(
+                            settings, "openai_api_key", SecretStr("sk-local-test")
+                        ),
+                    ):
+                        response = await self.request(
+                            "POST",
+                            "/user/chatbot/inference/CHAT-CHECK",
+                            json={"user_input": "Current input"},
+                        )
+                self.assertEqual(response.status_code, 503, response.text)
+                self.assertEqual(
+                    response.json()["detail"], chatbot_inference.UNAVAILABLE_MESSAGE
+                )
+        async with async_session() as db:
+            self.assertEqual((await db.get(ChatSession, "CHAT-CHECK")).message_count, 0)
+            self.assertEqual(
+                await db.scalar(select(func.count()).select_from(ChatTurn)), 0
+            )
+
+    async def test_missing_openai_key_returns_503_before_stream_headers(self):
+        with patch.object(settings, "openai_api_key", SecretStr("")):
+            response = await self.request(
+                "POST",
+                "/user/chatbot/inference/stream/CHAT-CHECK",
+                json={"user_input": "Current input"},
+            )
+            self.assertEqual(response.status_code, 503, response.text)
+            self.assertEqual(
+                response.json()["detail"], chatbot_inference.UNAVAILABLE_MESSAGE
+            )
 
 
 class MigrationChecks(unittest.TestCase):

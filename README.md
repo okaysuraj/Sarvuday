@@ -50,7 +50,7 @@ Use descriptive names, format code consistently, and comment decisions that are 
 
 The web client uses [netlify.toml](netlify.toml). Render runs the backend with `backend` as its root directory; its build and start commands are documented in the backend guide. Mobile release settings live in `mobile/app.json` and `mobile/eas.json`.
 
-AI inference is provided by the configured external endpoint. Model binaries and third-party model source are not part of the application repository.
+AI replies use the OpenAI API through the backend. Configure `OPENAI_API_KEY` on the server; model binaries and a separate inference server are unnecessary.
 
 PostgreSQL is the only application database. The [backend guide](backend/README.md#database-architecture) explains table ownership, transactional updates, importing existing records and hosted security requirements.
 

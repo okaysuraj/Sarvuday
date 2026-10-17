@@ -2,7 +2,7 @@
 
 from typing import Literal, Optional
 
-from pydantic import Field, model_validator
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -29,11 +29,10 @@ class Settings(BaseSettings):
     auth_uri: str = "https://accounts.google.com/o/oauth2/auth"
     firebase_private_key: str
 
-    chatbot_base_url: str = "http://localhost:1234/v1"
-    chatbot_api_key: str = "lm-studio"
-    chatbot_model: str = "/models/survuday_v2"
-    chatbot_temperature: float = 0.8
-    max_total_tokens: int = 2048
+    openai_api_key: SecretStr = SecretStr("")
+    openai_model: str = Field(default="gpt-6-luna", min_length=1)
+    openai_max_output_tokens: int = Field(default=2048, ge=64, le=16384)
+    max_total_tokens: int = Field(default=2048, ge=128)
     chatbot_system_prompt: str = "You are a supportive and empathetic assistant."
     secret_key: str
     algorithm: Literal["HS256", "HS384", "HS512"] = "HS256"

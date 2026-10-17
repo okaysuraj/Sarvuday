@@ -7,7 +7,6 @@ from fastapi import HTTPException
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import settings
 from app.models import ChatSession
 from app.models.sessions.chat_turn import ChatTurn
 from app.schemas.chatbot_schemas import (
@@ -115,8 +114,6 @@ class ChatBotService:
         self,
         user_id: str,
         session_id: str,
-        chatbot_model: str,
-        temperature: float,
         user_input: str,
     ) -> ChatResponse:
         await self._validate_user_session(session_id, user_id)
@@ -129,9 +126,6 @@ class ChatBotService:
         await self.db.rollback()  # Release the read connection during inference.
 
         response = await get_chatbot_response(
-            model_name=chatbot_model,
-            temperature=temperature,
-            chatbot_system_prompt=settings.chatbot_system_prompt,
             user_input=user_input,
             history_context=history_context,
         )
@@ -153,8 +147,6 @@ class ChatBotService:
         self,
         user_id: str,
         session_id: str,
-        chatbot_model: str,
-        temperature: float,
         user_input: str,
     ):
         await self._validate_user_session(session_id, user_id)
@@ -168,9 +160,6 @@ class ChatBotService:
 
         chunks = []
         async for chunk in stream_chatbot_response(
-            model_name=chatbot_model,
-            temperature=temperature,
-            chatbot_system_prompt=settings.chatbot_system_prompt,
             user_input=user_input,
             history_context=history_context,
         ):

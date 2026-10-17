@@ -12,6 +12,7 @@ os.environ.update(
     FIREBASE_CLIENT_EMAIL="schema@example.com",
     FIREBASE_PRIVATE_KEY="unused",
     SECRET_KEY="schema-export-only" * 4,
+    OPENAI_API_KEY="",
 )
 
 
