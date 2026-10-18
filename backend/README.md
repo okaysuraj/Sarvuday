@@ -57,7 +57,7 @@ Create `backend/.env` locally and configure the same settings on the server:
 - `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`: server service account credentials. Escaped `\n` sequences are accepted in the key.
 - `SECRET_KEY`: randomly generated API session signing key.
 
-Production needs `ENVIRONMENT=production`, explicit HTTPS `CORS_ALLOWED_ORIGINS`, and `ALLOWED_HOSTS` containing the API hostname. `FRONTEND_BASE_URL` may supply the web origin. Production signing keys require at least 32 bytes for HS256, 48 for HS384, or 64 for HS512.
+Production needs `ENVIRONMENT=production`, explicit HTTPS CORS origins, and `ALLOWED_HOSTS` containing the API hostname. `CORS_ALLOWED_ORIGINS` defaults to `https://sarvuday.netlify.app`; an environment value overrides that default and may contain comma-separated origins. `FRONTEND_BASE_URL` adds another web origin. Production signing keys require at least 32 bytes for HS256, 48 for HS384, or 64 for HS512.
 
 | Optional feature | Settings                                                               |
 | ---------------- | ---------------------------------------------------------------------- |
@@ -116,6 +116,15 @@ Pause application writes before restoring a database. After restoration, deploy 
 Set **Root Directory** to `backend`.
 
 The backend automatically trusts its own hostname from Render's `RENDER_EXTERNAL_HOSTNAME` setting. Keep `ALLOWED_HOSTS` for additional custom domains; values are hostnames without a scheme or path. Requests for unrelated hosts remain rejected. Set `ENVIRONMENT=production` and the explicit web origins described above. Use `/health/ready` as the Render health check path.
+
+For the hosted web app, configure these Render environment values and redeploy:
+
+```dotenv
+FRONTEND_BASE_URL=https://sarvuday.netlify.app
+CORS_ALLOWED_ORIGINS=https://sarvuday.netlify.app
+```
+
+Origins contain the scheme and hostname, without a path. A successful `/health/ready` response only checks service readiness. Browser login also requires the `OPTIONS /auth/firebase-login` preflight with `Origin: https://sarvuday.netlify.app` to return `200` and `Access-Control-Allow-Origin: https://sarvuday.netlify.app`. A `400 Disallowed CORS origin` response prevents the browser from sending the login request.
 
 Use this **Build Command**:
 

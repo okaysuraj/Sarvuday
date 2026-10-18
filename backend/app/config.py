@@ -9,7 +9,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     database_url: str
     environment: Literal["development", "test", "production"] = "development"
-    cors_allowed_origins: str = ""
+    # The hosted web client is a first-party origin; deployments can override it.
+    cors_allowed_origins: str = "https://sarvuday.netlify.app"
     allowed_hosts: str = "localhost,127.0.0.1,testserver"
     render_external_hostname: str = Field(
         default="", pattern=r"^$|^[a-zA-Z0-9-]+\.onrender\.com$"

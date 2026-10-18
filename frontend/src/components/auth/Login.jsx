@@ -104,9 +104,11 @@ const Login = () => {
 
   const handleBackendLogin = async (idToken) => {
     try {
-      const response = await axiosInstance.post(`/auth/firebase-login`, {
-        id_token: idToken,
-      });
+      const response = await axiosInstance.post(
+        '/auth/firebase-login',
+        { id_token: idToken },
+        { silent: true }, // This form owns the error toast for this request.
+      );
       if (response.status === 200) {
         toast.success('Login successful!');
         saveSession(response.data);
@@ -115,7 +117,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Backend Login error:', error);
-      toast.error(error?.response?.data?.detail || 'Login failed.');
+      toast.error(error.userMessage || 'Login failed. Please try again.');
     }
   };
 
